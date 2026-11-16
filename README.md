@@ -4,7 +4,7 @@ Persönliche Bento-Canvas mit den drei Produkten shopvibes, showcase und Backlan
 
 React + TypeScript + Vite. Statische Website, ohne Backend, CMS, Zugangsdaten oder externe Schriftanbieter. Die Schriften werden lokal ausgeliefert.
 
-Die Gestaltung verwendet neutrale weiße Flächen, fast schwarze serifenlose Typografie, feine graue Konturen und kräftige blaue sowie orange Akzente. Das dunkle Musik-Widget ergänzt die helle Canvas. Referenzen für Farbe und Klarheit: [ana.sh](https://ana.sh) und [chanhdai.com](https://chanhdai.com).
+Die Gestaltung verwendet neutrale weiße Flächen, fast schwarze serifenlose Typografie, feine graue Konturen und kräftige blaue sowie orange Akzente. Die Widgets sind als eigenständige Objekte gestaltet: eine aufklappende Projektmappe, ein Plattencover mit Vinyl, gestaffelte Produktansichten, eine Boulderwand mit Routenetikett und eine abstrakte Laufzeichnung. Referenzen für Farbe und Klarheit: [ana.sh](https://ana.sh) und [chanhdai.com](https://chanhdai.com).
 
 ## Lokal starten
 
@@ -45,6 +45,8 @@ Die Produktdarstellungen sind eigenständige schematische Illustrationen, keine 
 ## Verhalten
 
 - Fehlende externe Dock-Aktionen werden vollständig ausgeblendet. Interne und konfigurierte externe Aktionen sind optisch getrennt.
+- Gedanken, Repository und Playlist haben kleine, nichtmodale Pop-outs. Sie öffnen per Klick, Touch oder Tastatur, schließen per Escape, Klick daneben oder beim Verlassen mit Tab. Ein weiterführendes Detailfenster stellt den Fokus anschließend am ursprünglichen Widget wieder her.
+- Hover-Effekte bewegen gezielt die Objekte innerhalb der Widgets; Tastaturfokus bietet dieselben Hinweise. Es gibt keine dauerlaufenden Animationen. `prefers-reduced-motion` unterbindet die Bewegung.
 - Produktfenster nutzen native HTML-Dialoge mit Escape, Fokusbindung und Rückkehr zum Auslöser. Auf Mobilgeräten werden sie bildschirmfüllend.
 - Das Boulder-Spiel ist mit Maus, Touch und Tastatur spielbar. Umrandete Griffe sind erreichbar. Ziel: Top in maximal sieben Zügen. Rückwege verbrauchen ebenfalls Kraft. Es gibt Gewinn, Verlust und Neustart.
 - GitHub wird erst beim Öffnen des Widgets und nur mit konfiguriertem Nutzernamen abgefragt. Die offizielle öffentliche Events-API benötigt hier keine Zugangsdaten. Die Ansicht behandelt Laden, fehlende Aktivität, Fehler, Timeout und manuelles Wiederholen. Sie ist kein Contribution- oder Echtzeit-Tracker.
@@ -62,7 +64,8 @@ src/hooks/               Ladezustände und Abbruch/Timeout
 src/game/boulder.ts      Unabhängige Spielregeln
 src/lib/links.ts          Linkvalidierung und Asset-Pfade
 src/test/                Spiel-, API-, Link- und Interaktionstests
-src/styles.css           Gestaltung und responsive Regeln
+src/styles.css           Grundlayout, Details, Dock und responsive Regeln
+src/widgets.css          Individuelle Widget-Objekte, Pop-outs und Hover-Verhalten
 ```
 
 ## Später auf GitHub Pages veröffentlichen
@@ -83,9 +86,11 @@ Der Workflow prüft den Code vor der Veröffentlichung. Er wird absichtlich nur 
 
 ## Geprüfter Stand · 16. November 2026
 
-- Produktionsbuild, TypeScript und ESLint erfolgreich; 19 automatisierte Tests für Spielregeln, Tastaturbedienung, Dialoge, externe Links und GitHub-Zustände.
+- Produktionsbuild, TypeScript und ESLint erfolgreich; 25 automatisierte Tests für Spielregeln, Tastaturbedienung, Dialoge, Pop-outs, externe Links und GitHub-Zustände.
 - Browserprüfung bei 1440 × 1000, 768 × 1024, 390 × 844 und 320 × 740 Pixeln; kein horizontaler Seitenüberlauf.
 - Dock-Navigation, alle drei Produktansichten, Fenstervergrößerung, Escape, Tab/Shift-Tab und Rückkehr zum Auslöser geprüft.
 - Boulder-Route im mobilen Browser vollständig gespielt, Gewinn und Neustart geprüft; Verlust und Umwege zusätzlich automatisiert getestet.
 - Sichtbare Begleittexte auf den farbigen Flächen nach einer Kontrastprüfung nachgedunkelt. Die reduzierte Bewegung ist als gültige CSS-Medienregel geprüft: Übergänge, Animationen, Hover-Bewegung und weiches Scrollen werden abgeschaltet. Eine Betriebssystem-Emulation dieser Einstellung wurde nicht durchgeführt.
 - Externe Dienste sind noch nicht persönlich konfiguriert. GitHub-Lade-, Leer- und Fehlerzustände sowie Wiederholen sind mit ausdrücklich gekennzeichneten Testdaten geprüft. Ein echter persönlicher Spotify-Player und die später hinterlegten persönlichen Ziel-URLs sind nach ihrer Ergänzung nochmals zu prüfen.
+
+Die letzte Widget-Überarbeitung wurde zusätzlich bei 320 px, rund 768 px und 1280 px CSS-Breite im Browser geprüft. Die Pop-outs bleiben im sichtbaren Bereich; der schmale Seitenüberlauf durch die reservierte Scrollbar wurde behoben. Escape, Tab-Austritt und der Wechsel aus der Vorschau in ein Detailfenster wurden im Browser und automatisiert geprüft.

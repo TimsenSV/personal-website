@@ -6,6 +6,7 @@ export function BoulderPreview() {
   return <svg className="boulder-preview" viewBox="0 0 300 280" fill="none" aria-hidden="true">
     <defs><pattern id="wall-bolts" width="27" height="27" patternUnits="userSpaceOnUse"><circle cx="13" cy="13" r="1" fill="#bac4dc" opacity=".5"/></pattern></defs>
     <path d="M22 0h256v280H22z" fill="url(#wall-bolts)"/>
+    <polyline className="boulder-preview-route" points={holds.slice(0, 3).map(hold => `${20 + hold.x * 2.6},${8 + hold.y * 2.65}`).join(' ')} stroke="#3159f5" strokeWidth="2" strokeDasharray="4 5"/>
     {[
       ...holds.map(hold => [20 + hold.x * 2.6, 8 + hold.y * 2.65, hold.rotation, 'blue']),
       [51, 63, 20, 'sand'], [251, 119, -20, 'sand'], [164, 244, 10, 'sand'],

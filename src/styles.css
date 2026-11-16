@@ -1,4 +1,4 @@
-@layer base, layout, components, responsive;
+@layer base, layout, components, responsive, widgets;
 
 @layer base {
   :root {
@@ -18,7 +18,7 @@
   }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; scroll-padding-top: 24px; scrollbar-gutter: stable; }
-  body { margin: 0; min-width: 320px; }
+  body { margin: 0; min-width: 0; }
   button, a, input { -webkit-tap-highlight-color: transparent; }
   button, a { touch-action: manipulation; }
   button { font: inherit; color: inherit; cursor: pointer; }
