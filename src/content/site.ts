@@ -60,7 +60,7 @@ export const siteConfig: PortfolioConfig = {
       { src: 'images/portrait-sample.png', alt: 'Näherer Ausschnitt des Musterporträts, kein Foto von Tim', placeholder: true, zoom: 1.35, position: '50% 35%' },
     ],
     email: null,
-    linkedinUrl: null,
+    linkedinUrl: 'https://www.linkedin.com/in/timsenhoffmann/',
   },
   github: {
     username: 'TimsenSV',

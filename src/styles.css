@@ -40,13 +40,8 @@
 }
 
 @layer layout {
-  .page-shell { max-width: 1360px; padding: 0 40px calc(126px + env(safe-area-inset-bottom)); margin: auto; }
-  .site-header { min-height: 92px; display: flex; align-items: center; gap: 20px;  border-bottom: 1px solid var(--line); margin-bottom: 24px;}
-  .wordmark { font-family: var(--display); font-size: 39px; letter-spacing: -3px; color: var(--ink); line-height: 1; width: 45px; padding-bottom: 3px;  font-weight: 750;}
-  .header-title { display: flex; flex-direction: column; gap: 3px; font-size: 12px; line-height: 1.35; border-left: none; padding-left: 0; }
-  .header-title span:last-child { color: var(--muted); }
-  .header-note { display: flex; align-items: center; gap: 9px; margin-left: auto; color: var(--muted); font-size: 10px;  font-family: var(--mono);}
-  .header-note > span { width: 5px; height: 5px; border-radius: 50%; background: #3159f5; }
+  .page-shell { max-width: 1360px; padding: 32px 40px calc(126px + env(safe-area-inset-bottom)); margin: auto; }
+
   .bento-grid { display: grid; grid-template-columns: repeat(12, minmax(0,1fr)); gap: 20px; align-items: stretch; }
   .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; min-width: 0; overflow: hidden; box-shadow: 0 1px 3px #11182705; }
   .intro-card { grid-column: span 4; min-height: 440px;  padding: 26px; background: var(--surface);}
@@ -55,10 +50,7 @@
   .music-card { grid-column: span 4; min-height: 260px;  color: #ffffff; border-color: #16171c;}
   .boulder-card { grid-column: 9 / 13; grid-row: 2 / 4; }
   .running-card { grid-column: span 8; min-height: 210px; }
-  .site-footer { display: flex; justify-content: space-between; gap: 20px; align-items: center; margin-top: 26px; padding: 0 3px; font-size: 11px; color: var(--muted); }
-  .site-footer a { display: inline-flex; align-items: center; gap: 7px; min-height: 44px; }
-  .footer-signature { display: flex; align-items: center; gap: 12px; }
-  .footer-signature > span { font-family: var(--display); font-size: 16px; font-style: normal; color: var(--ink);  font-weight: 600;}
+
 }
 
 @layer components {
@@ -82,7 +74,6 @@
   .portrait, .portrait-placeholder { width: 68px; height: 68px; border-radius: 14px; flex-shrink: 0; transform: none; background: #eef2ff; border: 1px solid #dbe3ff; box-shadow: none; }
   .portrait-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; color: #3159f5; gap: 4px; }
   .portrait-placeholder small { font-size: 9px; }
-
 
   .intro-card h1 { font-family: var(--display); font-size: 38px; line-height: 1.06; letter-spacing: -1.5px; margin-bottom: 0;  font-weight: 650;}
 
@@ -315,7 +306,7 @@
     .projects-card > h2 { font-size: 25px; }.product-name { font-size: 19px; }.running-card h2 { font-size: 31px; }
   }
   @media (max-width: 960px) {
-    .page-shell { max-width: 800px; padding-left: 26px; padding-right: 26px; }.site-header { min-height: 100px; }.bento-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; }
+    .page-shell { max-width: 800px; padding-left: 26px; padding-right: 26px; }.bento-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; }
     .intro-card { grid-column: 1 / -1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0 35px; padding: 27px 30px; }
     .intro-top { grid-column: 1 / -1; margin-bottom: 15px; }.portrait-row { grid-column: 1; grid-row: 2; margin-bottom: 14px; }.intro-card h1 { font-size: 38px; }.intro-positioning { grid-column: 1; grid-row: 3; font-size: 22px; margin-bottom: 0; }
     .intro-description { grid-column: 2; grid-row: 2; font-size: 14px; }.intro-personal { grid-column: 2; grid-row: 3; font-size: 13px; margin-top: 0; }.current-focus { grid-column: 1 / -1; padding: 13px; margin-top: 23px; }.current-focus p { font-size: 11px; }.linkedin-widget { grid-column: 2; }
@@ -323,11 +314,10 @@
     .github-card, .music-card, .boulder-card, .running-card { grid-column: auto; grid-row: auto; }.github-card, .music-card { min-height: 260px; }.record-sleeve { width: 115px; height: 115px; }
     .boulder-card { grid-column: 2; grid-row: 4; min-height: 440px; }.running-card { grid-column: 1; grid-row: 4; flex-direction: column; align-items: stretch; padding: 25px; }
     .running-copy { flex: 0 0 auto; }.running-card h2 { font-size: 30px; max-width: 230px; }.route-art { margin-top: 20px; min-height: 180px; }.route-art .route-drawing { width: 120%; margin-left: -10%; }.route-art > span { font-size: 8px; }
-    .site-footer { font-size: 10px; }.footer-signature { gap: 7px; }
     .boulder-game { gap: 25px; padding: 30px; }.game-heading > h3 { font-size: 36px; }.game-board { min-height: 445px; }.game-instructions { margin-top: 16px; }.energy-meter { margin-top: 18px; }
   }
   @media (max-width: 620px) {
-    html { scroll-padding-top: 14px; }.page-shell { padding: 0 16px calc(122px + env(safe-area-inset-bottom)); }.site-header { min-height: 89px; gap: 14px; }.wordmark { width: 31px; font-size: 43px; }.header-title { font-size: 10px; padding-left: 14px; }.header-note { display: none; }
+    html { scroll-padding-top: 14px; }.page-shell { padding: 16px 16px calc(122px + env(safe-area-inset-bottom)); }
     .bento-grid { display: flex; flex-direction: column; gap: 16px; }.card { border-radius: 13px; }
     .intro-card { display: flex; padding: 24px; min-height: 0; }.intro-top { margin-bottom: 17px; }.portrait-row { margin-bottom: 22px; }.intro-card h1 { font-size: 38px; margin: 0; }.intro-positioning { font-size: 23px; margin-bottom: 14px; }.intro-description { font-size: 13px; max-width: none; }.intro-personal { font-size: 13px; margin-top: 13px; }.current-focus { margin-top: 22px; padding: 13px; }
     .projects-card { padding: 24px 22px 20px; }.projects-top { margin-bottom: 18px; }.projects-top .quiet-label { display: none; }.projects-card > h2 { font-size: 27px; line-height: 1.18; max-width: 330px; margin-bottom: 25px; }.projects-card > h2 em { display: inline; }
@@ -338,7 +328,6 @@
     .github-card h2, .boulder-card h2 { font-size: 28px; }.widget-copy { font-size: 12px; }.repository-preview { padding: 15px; }.repository-preview strong { font-size: 13px; }.repository-preview span { font-size: 9px; }.status-label { font-size: 9px; }.widget-bottom > .small-note { display: inline; font-size: 9px; }
     .record-sleeve { width: 132px; height: 132px; }.album-art-title { font-size: 23px; }.record-groove { width: 80px; height: 80px; }.record-groove::after { inset: 26px; }.music-content { gap: 23px; }.playlist-copy h2 { font-size: 23px; }.playlist-copy > p { font-size: 12px; }.playlist-pending { font-size: 9px; }.music-bottom { margin-top: 22px; font-size: 10px; }
     .running-card h2 { max-width: none; font-size: 31px; }.route-art { margin-top: 0; min-height: 140px; }.route-art .route-drawing { width: 100%; margin: -15px 0 0; }.route-art > span { font-size: 8px; }.boulder-card .widget-copy { max-width: 250px; }.boulder-preview-button { min-height: 290px; }.board-open-hint { opacity: 1; transform: none; font-size: 10px; }.boulder-bottom { font-size: 10px; }
-    .site-footer { flex-direction: column; align-items: flex-start; gap: 9px; padding: 0 5px; margin-top: 22px; }.footer-signature { font-size: 10px; }.footer-signature > span { font-size: 16px; }
     .dock { gap: 6px; padding: 9px 10px 12px; border-radius: 20px; bottom: calc(13px + env(safe-area-inset-bottom)); }.dock-item { height: 46px; width: 44px; }.dock-icon { width: 44px; height: 44px; border-radius: 12px; }.dock-divider { margin: 0; height: 28px; }.dock-tooltip { font-size: 9px; }
     .window, .window.is-expanded { width: 100%; height: 100dvh; max-height: 100dvh; max-width: 100%; border: 0; border-radius: 0; margin: 0; }.window-bar { min-height: 62px; padding: calc(4px + env(safe-area-inset-top)) 10px 4px 16px; gap: 5px; }.window-chrome { display: none; }.window-bar h2 { font-size: 10px; margin: 0 auto 0 0; }.window-expand { display: none; }.window-body { padding-bottom: env(safe-area-inset-bottom); }
     .mobile-close-label { display: inline; font-size: 10px; }.window-controls [data-close] { width: auto; gap: 3px; padding: 0 6px; }

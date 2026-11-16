@@ -30,7 +30,7 @@ Die typisierte Datei **`src/content/site.ts`** enthält alle persönlichen Texte
 | Bereich | Noch zu ergänzen |
 | --- | --- |
 | Profil | Vollständiger öffentlicher Name, eigene Fotos für den Polaroid-Stapel, ggf. Feinschliff an Kurzvorstellung und Fokus |
-| Kontakt | E-Mail-Adresse und LinkedIn-URL |
+| Kontakt | E-Mail-Adresse; LinkedIn ist im Dock hinterlegt |
 | GitHub | TimsenSV ist verbunden; Links zu ausgewählten öffentlichen Repositories können noch ergänzt werden |
 | Spotify | Playlist-Link oder Embed-URL, Titel, optional eigenes Cover und Begleittext |
 | Produkte | Eigener Beitrag, je eine konkrete Entscheidung, Produktlinks, optional echte Screenshots |
@@ -119,7 +119,7 @@ Die Einträge liegen unter `profile.photos` in `src/content/site.ts`. Für eigen
 
 Aktuell wird ein einziges KI-generiertes Musterfoto in drei Darstellungen verwendet: Farbe, Schwarz-Weiß und engerer Ausschnitt. Die Person ist fiktiv und **nicht Tim**. Das Bild ist zur Stilabnahme gedacht, jede Karte ist als Platzhalter markiert. Quelle: eingebautes Imagegen-Werkzeug, kein CLI/API-Fallback. Das unveränderte generierte Asset liegt unter `public/images/portrait-sample.png`.
 
-Ein Klick auf den kleinen Stapel öffnet ihn mit einer kurzen 3D-Drehung aus seiner Position heraus. In der großen Ansicht blättert ein Klick weiter. Ziehen, Navigationsknöpfe und Pfeiltasten funktionieren in beiden Größen; das ausgewählte Foto bleibt beim Schließen erhalten. Escape, Schließen oder ein Klick neben den Stapel schließen die native modale Galerie und geben den Fokus zurück. Reduzierte Bewegung deaktiviert die räumlichen Übergänge.
+Ein Klick auf den kleinen Stapel bewegt denselben, bereits geladenen Stapel mit einer kurzen 3D-Drehung aus seiner exakten Position in die große Ansicht. Es wird keine zweite Galerie eingeblendet; Bildausschnitt und Proportionen bleiben während der Bewegung erhalten. In der großen Ansicht blättert ein Klick weiter. Ziehen, Navigationsknöpfe und Pfeiltasten funktionieren in beiden Größen; das ausgewählte Foto bleibt beim Schließen erhalten. Escape, Schließen oder ein Klick neben den Stapel schließen die native modale Galerie und geben den Fokus zurück. Reduzierte Bewegung deaktiviert die räumlichen Übergänge.
 
 Die Galerie wurde auf Desktop und Mobilgröße mit echten Maus-Ziehgesten im Browser geprüft. Automatisierte Prüfungen decken Vergrößern, Klick, Pfeiltasten, Umlauf, doppelte Klicks nach Ziehen, kurze Gesten, vertikales Scrollen, Abbruch, Fokusbegrenzung und -rückkehr, Schließen, reduzierte Bewegung, leere/einzelne Galerien und Bildfehler ab.
 

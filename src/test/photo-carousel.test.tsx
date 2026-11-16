@@ -22,9 +22,13 @@ describe('polaroid photo carousel', () => {
     vi.useFakeTimers()
     render(<PhotoCarousel photos={photos} name="Tim"/>)
     const trigger = screen.getByRole('button', { name: 'Fotos vergrößern' })
+    const originalImage = within(trigger).getByRole('img')
     fireEvent.click(trigger)
     const dialog = screen.getByRole('dialog', { name: 'Fotos von Tim' })
     const photo = within(dialog).getByRole('button', { name: 'Fotos durchblättern' })
+    expect(photo).toBe(trigger)
+    expect(within(photo).getByRole('img')).toBe(originalImage)
+    expect(document.querySelectorAll('.photo-carousel')).toHaveLength(1)
     expect(photo).toHaveFocus()
     expect(status()).toBe('Foto 1 von 3')
     expect(document.body.style.overflow).toBe('hidden')
@@ -147,9 +151,13 @@ describe('polaroid photo carousel', () => {
     fireEvent.click(trigger)
     const dialog = screen.getByRole('dialog')
     const photo = within(dialog).getByRole('button', { name: 'Fotos durchblättern' })
-    vi.spyOn(photo, 'clientWidth', 'get').mockReturnValue(400)
+    vi.spyOn(photo, 'clientWidth', 'get').mockReturnValue(200)
+    const portal = photo.closest<HTMLElement>('.photo-portal')!
+    vi.spyOn(portal, 'clientWidth', 'get').mockReturnValue(216)
+    vi.spyOn(portal, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 0, 432, 491))
     fireEvent.pointerDown(photo, pointer(300))
     fireEvent.pointerMove(photo, pointer(120))
+    expect(photo.style.getPropertyValue('--drag-x')).toBe('-90px')
     fireEvent.pointerUp(photo, pointer(120))
     expect(status()).toBe('Foto 3 von 3 · Platzhalter')
     finishFlip()
@@ -169,5 +177,47 @@ describe('polaroid photo carousel', () => {
     fireEvent.click(reopened)
     finishFlip()
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+
+  it('starts the same photos at their exact source position and can reverse before opening finishes', () => {
+    vi.useFakeTimers()
+    const originalAnimate = HTMLElement.prototype.animate
+    const animations: { frames: Keyframe[]; cancel: () => void; onfinish: (() => void) | null }[] = []
+    HTMLElement.prototype.animate = vi.fn((frames: Keyframe[] | PropertyIndexedKeyframes | null) => {
+      const animation = { frames: frames as Keyframe[], cancel: vi.fn(), onfinish: null as (() => void) | null }
+      animations.push(animation)
+      return animation as unknown as Animation
+    })
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
+      return this.classList.contains('photo-lightbox-anchor') ? new DOMRect(410, 190, 460, 523) : new DOMRect(110, 120, 200, 227)
+    })
+    try {
+      render(<PhotoCarousel photos={photos} name="Tim"/>)
+      const trigger = screen.getByRole('button', { name: 'Fotos vergrößern' })
+      const image = within(trigger).getByRole('img')
+      fireEvent.click(trigger)
+      const dialog = screen.getByRole('dialog')
+      expect(within(dialog).getByRole('button', { name: 'Fotos durchblättern' })).toBe(trigger)
+      expect(within(trigger).getByRole('img')).toBe(image)
+      expect(animations[0].frames).toEqual([
+        { transform: 'translate3d(-300px,-70px,0) scale(1)' },
+        { transform: 'translate3d(0,0,0) scale(2.3)' },
+      ])
+      expect(trigger.closest<HTMLElement>('.photo-portal')!.style.transform).toBe('translate3d(-300px,-70px,0) scale(1)')
+      fireEvent(dialog, new Event('cancel', { cancelable: true }))
+      expect(animations[0].cancel).toHaveBeenCalled()
+      act(() => animations[2].onfinish?.())
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Fotos vergrößern' })).toBe(trigger)
+      expect(trigger).toHaveFocus()
+      fireEvent.click(trigger)
+      fireEvent(screen.getByRole('dialog'), new Event('cancel', { cancelable: true }))
+      animations.at(-2)!.cancel()
+      finishFlip()
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+      expect(trigger).toHaveFocus()
+    } finally {
+      HTMLElement.prototype.animate = originalAnimate
+    }
   })
 })

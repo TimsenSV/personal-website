@@ -11,9 +11,10 @@ describe('canvas interactions', () => {
     render(<App/>)
     for (const name of ['shopvibes', 'showcase', 'Backlane']) expect(screen.getByRole('button', { name: `${name}: Details öffnen` })).toBeVisible()
     const dock = screen.getByRole('navigation', { name: 'Schnellnavigation' })
-    expect(within(dock).getAllByRole('link')).toHaveLength(3)
+    expect(within(dock).getAllByRole('link')).toHaveLength(4)
     expect(within(dock).getByRole('link', { name: 'Arbeit' })).toHaveAttribute('href', '#work')
-    expect(within(dock).queryByRole('link', { name: /LinkedIn/ })).not.toBeInTheDocument()
+    expect(within(dock).getByRole('link', { name: /LinkedIn/ })).toHaveAttribute('href', 'https://www.linkedin.com/in/timsenhoffmann/')
+    expect(within(dock).queryByRole('link', { name: /E-Mail/ })).not.toBeInTheDocument()
     expect(screen.getByRole('link', { name: /Mit mir auf Strava laufen/ })).toHaveAttribute('href', 'https://www.strava.com/athletes/137493657')
   })
   it('opens product windows by keyboard, switches products and returns focus after cancel', async () => {

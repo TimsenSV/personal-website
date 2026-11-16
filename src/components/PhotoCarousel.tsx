@@ -3,9 +3,9 @@ import { ArrowLeft, ArrowRight, Camera } from 'lucide-react'
 import type { ProfilePhoto } from '../content/site'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { assetUrl } from '../lib/links'
-import { PhotoLightbox, type PhotoOrigin } from './PhotoLightbox'
+import { PhotoLightbox } from './PhotoLightbox'
 
-type Gesture = { pointer: number; x: number; y: number; width: number; axis: 'pending' | 'horizontal' | 'vertical'; offset: number }
+type Gesture = { pointer: number; x: number; y: number; width: number; scale: number; axis: 'pending' | 'horizontal' | 'vertical'; offset: number }
 type Departure = { photo: ProfilePhoto; index: number; direction: number; offset: number }
 
 function PhotoImage({ photo }: { photo: ProfilePhoto }) {
@@ -19,9 +19,9 @@ function PhotoPrint({ photo, index, total }: { photo: ProfilePhoto; index: numbe
   return <><PhotoImage key={photo.src} photo={photo}/><span className="polaroid-caption"><span>{photo.placeholder ? 'Platzhalter' : photo.caption ?? 'Ein bisschen ich.'}</span><span>{String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}</span></span></>
 }
 
-function PhotoDeck({ photos, name, index, onChange, onOpen, expanded = false, concealed = false }: {
+function PhotoDeck({ photos, name, index, onChange, onOpen, expanded = false }: {
   photos: ProfilePhoto[]; name: string; index: number; onChange: (index: number) => void
-  onOpen?: (trigger: HTMLButtonElement) => void; expanded?: boolean; concealed?: boolean
+  onOpen?: (trigger: HTMLButtonElement) => void; expanded?: boolean
 }) {
   const [offset, setOffset] = useState(0)
   const [dragging, setDragging] = useState(false)
@@ -54,15 +54,17 @@ function PhotoDeck({ photos, name, index, onChange, onOpen, expanded = false, co
   function begin(event: PointerEvent<HTMLButtonElement>) {
     if (!canFlip || busy.current || event.button !== 0 || !event.isPrimary) return
     suppressClick.current = false
-    gesture.current = { pointer: event.pointerId, x: event.clientX, y: event.clientY, width: event.currentTarget.clientWidth, axis: 'pending', offset: 0 }
+    const portal = event.currentTarget.closest<HTMLElement>('.photo-portal')
+    const scale = portal?.clientWidth ? portal.getBoundingClientRect().width / portal.clientWidth : 1
+    gesture.current = { pointer: event.pointerId, x: event.clientX, y: event.clientY, width: event.currentTarget.clientWidth, scale, axis: 'pending', offset: 0 }
     event.currentTarget.setPointerCapture?.(event.pointerId)
   }
 
   function move(event: PointerEvent<HTMLButtonElement>) {
     const drag = gesture.current
     if (!drag || drag.pointer !== event.pointerId) return
-    const dx = event.clientX - drag.x
-    const dy = event.clientY - drag.y
+    const dx = (event.clientX - drag.x) / drag.scale
+    const dy = (event.clientY - drag.y) / drag.scale
     if (drag.axis === 'pending' && Math.max(Math.abs(dx), Math.abs(dy)) > 8) drag.axis = Math.abs(dx) > Math.abs(dy) ? 'horizontal' : 'vertical'
     if (drag.axis === 'pending') return
     suppressClick.current = true
@@ -91,7 +93,7 @@ function PhotoDeck({ photos, name, index, onChange, onOpen, expanded = false, co
 
   if (!photos.length) return <div className="photo-carousel photo-empty" role="img" aria-label="Platz für persönliche Fotos"><Camera size={32}/><span>Fotos folgen.</span></div>
 
-  return <div className={`photo-carousel ${expanded ? 'photo-carousel-large' : ''} ${concealed ? 'is-open' : ''} ${dragging ? 'is-dragging' : ''} ${departure ? 'is-flipping' : ''}`} role="region" aria-roledescription="Karussell" aria-label={`Fotos von ${name}`} onKeyDown={event => {
+  return <div className={`photo-carousel ${expanded ? 'photo-carousel-large' : ''} ${dragging ? 'is-dragging' : ''} ${departure ? 'is-flipping' : ''}`} role="region" aria-roledescription="Karussell" aria-label={`Fotos von ${name}`} onKeyDown={event => {
     if (event.altKey || event.ctrlKey || event.metaKey || !['ArrowLeft', 'ArrowRight'].includes(event.key)) return
     event.preventDefault()
     flip(event.key === 'ArrowRight' ? 1 : -1)
@@ -122,15 +124,7 @@ function PhotoDeck({ photos, name, index, onChange, onOpen, expanded = false, co
 
 export function PhotoCarousel({ photos, name }: { photos: ProfilePhoto[]; name: string }) {
   const [index, setIndex] = useState(0)
-  const [open, setOpen] = useState<{ origin: PhotoOrigin; trigger: HTMLButtonElement } | null>(null)
-
-  return <>
-    <PhotoDeck photos={photos} name={name} index={index} onChange={setIndex} concealed={!!open} onOpen={trigger => {
-      const rect = trigger.closest('.photo-carousel')!.getBoundingClientRect()
-      setOpen({ trigger, origin: { left: rect.left, top: rect.top, width: rect.width, height: rect.height } })
-    }}/>
-    {open && <PhotoLightbox name={name} origin={open.origin} trigger={open.trigger} onClose={() => setOpen(null)}>
-      <PhotoDeck photos={photos} name={name} index={index} onChange={setIndex} expanded/>
-    </PhotoLightbox>}
-  </>
+  return <PhotoLightbox name={name}>{({ expanded, open }) =>
+    <PhotoDeck photos={photos} name={name} index={index} onChange={setIndex} expanded={expanded} onOpen={expanded ? undefined : open}/>
+  }</PhotoLightbox>
 }
