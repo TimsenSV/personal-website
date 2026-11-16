@@ -14,22 +14,26 @@
   .runner-track { position: absolute; height: 20px; left: 8%; right: 8%; bottom: 8px; border-top: 2px solid #eac9af; border-bottom: 1px solid #edd7c5; transform: skewX(-35deg); background: repeating-linear-gradient(90deg,transparent 0 25px,#edceb7 25px 34px,transparent 34px 66px); background-size: 66px 100%; }
   .runner-speed { position: absolute; top: 58px; left: calc(50% - 73px); width: 30px; }
   .runner-speed i { display: block; background: #ddaf8e; height: 2px; margin-bottom: 7px; width: 22px; opacity: .55; }.runner-speed i:nth-child(2) { width: 31px; margin-left: -8px; }.runner-speed i:last-child { width: 15px; margin-left: 7px; }
-  .runner-body { animation: runner-bounce .36s steps(2,end) infinite; }
-  .runner-front-leg { transform-origin: 19px 35px; animation: runner-stride .72s steps(2,end) infinite; }
-  .runner-back-leg { transform-origin: 22px 35px; animation: runner-stride .72s steps(2,end) -.36s infinite; }
-  .runner-front-arm { transform-origin: 13px 26px; animation: runner-arms .72s steps(2,end) -.36s infinite; }
-  .runner-back-arm { transform-origin: 27px 26px; animation: runner-arms .72s steps(2,end) infinite; }
-  .runner-track { animation: runner-ground .72s linear infinite; }.runner-speed { animation: runner-speed .36s steps(2,end) infinite; }
-  .runner-card .runner-body, .runner-card .runner-front-leg, .runner-card .runner-back-leg, .runner-card .runner-front-arm, .runner-card .runner-back-arm, .runner-card .runner-track, .runner-card .runner-speed { animation-play-state: paused; }
+  .runner-body { animation: runner-bounce .4s steps(1,end) infinite; }
+  .runner-leg-right { --leg-phase: -.4s; }
+  .runner-leg-frame { opacity: 0; animation: .8s steps(1,end) var(--leg-phase, 0s) infinite; }
+  .runner-contact { opacity: 1; animation-name: runner-contact; }.runner-push { animation-name: runner-push; }.runner-lift { animation-name: runner-lift; }.runner-reach { animation-name: runner-reach; }
+  .runner-front-arm { animation: runner-arms .8s steps(1,end) -.4s infinite; }
+  .runner-back-arm { animation: runner-arms .8s steps(1,end) infinite; }
+  .runner-track { animation: runner-ground .8s linear infinite; }.runner-speed { animation: runner-speed .4s steps(2,end) infinite; }
+  .runner-card .runner-body, .runner-card .runner-leg-frame, .runner-card .runner-front-arm, .runner-card .runner-back-arm, .runner-card .runner-track, .runner-card .runner-speed { animation-play-state: paused; }
   .runner-card:focus-within .runner-scene * { animation-play-state: running; }
   @media (hover: hover) and (pointer: fine) { .runner-card:hover .runner-scene * { animation-play-state: running; } }
-  @keyframes runner-bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
-  @keyframes runner-stride { 0%,100% { transform: rotate(-24deg); } 50% { transform: rotate(23deg); } }
-  @keyframes runner-arms { 0%,100% { transform: rotate(-13deg); } 50% { transform: rotate(16deg); } }
+  @keyframes runner-bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-1px); } }
+  @keyframes runner-contact { 0% { opacity: 1; } 25%,100% { opacity: 0; } }
+  @keyframes runner-push { 0%,50%,100% { opacity: 0; } 25% { opacity: 1; } }
+  @keyframes runner-lift { 0%,75%,100% { opacity: 0; } 50% { opacity: 1; } }
+  @keyframes runner-reach { 0%,100% { opacity: 0; } 75% { opacity: 1; } }
+  @keyframes runner-arms { 0%,100% { transform: translate(0,1px); } 50% { transform: translate(1px,-1px); } }
   @keyframes runner-ground { to { background-position: -66px 0; } }
   @keyframes runner-speed { 50% { opacity: .45; transform: translateX(-3px); } }
   @media (max-width: 1180px) and (min-width: 961px) { .runner-card { padding: 20px; }.runner-card h2 { font-size: 23px; } }
   @media (max-width: 620px) { .runner-card { padding: 20px 25px 18px; min-height: 330px; }.runner-card h2 { max-width: 340px; font-size: 27px; }.runner-scene { height: 150px; } }
   @media (max-width: 375px) { .runner-card { padding: 18px 20px; }.runner-card h2 { font-size: 24px; } }
-  @media (prefers-reduced-motion: reduce) { .runner-scene * { animation: none !important; } }
+  @media (prefers-reduced-motion: reduce) { .runner-scene * { animation: none !important; }.runner-leg-frame { opacity: 0; }.runner-contact { opacity: 1; } }
 }

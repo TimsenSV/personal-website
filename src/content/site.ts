@@ -23,7 +23,7 @@ export type PortfolioConfig = {
     introduction: string
     personal: string
     focus: string
-    pixelAvatar: { hair: string; skin: string; shirt: string; trousers: string; chalkBag: string }
+    pixelAvatar: { hair: string; hairHighlight: string; skin: string; shirt: string; trousers: string; chalkBag: string }
     portrait: ImageAsset | null
     email: string | null
     linkedinUrl: string | null
@@ -50,8 +50,8 @@ export const siteConfig: PortfolioConfig = {
     introduction: 'Mich interessiert, wie aus komplexen Abläufen verständliche und nützliche Produkte werden.',
     personal: 'Zwischen Produktideen, Musik im Ohr und dem nächsten Griff.',
     focus: 'Wie KI im E-Commerce wirklich nützlich wird.',
-    // Stilisiertes Spiel-Avatar; Farben sind frei gewählt, kein echtes Porträt.
-    pixelAvatar: { hair: '#3b3034', skin: '#edbb96', shirt: '#3159f5', trousers: '#30394f', chalkBag: '#ff7140' },
+    // Stilisiertes Spiel-Avatar mit braunblondem Haar nach eigener Angabe; kein Porträt.
+    pixelAvatar: { hair: '#9b774b', hairHighlight: '#ccb27b', skin: '#edbb96', shirt: '#3159f5', trousers: '#30394f', chalkBag: '#ff7140' },
     portrait: null,
     email: null,
     linkedinUrl: null,
