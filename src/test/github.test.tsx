@@ -2,6 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { GithubDetail } from '../components/Widgets'
+import { calendarFixture } from './fixtures/calendar'
 import { fetchGitHubActivity } from '../services/github'
 
 const exampleEvent = { id: '1', type: 'PushEvent', repo: { name: 'octocat/Hello-World' }, created_at: '2026-11-15T12:00:00Z' }
@@ -10,28 +11,29 @@ describe('GitHub data and independent fallback states', () => {
   it('makes no request without a configured username', () => {
     const fetch = vi.fn()
     vi.stubGlobal('fetch', fetch)
-    render(<GithubDetail config={{ username: null, repositories: [] }}/>)
+    render(<GithubDetail config={{ username: null, repositories: [], playfulPullRequests: [] }}/>)
     expect(screen.getByText(/noch kein GitHub-Profil verbunden/)).toBeVisible()
     expect(fetch).not.toHaveBeenCalled()
   })
   it('shows loading, then real contextual activity', async () => {
-    const fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => [exampleEvent] })
+    const fetch = vi.fn(async (url: string) => ({ ok: true, json: async () => url.includes('github-contributions.json') ? calendarFixture('octocat') : [exampleEvent] }))
     vi.stubGlobal('fetch', fetch)
-    render(<GithubDetail config={{ username: 'octocat', repositories: [] }}/>)
-    expect(screen.getByRole('status')).toHaveTextContent(/wird von GitHub geladen/)
+    render(<GithubDetail config={{ username: 'octocat', repositories: [], playfulPullRequests: [] }}/>)
+    expect(screen.getByText(/Aktivität wird von GitHub geladen/)).toBeVisible()
     expect(await screen.findByText('Code weiterentwickelt')).toBeVisible()
     expect(screen.getByRole('link', { name: /octocat\/Hello-World/ })).toHaveAttribute('href', 'https://github.com/octocat/Hello-World')
-    expect(fetch.mock.calls[0][1].headers).not.toHaveProperty('Authorization')
+    expect(JSON.stringify(fetch.mock.calls)).not.toContain('Authorization')
   })
   it('shows a genuine empty state for an empty activity response', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => [] }))
-    render(<GithubDetail config={{ username: 'octocat', repositories: [] }}/>)
+    render(<GithubDetail config={{ username: 'octocat', repositories: [], playfulPullRequests: [] }}/>)
     expect(await screen.findByText(/keine öffentlichen Aktivitäten sichtbar/)).toBeVisible()
   })
   it('recovers from rate limiting through an explicit retry', async () => {
-    const fetch = vi.fn().mockResolvedValueOnce({ ok: false, status: 403 }).mockResolvedValueOnce({ ok: true, json: async () => [exampleEvent] })
+    let activityCalls = 0
+    const fetch = vi.fn(async (url: string) => url.includes('github-contributions.json') ? { ok: true, json: async () => calendarFixture('octocat') } : ++activityCalls === 1 ? { ok: false, status: 403 } : { ok: true, json: async () => [exampleEvent] })
     vi.stubGlobal('fetch', fetch)
-    render(<GithubDetail config={{ username: 'octocat', repositories: [] }}/>)
+    render(<GithubDetail config={{ username: 'octocat', repositories: [], playfulPullRequests: [] }}/>)
     expect(await screen.findByText(/GitHub macht gerade eine Pause/)).toBeVisible()
     await userEvent.click(screen.getByRole('button', { name: 'Erneut versuchen' }))
     await waitFor(() => expect(screen.getByText('Code weiterentwickelt')).toBeVisible())

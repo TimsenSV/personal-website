@@ -1,0 +1,46 @@
+@layer widgets {
+  .github-card.heatmap-card { padding: 19px 23px 16px; background: #fff; min-height: 355px; }
+  .heatmap-card .widget-top { margin-bottom: 12px; gap: 12px; }
+  .heatmap-card .widget-top > .external-link { margin-left: auto; font: 9px var(--mono); color: #606d88; }
+  .github-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 16px; }
+  .github-heading h2 { font-size: 22px; line-height: 1.2; letter-spacing: -.7px; }
+  .github-heading > a { font: 9px var(--mono); color: #606d88; min-height: 32px; }
+  .contribution-calendar { min-width: 0; width: 100%; }
+  .heatmap-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; font: 8px var(--mono); color: #64708a; }
+  .heatmap-heading > strong { font-size: 9px; font-weight: 500; color: #36578f; }
+  .heatmap-svg { display: block; width: 100%; height: auto; margin-top: 9px; overflow: visible; }
+  .heatmap-month { font: 6px var(--mono); fill: #64708a; }
+  .heatmap-svg rect { transition: opacity .15s; }.heatmap-svg rect:hover { opacity: .65; }
+  .heatmap-caption { padding: 6px 0 0; display: flex; justify-content: space-between; gap: 10px; font-size: 8px; color: #64708a; }
+  .heatmap-legend { display: inline-flex; align-items: center; gap: 3px; font-size: 7px; }.heatmap-legend > i { width: 6px; height: 6px; border-radius: 1px; }
+  .heatmap-updated { font: 7px/1.4 var(--mono); color: #69758a; margin-top: 7px; }
+  .contribution-empty { min-height: 140px; position: relative; display: flex; flex-direction: column; justify-content: center; }
+  .contribution-empty > p { font-size: 11px; margin-top: 10px; color: #626e87; }.contribution-empty .text-button { color: var(--blue); }
+  .heatmap-placeholder { display: grid; grid-template-columns: repeat(26,minmax(0,1fr)); gap: 3px; }.heatmap-placeholder > i { aspect-ratio: 1; border-radius: 2px; background: #edf0f7; }
+  .playful-prs { border-top: 1px dashed #dfe5f0; margin-top: 13px; }
+  .pr-toggle { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0; background: none; min-height: 39px; width: 100%; text-align: left; color: #4d5d7c; font-size: 10px; }
+  .pr-toggle small { font: 7px var(--mono); margin-left: 6px; padding: 3px 5px; background: #eef2fa; border-radius: 3px; color: #58647d; white-space: nowrap; }.pr-toggle > svg { transition: transform .2s; }.is-revealed .pr-toggle > svg { transform: rotate(180deg); }
+  .pr-roll-area { position: relative; height: 113px; perspective: 700px; }
+  .pr-invitation { position: absolute; inset: 10px 0; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 13px; line-height: 1.5; text-align: center; color: #65728d; transition: opacity .16s; }.pr-invitation > span { font: 8px var(--mono); margin-top: 9px; color: #3159f5; }
+  .pr-roll { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; pointer-events: none; }
+  .pr-roll > li { display: flex; align-items: center; gap: 9px; min-height: 33px; padding: 5px 9px; border: 1px solid #dfe5f1; background: #fff; border-radius: 7px; box-shadow: 0 3px 6px #152c5b09; opacity: 0; transform: translateY(24px) rotateX(-35deg); transform-origin: center bottom; transition: transform .38s cubic-bezier(.16,.8,.25,1), opacity .24s; transition-delay: calc(var(--pr-order) * 65ms); }
+  .pr-roll > li > svg { color: #6f51cb; }.pr-roll > li > span:nth-child(2) { min-width: 0; }.pr-roll strong { display: block; font-size: 9px; line-height: 1.25; font-weight: 550; color: #2c3852; }.pr-roll small { display: block; font: 7px var(--mono); color: #68768f; margin-top: 3px; }.pr-draft { font: 6px var(--mono); margin-left: auto; color: #7657b5; padding: 3px 4px; background: #f0eafa; border-radius: 3px; }
+  .is-revealed .pr-roll > li { opacity: 1; transform: none; }.is-revealed .pr-invitation { opacity: 0; }
+  .github-repo-footer { padding-top: 13px; margin-top: auto; }
+  .repo-chip { display: flex; align-items: center; gap: 8px; padding: 8px 10px; min-height: 44px; width: 100%; text-align: left; border: 1px solid #e5e9f2; border-radius: 6px; background: #f7f9fd; color: #50627f; font: 9px var(--mono); }.repo-chip > span { overflow-wrap: anywhere; }.repo-chip > svg:last-child { margin-left: auto; }
+  .standard-detail > .contribution-calendar { margin-top: 28px; background: #f8faff; border: 1px solid #e3e9f4; padding: 20px; border-radius: 12px; }
+  .is-full .heatmap-heading { font-size: 11px; }.is-full .heatmap-heading > strong { font-size: 12px; }.is-full .heatmap-caption { font-size: 10px; }.is-full .heatmap-updated { font-size: 9px; }.is-full > .small-note { margin-top: 12px; }
+  @media (max-width: 1180px) and (min-width: 961px) {
+    .github-card.heatmap-card { padding: 19px 18px 15px; }.github-heading h2 { font-size: 19px; }.github-heading > a { font-size: 8px; }.pr-roll > li { padding: 7px; gap: 6px; }.pr-draft { display: none; }
+  }
+  @media (max-width: 620px) {
+    .github-card.heatmap-card { padding: 20px 24px 18px; }.github-heading h2 { font-size: 22px; }.pr-roll-area { height: 125px; }.pr-roll > li { min-height: 37px; }.pr-roll strong { font-size: 10px; }.heatmap-heading { font-size: 9px; }.heatmap-caption { font-size: 8px; }.github-heading > a { font-size: 9px; }
+    .standard-detail > .contribution-calendar { padding: 14px; }.is-full .heatmap-heading { flex-direction: column; gap: 6px; }.is-full .heatmap-caption { flex-wrap: wrap; }.is-full .heatmap-updated { font-size: 8px; }
+  }
+  @media (max-width: 375px) {
+    .github-card.heatmap-card { padding-left: 20px; padding-right: 20px; }.github-heading { flex-wrap: wrap; gap: 0; margin-bottom: 12px; }.github-heading h2 { font-size: 20px; }.github-heading > a { min-height: 28px; }.pr-draft { display: none; }.pr-roll > li { gap: 6px; }.pr-roll strong { font-size: 9px; }.heatmap-caption { font-size: 7px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pr-roll > li, .is-revealed .pr-roll > li, .pr-toggle > svg, .is-revealed .pr-toggle > svg { transform: none; }
+  }
+}

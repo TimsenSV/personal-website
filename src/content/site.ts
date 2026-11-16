@@ -23,12 +23,14 @@ export type PortfolioConfig = {
     introduction: string
     personal: string
     focus: string
+    pixelAvatar: { hair: string; skin: string; shirt: string; trousers: string; chalkBag: string }
     portrait: ImageAsset | null
     email: string | null
     linkedinUrl: string | null
   }
   github: {
     username: string | null
+    playfulPullRequests: { title: string; tag: string }[]
     repositories: { name: string; description: string; url: string | null; tags: string[] }[]
   }
   spotify: { title: string; note: string; url: string | null; cover: ImageAsset | null }
@@ -48,12 +50,19 @@ export const siteConfig: PortfolioConfig = {
     introduction: 'Mich interessiert, wie aus komplexen Abläufen verständliche und nützliche Produkte werden.',
     personal: 'Zwischen Produktideen, Musik im Ohr und dem nächsten Griff.',
     focus: 'Wie KI im E-Commerce wirklich nützlich wird.',
+    // Stilisiertes Spiel-Avatar; Farben sind frei gewählt, kein echtes Porträt.
+    pixelAvatar: { hair: '#3b3034', skin: '#edbb96', shirt: '#3159f5', trousers: '#30394f', chalkBag: '#ff7140' },
     portrait: null,
     email: null,
     linkedinUrl: null,
   },
   github: {
-    username: null,
+    username: 'TimsenSV',
+    playfulPullRequests: [
+      { title: 'KI sagt jetzt auch mal „weiß ich nicht“', tag: 'fix / hallucinations' },
+      { title: 'Kontextfenster kann jetzt stoßlüften', tag: 'feat / context' },
+      { title: 'Agenten aus der Endlosschleife abholen', tag: 'chore / agents' },
+    ],
     repositories: [{
       name: 'personal-website',
       description: 'Dieses kleine Stück Internet. Eine persönliche Canvas zum Entdecken und Weiterbauen.',

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { ArrowUpRight, Check, RotateCcw } from 'lucide-react'
+import { ChalkClimber } from './ChalkClimber'
 import { createGame, holds, isReachable, MAX_MOVES, moveTo } from '../game/boulder'
 
 export function BoulderPreview() {
@@ -25,7 +26,7 @@ export function BoulderGame() {
   const current = game.path[game.path.length - 1]
   const points = game.path.map((id) => holds.find((hold) => hold.id === id)!).map((hold) => `${hold.x},${hold.y}`).join(' ')
   return <div className="boulder-game">
-    <div className="game-intro"><div className="game-heading"><p className="eyebrow">Kleine Pause / Boulder No. 01</p><h3>Erst denken.<br/><em>Dann greifen.</em></h3><p>Finde deinen Weg zum Top. Du hast {MAX_MOVES} Züge — und nicht jeder Griff führt nach oben.</p></div>
+    <div className="game-intro"><div className="game-heading"><ChalkClimber compact/><p className="eyebrow">Kleine Pause / Boulder No. 01</p><h3>Erst denken.<br/><em>Dann greifen.</em></h3><p>Finde deinen Weg zum Top. Du hast {MAX_MOVES} Züge — und nicht jeder Griff führt nach oben.</p></div>
       <details className="game-instructions"><summary>So geht’s</summary><p>Klicke oder tippe auf einen Griff. Umrandete Griffe sind in Reichweite. Mit <kbd>Tab</kbd> und <kbd>Enter</kbd> geht es auch per Tastatur. Jeder Wechsel kostet einen Zug, auch der Rückweg.</p></details>
       <div className="game-controls">
       <div className="energy-meter" aria-label={`${game.remaining} von ${MAX_MOVES} Zügen übrig`}><span className="eyebrow">Noch Kraft für</span><div aria-hidden="true">{Array.from({ length: MAX_MOVES }, (_, i) => <span key={i} className={i < game.remaining ? 'energy-full' : ''}/>)}</div><strong>{game.remaining} {game.remaining === 1 ? 'Zug' : 'Züge'}</strong></div>

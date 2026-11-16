@@ -11,7 +11,7 @@ describe('canvas interactions', () => {
     render(<App/>)
     for (const name of ['shopvibes', 'showcase', 'Backlane']) expect(screen.getByRole('button', { name: `${name}: Details öffnen` })).toBeVisible()
     const dock = screen.getByRole('navigation', { name: 'Schnellnavigation' })
-    expect(within(dock).getAllByRole('link')).toHaveLength(2)
+    expect(within(dock).getAllByRole('link')).toHaveLength(3)
     expect(within(dock).getByRole('link', { name: 'Arbeit' })).toHaveAttribute('href', '#work')
     expect(within(dock).queryByRole('link', { name: /LinkedIn/ })).not.toBeInTheDocument()
   })

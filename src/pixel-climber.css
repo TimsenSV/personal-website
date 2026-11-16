@@ -1,0 +1,62 @@
+@layer widgets {
+  .boulder-scene { position: relative; display: flex; flex: 1; min-width: 0; }
+  .boulder-scene .boulder-preview-button { min-width: 0; }
+  .boulder-avatar { position: absolute; right: -9px; bottom: 12px; z-index: 2; }
+  .chalk-climber { position: relative; width: 120px; padding: 0 0 7px; background: none; border-radius: 10px; color: #30394f; }
+  .pixel-climber { width: 120px; height: 156px; display: block; overflow: visible; image-rendering: pixelated; }
+  .climber-name { display: inline-block; font: 10px/1.45 var(--mono); letter-spacing: .3px; background: #fff; padding: 5px 9px; border: 1px solid #dce3f3; border-radius: 4px; box-shadow: 2px 2px 0 #dce3f3; }
+  .climber-name > span { display: block; margin-top: 2px; font-size: 8px; color: #596582; }
+  .climber-bubble { position: absolute; pointer-events: none; top: 0; right: -4px; padding: 7px 9px; color: #394663; background: #fff; border: 1px solid #d3dcef; box-shadow: 2px 2px 0 #dce3f3; font: 8px var(--mono); white-space: nowrap; opacity: 0; }
+  .climber-bubble::after { content: ''; position: absolute; width: 5px; height: 5px; background: #fff; border-right: 1px solid #d3dcef; border-bottom: 1px solid #d3dcef; bottom: -4px; left: 40%; transform: rotate(45deg); }
+  .chalk-climber:focus-visible .climber-bubble { opacity: 1; }
+  @media (hover: hover) and (pointer: fine) {
+    .boulder-card:hover .climber-bubble, .chalk-climber:hover .climber-bubble { opacity: 1; }
+  }
+
+  .pixel-pose-rub, .pixel-pose-clap, .chalk-puff, .pixel-chalk-spark { opacity: 0; }
+  /* One short sequence per entry or tap. No idle loop, timers or continuous rendering. */
+  .is-chalking .pixel-pose-idle { animation: chalk-idle 1.9s steps(1,end) both; }
+  .is-chalking .pixel-pose-rub { animation: chalk-rub 1.9s steps(1,end) both; }
+  .is-chalking .pixel-pose-clap { animation: chalk-clap 1.9s steps(1,end) both; }
+  .is-chalking .pixel-hand-left { animation: chalk-hand-left .2s steps(1,end) .15s 5; }
+  .is-chalking .pixel-hand-right { animation: chalk-hand-right .2s steps(1,end) .15s 5; }
+  .is-chalking .pixel-body { animation: chalk-brace 1.9s steps(1,end) both; }
+  .is-chalking .puff-left { animation: chalk-puff-left 1.9s steps(5,end) both; }
+  .is-chalking .puff-right { animation: chalk-puff-right 1.9s steps(5,end) both; }
+  .is-chalking .puff-up { animation: chalk-puff-up 1.9s steps(5,end) both; }
+  .is-chalking .pixel-chalk-spark { animation: chalk-spark 1.9s steps(1,end) both; }
+  @keyframes chalk-idle { 0%, 7% { opacity: 1; } 8%, 87% { opacity: 0; } 88%, 100% { opacity: 1; } }
+  @keyframes chalk-rub { 0%, 7% { opacity: 0; } 8%, 57% { opacity: 1; } 58%, 100% { opacity: 0; } }
+  @keyframes chalk-clap { 0%, 57% { opacity: 0; } 58%, 87% { opacity: 1; } 88%, 100% { opacity: 0; } }
+  @keyframes chalk-hand-left { 0%, 100% { transform: translate(0,0); } 50% { transform: translate(1px,-1px); } }
+  @keyframes chalk-hand-right { 0%, 100% { transform: translate(0,0); } 50% { transform: translate(-1px,1px); } }
+  @keyframes chalk-brace { 0%, 7% { transform: translateY(0); } 8%, 57% { transform: translateY(1px); } 58%, 100% { transform: translateY(0); } }
+  @keyframes chalk-puff-left { 0%, 50% { opacity: 0; transform: translate(0,2px); } 57% { opacity: 1; } 89%, 100% { opacity: 0; transform: translate(-8px,-7px); } }
+  @keyframes chalk-puff-right { 0%, 50% { opacity: 0; transform: translate(0,2px); } 57% { opacity: 1; } 89%, 100% { opacity: 0; transform: translate(8px,-6px); } }
+  @keyframes chalk-puff-up { 0%, 50% { opacity: 0; transform: translateY(4px); } 57% { opacity: 1; } 89%, 100% { opacity: 0; transform: translateY(-7px); } }
+  @keyframes chalk-spark { 0%, 62% { opacity: 0; } 63%, 72% { opacity: 1; } 73%, 100% { opacity: 0; } }
+
+  .game-heading { position: relative; }
+  .game-heading > .chalk-climber { position: absolute; right: -10px; top: -12px; }
+  .chalk-climber.is-compact { width: 72px; padding: 0; }
+  .is-compact .pixel-climber { width: 72px; height: 94px; }
+  .is-compact .climber-name { display: none; }
+  .is-compact .climber-bubble { top: -8px; right: 0; }
+  .game-heading > .eyebrow { padding-right: 60px; }
+  .game-heading > h3 { padding-right: 50px; }
+  @media (max-width: 620px) {
+    .boulder-avatar { right: -7px; bottom: 12px; }
+    .game-heading > .chalk-climber { top: -5px; right: -5px; }
+    .game-heading > h3 { padding-right: 60px; }
+    .game-heading > p:not(.eyebrow) { margin-top: 18px; }
+  }
+  @media (max-width: 375px) {
+    .boulder-avatar { right: -13px; }
+    .chalk-climber:not(.is-compact) { width: 112px; }
+    .chalk-climber:not(.is-compact) .pixel-climber { width: 112px; height: 146px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pixel-climber *, .pixel-climber *::before, .pixel-climber *::after { animation: none !important; }
+    .pixel-pose-idle { opacity: 1; }.pixel-pose-rub, .pixel-pose-clap, .chalk-puff, .pixel-chalk-spark { opacity: 0; }
+  }
+}

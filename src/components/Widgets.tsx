@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { ArrowRight, ArrowUpRight, AudioLines, Camera, Code2, Footprints, GitBranch, Github, ImagePlus, Linkedin, Play, Plus, Sparkles } from 'lucide-react'
 import type { PortfolioConfig } from '../content/site'
 import { assetUrl, externalUrl, githubProfile, spotifyPlaylist } from '../lib/links'
@@ -6,6 +7,8 @@ import { BoulderPreview } from './BoulderGame'
 import { ExternalLink } from './ExternalLink'
 import { RouteDrawing, SpotifyMark } from './Icons'
 import { Popout } from './Popout'
+import { ChalkClimber } from './ChalkClimber'
+import { GitHubHeatmap } from './GitHubHeatmap'
 
 export function IntroWidget({ profile }: { profile: PortfolioConfig['profile'] }) {
   return <section className="card intro-card" aria-labelledby="intro-title">
@@ -21,28 +24,10 @@ export function IntroWidget({ profile }: { profile: PortfolioConfig['profile'] }
   </section>
 }
 
-export function GithubWidget({ config, onOpen }: { config: PortfolioConfig['github']; onOpen: () => void }) {
-  const selected = config.repositories[0]
-  const profile = githubProfile(config.username)
-  return <section className="card github-card" aria-labelledby="github-title"><div className="widget-top"><span className="eyebrow"><Github size={16}/> Werkbank</span><button className="round-link" onClick={onOpen} aria-label="GitHub und Experimente öffnen"><ArrowUpRight size={18}/></button></div>
-    <h2 id="github-title">Was wäre, wenn …</h2>
-    <Popout className="folder-popout" buttonClassName="repo-folder" label="Repository-Vorschau öffnen" title="Auf der Werkbank" action={{ label: 'Mehr aus der Werkbank', onClick: onOpen }} trigger={<>
-      <span className="folder-back" aria-hidden="true"/>
-      <span className="folder-paper paper-code" aria-hidden="true"><span><i/><i/><i/></span><code>&lt;Idee /&gt;</code><span className="code-line"/><span className="code-line short"/></span>
-      <span className="folder-paper paper-readme" aria-hidden="true"><Code2 size={20}/><strong>README.md</strong><span>Eine Idee.<br/>Etwas Code.<br/>Mal sehen.</span></span>
-      <span className="folder-front"><GitBranch size={19}/><strong>{selected?.name ?? 'Nächste Idee'}</strong><span>{selected?.url ? 'Repository ansehen' : 'Ein lokales Experiment'}<Plus size={14}/></span></span>
-      <span className="folder-hint" aria-hidden="true">Ein Blick hinein ↗</span>
-    </>}>
-      <><div className="popout-icon"><Code2 size={24}/></div><h3>{selected?.name ?? 'Raum für die nächste Idee'}</h3><p>{selected?.description ?? 'Mein nächstes Experiment bekommt hier seinen Platz.'}</p>{selected && <div className="tag-row">{selected.tags.map(tag => <span key={tag}>{tag}</span>)}</div>}{!profile && <span className="small-note">GitHub ist noch nicht verbunden.</span>}</>
-    </Popout>
-    <div className="widget-bottom"><span className="status-label"><i className={profile ? 'is-configured' : ''}/>{profile ? 'Öffentliche Aktivität ansehen' : 'GitHub-Profil folgt'}</span>{profile ? <ExternalLink href={profile}>GitHub</ExternalLink> : <span className="small-note">Work in progress.</span>}</div>
-  </section>
-}
-
 export function GithubDetail({ config }: { config: PortfolioConfig['github'] }) {
   const { state, retry } = useGitHubActivity(config.username)
   return <div className="standard-detail"><p className="eyebrow"><Github size={16}/> Die Werkbank</p><h3>Von „Was wäre, wenn“<br/><em>zu „Schau mal“.</em></h3><p>Ein Platz für Experimente, kleine Werkzeuge und Dinge, an denen ich weiterdenke.</p>
-    <section className="activity-section"><h4>Öffentliche GitHub-Aktivität</h4>
+    <GitHubHeatmap username={config.username} full/><section className="activity-section"><h4>Öffentliche GitHub-Aktivität</h4>
       {state.status === 'idle' && <div className="honest-empty"><GitBranch size={25}/><p>Hier ist noch kein GitHub-Profil verbunden.<span>Sobald mein Nutzername hinterlegt ist, erscheinen hier echte öffentliche Aktivitäten.</span></p></div>}
       {state.status === 'loading' && <p role="status" className="loading-copy">Aktivität wird von GitHub geladen …</p>}
       {state.status === 'empty' && <p className="honest-empty" role="status">Im aktuellen GitHub-Zeitraum sind keine öffentlichen Aktivitäten sichtbar. Das heißt nicht, dass nichts entsteht.</p>}
@@ -84,5 +69,6 @@ export function RunningDetail({ config }: { config: PortfolioConfig['running'] }
 }
 
 export function BoulderWidget({ onOpen }: { onOpen: () => void }) {
-  return <section className="card boulder-card" aria-labelledby="boulder-title"><div className="widget-top"><span className="eyebrow"><Sparkles size={15}/> Kopf & Hände</span><span className="tiny-tag">Spielbar</span></div><div className="boulder-heading"><h2 id="boulder-title">Noch ein<br/>Versuch.</h2><span className="boulder-number" aria-hidden="true">01</span></div><p className="widget-copy">Ein kleines Problem. Dein Weg nach oben.</p><button className="boulder-preview-button" onClick={onOpen} aria-label="Boulder-Problem vergrößern und spielen"><BoulderPreview/><span className="boulder-ticket" aria-hidden="true"><span>BOULDER CLUB</span><strong>7 Züge.<br/>Du bist dran.</strong><ArrowUpRight size={23}/></span><span className="board-open-hint"><Play size={12} fill="currentColor"/> Losklettern</span></button><div className="boulder-bottom"><span>Erst die Route lesen. Dann los.</span><button className="round-link" onClick={onOpen} aria-label="Boulder-Minispiel starten"><ArrowUpRight size={18}/></button></div></section>
+  const [chalkCue, setChalkCue] = useState(0)
+  return <section className="card boulder-card" aria-labelledby="boulder-title" onPointerEnter={(event) => { if (event.pointerType !== 'touch') setChalkCue(value => value + 1) }} onFocus={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setChalkCue(value => value + 1) }}><div className="widget-top"><span className="eyebrow"><Sparkles size={15}/> Kopf & Hände</span><span className="tiny-tag">Spielbar</span></div><div className="boulder-heading"><h2 id="boulder-title">Noch ein<br/>Versuch.</h2><span className="boulder-number" aria-hidden="true">01</span></div><p className="widget-copy">Ein kleines Problem. Dein Weg nach oben.</p><div className="boulder-scene"><button className="boulder-preview-button" onClick={onOpen} aria-label="Boulder-Problem vergrößern und spielen"><BoulderPreview/><span className="board-open-hint"><Play size={12} fill="currentColor"/> Losklettern</span></button><div className="boulder-avatar"><ChalkClimber cue={chalkCue}/></div></div><div className="boulder-bottom"><span>Erst die Route lesen. Dann los.</span><button className="round-link" onClick={onOpen} aria-label="Boulder-Minispiel starten"><ArrowUpRight size={18}/></button></div></section>
 }
