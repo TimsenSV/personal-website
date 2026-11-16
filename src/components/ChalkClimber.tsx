@@ -19,11 +19,16 @@ export function ChalkClimber({ cue = 0, compact = false }: { cue?: number; compa
         <path d="M14 35h3v8h-3zM24 35h2v8h-2z" fill="#6e7894"/>
         <path d="M12 44h7v4h-9v-2h2zM22 44h6v2h3v2h-9z" fill="#171c2c"/>
         <path d="M10 47h9v1h-9zM22 47h9v1h-9z" fill="#8294bf"/>
+        <g className="pixel-upper-body">
         <path d="M14 21h13v2h4v6h-4v7H14v-7h-4v-6h4z" fill="var(--pixel-shirt)"/>
         <path d="M15 23h2v10h-2zM11 24h3v2h-3z" fill="#a1b9ff"/>
         <path d="M24 25h2v10h-2z" fill="#142d86" opacity=".45"/>
         <path d="M18 20h6v3h-6z" fill="var(--pixel-skin)"/>
         <PixelTimHead/>
+        <g className="pixel-cough-face">
+          <path d="M17 14h3v2h-3zM24 14h3v2h-3zM21 18h3v2h-3z" fill="var(--pixel-skin)"/>
+          <path d="M17 14h2v1h1v1h-3v-1h1zM24 14h2v1h1v1h-3v-1h1zM21 18h3v2h-3z" fill="#29263a"/>
+        </g>
         <path d="M14 34h13v1H14z" fill="#20273a"/>
         <path d="M27 31h6v7h-1v1h-4v-1h-1z" fill="var(--pixel-chalkBag)"/>
         <path d="M27 31h6v2h-6z" fill="#fff"/>
@@ -40,6 +45,11 @@ export function ChalkClimber({ cue = 0, compact = false }: { cue?: number; compa
           <path d="M10 27h4v3h2v-4h4v3h-2v4h-5v-1h-3zM28 27h3v5h-3v1h-4v-4h-1v-3h4v4h1z"/>
           <path d="M16 25h4v2h-4zM23 25h4v2h-4z" fill="#fff"/>
         </g>
+        <g className="pixel-pose-cough" fill="var(--pixel-skin)">
+          <path d="M10 27h4v4h6v3h-7v-2h-3zM28 27h3v-4h-3v-3h-3v-2h-3v4h3v4h3z"/>
+          <path d="M22 18h3v1h-3z" fill="#fff"/>
+        </g>
+        </g>
       </g>
       <g className="pixel-chalk-cloud" fill="#fff" stroke="#c6d3ed" strokeWidth=".3">
         <path className="chalk-puff puff-left" d="M16 22h3v3h-3zM13 27h2v2h-2zM17 29h1v1h-1z"/>
@@ -47,6 +57,7 @@ export function ChalkClimber({ cue = 0, compact = false }: { cue?: number; compa
         <path className="chalk-puff puff-up" d="M21 19h3v3h-3zM19 25h2v2h-2zM24 26h2v2h-2z"/>
       </g>
       <g className="pixel-chalk-spark" fill="#fff"><path d="M9 18h2v2H9zM32 17h2v2h-2zM22 13h1v1h-1z"/></g>
+      <g className="pixel-cough-puff" fill="#fff" stroke="#a9bad9" strokeWidth=".3"><path d="M30 19h2v2h-2zM33 17h2v2h-2zM34 22h1v1h-1z"/></g>
     </svg>
     <span className="climber-name" aria-hidden="true">{siteConfig.profile.name}</span>
   </button>

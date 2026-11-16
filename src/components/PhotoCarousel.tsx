@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight, Camera } from 'lucide-react'
 import type { ProfilePhoto } from '../content/site'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { assetUrl } from '../lib/links'
+import { PhotoLightbox, type PhotoOrigin } from './PhotoLightbox'
 
 type Gesture = { pointer: number; x: number; y: number; width: number; axis: 'pending' | 'horizontal' | 'vertical'; offset: number }
 type Departure = { photo: ProfilePhoto; index: number; direction: number; offset: number }
@@ -18,8 +19,10 @@ function PhotoPrint({ photo, index, total }: { photo: ProfilePhoto; index: numbe
   return <><PhotoImage key={photo.src} photo={photo}/><span className="polaroid-caption"><span>{photo.placeholder ? 'Platzhalter' : photo.caption ?? 'Ein bisschen ich.'}</span><span>{String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}</span></span></>
 }
 
-export function PhotoCarousel({ photos, name }: { photos: ProfilePhoto[]; name: string }) {
-  const [index, setIndex] = useState(0)
+function PhotoDeck({ photos, name, index, onChange, onOpen, expanded = false, concealed = false }: {
+  photos: ProfilePhoto[]; name: string; index: number; onChange: (index: number) => void
+  onOpen?: (trigger: HTMLButtonElement) => void; expanded?: boolean; concealed?: boolean
+}) {
   const [offset, setOffset] = useState(0)
   const [dragging, setDragging] = useState(false)
   const [departure, setDeparture] = useState<Departure | null>(null)
@@ -43,7 +46,7 @@ export function PhotoCarousel({ photos, name }: { photos: ProfilePhoto[]; name: 
       busy.current = true
       setDeparture({ photo: photos[current], index: current, direction, offset: dragOffset })
     }
-    setIndex((current + direction + photos.length) % photos.length)
+    onChange((current + direction + photos.length) % photos.length)
     setOffset(0)
     setDragging(false)
   }
@@ -88,21 +91,26 @@ export function PhotoCarousel({ photos, name }: { photos: ProfilePhoto[]; name: 
 
   if (!photos.length) return <div className="photo-carousel photo-empty" role="img" aria-label="Platz für persönliche Fotos"><Camera size={32}/><span>Fotos folgen.</span></div>
 
-  return <div className={`photo-carousel ${dragging ? 'is-dragging' : ''} ${departure ? 'is-flipping' : ''}`} role="region" aria-roledescription="Karussell" aria-label={`Fotos von ${name}`} onKeyDown={event => {
+  return <div className={`photo-carousel ${expanded ? 'photo-carousel-large' : ''} ${concealed ? 'is-open' : ''} ${dragging ? 'is-dragging' : ''} ${departure ? 'is-flipping' : ''}`} role="region" aria-roledescription="Karussell" aria-label={`Fotos von ${name}`} onKeyDown={event => {
     if (event.altKey || event.ctrlKey || event.metaKey || !['ArrowLeft', 'ArrowRight'].includes(event.key)) return
     event.preventDefault()
     flip(event.key === 'ArrowRight' ? 1 : -1)
   }}>
-    <span id={hintId} className="sr-only">Mit Klick, Ziehen oder den Pfeiltasten durch die Fotos blättern.</span>
+    <span id={hintId} className="sr-only">{onOpen ? 'Mit Klick vergrößern. Mit Ziehen oder den Pfeiltasten durch die Fotos blättern.' : 'Mit Klick, Ziehen oder den Pfeiltasten durch die Fotos blättern.'}</span>
     <div className="photo-deck">
       {Array.from({ length: Math.min(photos.length - 1, 2) }, (_, depth) => {
         const back = (current + depth + 1) % photos.length
         return <div key={depth} className={`polaroid-frame photo-back photo-back-${depth + 1}`} aria-hidden="true"><PhotoPrint photo={photos[back]} index={back} total={photos.length}/></div>
       })}
-      <button className="polaroid-frame photo-current" aria-label="Fotos durchblättern" aria-describedby={hintId} disabled={!canFlip}
+      <button className="polaroid-frame photo-current" aria-label={onOpen ? 'Fotos vergrößern' : 'Fotos durchblättern'} aria-haspopup={onOpen ? 'dialog' : undefined} aria-describedby={hintId} disabled={!canFlip && !onOpen}
         style={{ '--drag-x': `${reducedMotion ? 0 : offset}px`, '--drag-tilt': `${reducedMotion ? 0 : offset / 18}deg` } as CSSProperties}
         onPointerDown={begin} onPointerMove={move} onPointerUp={finish} onPointerCancel={cancel} onLostPointerCapture={cancel}
-        onClick={event => { if (event.detail > 0 && suppressClick.current) { suppressClick.current = false; return } flip(1) }}>
+        onClick={event => {
+          if (event.detail > 0 && suppressClick.current) { suppressClick.current = false; return }
+          if (busy.current) return
+          if (onOpen) onOpen(event.currentTarget)
+          else flip(1)
+        }}>
         <PhotoPrint photo={photos[current]} index={current} total={photos.length}/>
       </button>
       {departure && <div className="polaroid-frame photo-departing" aria-hidden="true" style={{ '--flip-direction': -departure.direction, '--flip-start': `${departure.offset}px` } as CSSProperties}><PhotoPrint photo={departure.photo} index={departure.index} total={photos.length}/></div>}
@@ -110,4 +118,19 @@ export function PhotoCarousel({ photos, name }: { photos: ProfilePhoto[]; name: 
     {canFlip && <><button className="photo-nav photo-prev" aria-label="Vorheriges Foto" onClick={() => flip(-1)}><ArrowLeft size={15}/></button><button className="photo-nav photo-next" aria-label="Nächstes Foto" onClick={() => flip(1)}><ArrowRight size={15}/></button></>}
     <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">Foto {current + 1} von {photos.length}{photos[current].placeholder ? ' · Platzhalter' : ''}</span>
   </div>
+}
+
+export function PhotoCarousel({ photos, name }: { photos: ProfilePhoto[]; name: string }) {
+  const [index, setIndex] = useState(0)
+  const [open, setOpen] = useState<{ origin: PhotoOrigin; trigger: HTMLButtonElement } | null>(null)
+
+  return <>
+    <PhotoDeck photos={photos} name={name} index={index} onChange={setIndex} concealed={!!open} onOpen={trigger => {
+      const rect = trigger.closest('.photo-carousel')!.getBoundingClientRect()
+      setOpen({ trigger, origin: { left: rect.left, top: rect.top, width: rect.width, height: rect.height } })
+    }}/>
+    {open && <PhotoLightbox name={name} origin={open.origin} trigger={open.trigger} onClose={() => setOpen(null)}>
+      <PhotoDeck photos={photos} name={name} index={index} onChange={setIndex} expanded/>
+    </PhotoLightbox>}
+  </>
 }

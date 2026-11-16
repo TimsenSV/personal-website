@@ -19,7 +19,7 @@
   .runner-leg-frame { opacity: 0; animation: .8s steps(1,end) var(--leg-phase, 0s) infinite; }
   .runner-contact { opacity: 1; animation-name: runner-contact; }.runner-push { animation-name: runner-push; }.runner-lift { animation-name: runner-lift; }.runner-reach { animation-name: runner-reach; }
   .runner-front-arm { animation: runner-arms .8s steps(1,end) -.4s infinite; }
-  .runner-back-arm { animation: runner-arms .8s steps(1,end) infinite; }
+  .runner-back-arm { animation: runner-back-swing .8s steps(1,end) infinite; }
   .runner-track { animation: runner-ground .8s linear infinite; }.runner-speed { animation: runner-speed .4s steps(2,end) infinite; }
   .runner-card .runner-body, .runner-card .runner-leg-frame, .runner-card .runner-front-arm, .runner-card .runner-back-arm, .runner-card .runner-track, .runner-card .runner-speed { animation-play-state: paused; }
   .runner-card:focus-within .runner-scene * { animation-play-state: running; }
@@ -30,6 +30,7 @@
   @keyframes runner-lift { 0%,75%,100% { opacity: 0; } 50% { opacity: 1; } }
   @keyframes runner-reach { 0%,100% { opacity: 0; } 75% { opacity: 1; } }
   @keyframes runner-arms { 0%,100% { transform: translate(0,1px); } 50% { transform: translate(1px,-1px); } }
+  @keyframes runner-back-swing { 0%,100% { transform: translate(0,0); } 25%,75% { transform: translate(-1px,1px); } 50% { transform: translate(-2px,1px); } }
   @keyframes runner-ground { to { background-position: -66px 0; } }
   @keyframes runner-speed { 50% { opacity: .45; transform: translateX(-3px); } }
   @media (max-width: 1180px) and (min-width: 961px) { .runner-card { padding: 20px; }.runner-card h2 { font-size: 23px; } }
