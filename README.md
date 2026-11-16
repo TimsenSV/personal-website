@@ -4,6 +4,8 @@ Persönliche Bento-Canvas mit den drei Produkten shopvibes, showcase und Backlan
 
 React + TypeScript + Vite. Statische Website, ohne Backend, CMS, Zugangsdaten oder externe Schriftanbieter. Die Schriften werden lokal ausgeliefert.
 
+Die Gestaltung verwendet neutrale weiße Flächen, fast schwarze serifenlose Typografie, feine graue Konturen und kräftige blaue sowie orange Akzente. Das dunkle Musik-Widget ergänzt die helle Canvas. Referenzen für Farbe und Klarheit: [ana.sh](https://ana.sh) und [chanhdai.com](https://chanhdai.com).
+
 ## Lokal starten
 
 Node.js ab 22.12 verwenden.

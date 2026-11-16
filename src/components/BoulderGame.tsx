@@ -4,14 +4,14 @@ import { createGame, holds, isReachable, MAX_MOVES, moveTo } from '../game/bould
 
 export function BoulderPreview() {
   return <svg className="boulder-preview" viewBox="0 0 300 280" fill="none" aria-hidden="true">
-    <defs><pattern id="wall-bolts" width="27" height="27" patternUnits="userSpaceOnUse"><circle cx="13" cy="13" r="1" fill="#b7b3a9" opacity=".5"/></pattern></defs>
+    <defs><pattern id="wall-bolts" width="27" height="27" patternUnits="userSpaceOnUse"><circle cx="13" cy="13" r="1" fill="#bac4dc" opacity=".5"/></pattern></defs>
     <path d="M22 0h256v280H22z" fill="url(#wall-bolts)"/>
     {[
       ...holds.map(hold => [20 + hold.x * 2.6, 8 + hold.y * 2.65, hold.rotation, 'blue']),
       [51, 63, 20, 'sand'], [251, 119, -20, 'sand'], [164, 244, 10, 'sand'],
-    ].map(([x, y, rotation, color], i) => <g key={i} transform={`translate(${x} ${y}) rotate(${rotation})`}><path d="M-17 3c-3-9 2-15 12-15S13-9 17-1s-8 15-17 13S-14 10-17 3Z" fill={color === 'blue' ? '#384e93' : '#d7cbb6'}/><path d="M-11-2c4-5 13-5 18-1" stroke={color === 'blue' ? '#7281b1' : '#e7ddcc'} strokeWidth="3" strokeLinecap="round"/></g>)}
-    <circle cx="72" cy="246" r="25" stroke="#384e93" strokeDasharray="3 4" opacity=".5"/>
-    <text x="103" y="271" fill="#62685b" fontSize="10" letterSpacing="2">START</text><text x="136" y="32" fill="#62685b" fontSize="10" letterSpacing="2">TOP</text>
+    ].map(([x, y, rotation, color], i) => <g key={i} transform={`translate(${x} ${y}) rotate(${rotation})`}><path d="M-17 3c-3-9 2-15 12-15S13-9 17-1s-8 15-17 13S-14 10-17 3Z" fill={color === 'blue' ? '#3159f5' : '#dce3f0'}/><path d="M-11-2c4-5 13-5 18-1" stroke={color === 'blue' ? '#94adff' : '#f4f7ff'} strokeWidth="3" strokeLinecap="round"/></g>)}
+    <circle cx="72" cy="246" r="25" stroke="#3159f5" strokeDasharray="3 4" opacity=".5"/>
+    <text x="103" y="271" fill="#60646f" fontSize="10" letterSpacing="2">START</text><text x="136" y="32" fill="#60646f" fontSize="10" letterSpacing="2">TOP</text>
   </svg>
 }
 
@@ -34,7 +34,7 @@ export function BoulderGame() {
     </div>
     <div className={`game-board ${game.status !== 'playing' ? 'game-finished' : ''}`} role="group" aria-label="Boulderwand mit acht Griffen">
       <div className="board-label"><span>Die blaue Route</span><ArrowUpRight size={14}/></div>
-      <svg className="game-route" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polyline points={points} fill="none" stroke="#344c92" strokeWidth=".65" strokeDasharray="1.5 1.4" opacity=".5"/></svg>
+      <svg className="game-route" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polyline points={points} fill="none" stroke="#3159f5" strokeWidth=".65" strokeDasharray="1.5 1.4" opacity=".5"/></svg>
       {holds.map((hold) => {
         const reachable = isReachable(current, hold.id) && game.status === 'playing'
         const here = current === hold.id

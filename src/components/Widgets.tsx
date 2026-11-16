@@ -8,9 +8,9 @@ import { RouteDrawing, SpotifyMark } from './Icons'
 
 export function IntroWidget({ profile }: { profile: PortfolioConfig['profile'] }) {
   return <section className="card intro-card" aria-labelledby="intro-title">
-    <div className="intro-top"><span className="eyebrow">Ein kleiner Einblick</span><span className="intro-spark" aria-hidden="true">✳</span></div>
-    <div className="portrait-row">{profile.portrait ? <img className="portrait" src={assetUrl(profile.portrait.src)} alt={profile.portrait.alt} width="66" height="78"/> : <span className="portrait-placeholder" role="img" aria-label="Platzhalter für ein echtes Porträt"><Camera size={21} strokeWidth={1.2}/><small>Foto folgt</small></span>}<div><p className="hello">Hi, ich bin {profile.name}.</p><span className="intro-role">{profile.positioning}</span></div></div>
-    <h1 id="intro-title">Ideen in Dinge<br/><em>verwandeln.</em></h1>
+    <div className="intro-top"><span className="eyebrow">Über mich</span><span className="intro-spark" aria-hidden="true">↗</span></div>
+    <div className="portrait-row">{profile.portrait ? <img className="portrait" src={assetUrl(profile.portrait.src)} alt={profile.portrait.alt} width="68" height="68"/> : <span className="portrait-placeholder" role="img" aria-label="Platzhalter für ein echtes Porträt"><Camera size={23} strokeWidth={1.5}/><small>Foto folgt</small></span>}<div><span className="intro-greeting">Hi, ich bin</span><h1 id="intro-title">{profile.name}<span>.</span></h1></div></div>
+    <p className="intro-positioning">{profile.positioning}</p>
     <p className="intro-description">{profile.introduction}</p>
     <p className="intro-personal">{profile.personal}</p>
     <div className="current-focus"><span className="focus-dot"/><div><span className="eyebrow">Gerade im Kopf</span><p>{profile.focus}</p></div></div>
