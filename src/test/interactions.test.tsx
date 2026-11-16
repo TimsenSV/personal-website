@@ -14,6 +14,7 @@ describe('canvas interactions', () => {
     expect(within(dock).getAllByRole('link')).toHaveLength(3)
     expect(within(dock).getByRole('link', { name: 'Arbeit' })).toHaveAttribute('href', '#work')
     expect(within(dock).queryByRole('link', { name: /LinkedIn/ })).not.toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Mit mir auf Strava laufen/ })).toHaveAttribute('href', 'https://www.strava.com/athletes/137493657')
   })
   it('opens product windows by keyboard, switches products and returns focus after cancel', async () => {
     const user = userEvent.setup()
@@ -33,7 +34,7 @@ describe('canvas interactions', () => {
   })
   it('opens and closes the remaining available details', async () => {
     render(<App/>)
-    for (const label of ['GitHub und Experimente öffnen', 'Ein paar Schritte raus', 'Boulder-Minispiel starten']) {
+    for (const label of ['GitHub und Experimente öffnen', 'Laufen: Details öffnen', 'Boulder-Minispiel starten']) {
       await userEvent.click(screen.getByRole('button', { name: label }))
       expect(screen.getByRole('dialog')).toBeVisible()
       await userEvent.click(screen.getByRole('button', { name: 'Fenster schließen' }))

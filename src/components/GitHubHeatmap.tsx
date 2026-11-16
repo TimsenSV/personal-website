@@ -15,7 +15,9 @@ function CalendarGrid({ cells }: { cells: (ContributionDay | null)[] }) {
   </svg>
 }
 
-export function GitHubHeatmap({ username, full = false }: { username: string | null; full?: boolean }) {
+type HeatmapInteraction = { expanded: boolean; controls: string; onToggle: () => void }
+
+export function GitHubHeatmap({ username, full = false, interaction }: { username: string | null; full?: boolean; interaction?: HeatmapInteraction }) {
   const [now] = useState(Date.now)
   const { state, retry } = useContributionCalendar(username)
   if (state.status !== 'ready') return <div className="contribution-empty" role="status">
@@ -30,12 +32,13 @@ export function GitHubHeatmap({ username, full = false }: { username: string | n
   const split = Math.ceil(cells.length / 14) * 7
   const summary = `${count.toLocaleString('de-DE')} GitHub-Beiträge von ${username}, ${fullDate(days[0].date)} bis ${fullDate(days.at(-1)!.date)}.`
   const stale = now - Date.parse(calendar.fetchedAt) > 7 * 86400000
+  const plot = <span className="heatmap-year-image" role="img" aria-label={summary}>
+    <span className="heatmap-wide"><CalendarGrid cells={cells}/></span>
+    <span className="heatmap-stacked"><CalendarGrid cells={cells.slice(0, split)}/><span style={{ width: `${(cells.length - split) / split * 100}%` }}><CalendarGrid cells={cells.slice(split)}/></span></span>
+  </span>
   return <figure className={`contribution-calendar ${full ? 'is-full' : ''}`}>
     <div className="heatmap-heading"><span>Ein Jahr auf GitHub</span><strong>{count.toLocaleString('de-DE')} Beiträge</strong></div>
-    <div className="heatmap-year" role="img" aria-label={summary}>
-      <div className="heatmap-wide"><CalendarGrid cells={cells}/></div>
-      <div className="heatmap-stacked"><CalendarGrid cells={cells.slice(0, split)}/><div style={{ width: `${(cells.length - split) / split * 100}%` }}><CalendarGrid cells={cells.slice(split)}/></div></div>
-    </div>
+    {interaction ? <button className="heatmap-year heatmap-trigger" aria-label="Pull Requests anzeigen" aria-expanded={interaction.expanded} aria-controls={interaction.controls} onClick={interaction.onToggle}>{plot}</button> : <div className="heatmap-year">{plot}</div>}
     <figcaption className="heatmap-caption"><span>{count === 0 ? 'Hier war es öffentlich ruhig.' : `${shortDate(days[0].date)}${days[0].date.slice(0, 4)} — ${shortDate(days.at(-1)!.date)}${days.at(-1)!.date.slice(0, 4)}`}</span><span className="heatmap-legend" aria-label="Hell bedeutet wenige, dunkel viele Beiträge.">Weniger {fills.map(fill => <i key={fill} style={{ background: fill }}/>) } Mehr</span></figcaption>
     {stale && <p className="heatmap-updated">Gespeicherter Stand: {fullDate(calendar.fetchedAt)}</p>}
     {full && calendar.anonymousContributions > 0 && <p className="small-note">Enthält auch anonym gezählte private Beiträge, wie im GitHub-Kalender. Repository-Namen und Inhalte werden dafür nicht gespeichert.</p>}

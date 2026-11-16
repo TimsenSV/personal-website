@@ -64,7 +64,7 @@ describe('verified contribution snapshots', () => {
     const user = userEvent.setup({ skipHover: true })
     render(<GithubWidget config={siteConfig.github} onOpen={() => {}}/>)
     const card = screen.getByRole('region', { name: 'Commit für Commit.' })
-    const toggle = screen.getByRole('button', { name: 'Pull Requests anzeigen' })
+    const toggle = await screen.findByRole('button', { name: 'Pull Requests anzeigen' })
     expect(toggle).toHaveAttribute('aria-expanded', 'false')
     await user.hover(card)
     expect(toggle).toHaveAttribute('aria-expanded', 'true')
@@ -89,10 +89,10 @@ describe('verified contribution snapshots', () => {
     await user.click(document.body)
     expect(toggle).toHaveAttribute('aria-expanded', 'false')
   })
-  it('merges and replaces PRs in order, cycles through the full pool and replays on reopening', () => {
+  it('merges and replaces PRs in order, cycles through the full pool and replays on reopening', async () => {
     vi.useFakeTimers()
     try {
-      render(<GithubWidget config={siteConfig.github} onOpen={() => {}}/>)
+      await act(async () => { render(<GithubWidget config={siteConfig.github} onOpen={() => {}}/>) })
       const toggle = screen.getByRole('button', { name: 'Pull Requests anzeigen' })
       fireEvent.click(toggle)
       const statuses = () => screen.getAllByRole('listitem').map(item => item.querySelector('.pr-status')?.textContent)

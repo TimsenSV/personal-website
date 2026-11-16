@@ -34,7 +34,7 @@ export type PortfolioConfig = {
     repositories: { name: string; description: string; url: string | null; tags: string[] }[]
   }
   spotify: { title: string; note: string; url: string | null; cover: ImageAsset | null }
-  running: { title: string; note: string; routeName: string | null; goal: string | null }
+  running: { title: string; note: string; stravaUrl: string | null; routeName: string | null; goal: string | null }
   products: Product[]
   seo: { title: string; description: string }
 }
@@ -86,10 +86,11 @@ export const siteConfig: PortfolioConfig = {
     cover: null,
   },
   running: {
-    title: 'Kopf frei. Weiterlaufen.',
+    title: 'Join me on my quest to not die in a half marathon.',
     note: 'Nicht alles braucht einen Bildschirm.',
+    stravaUrl: 'https://www.strava.com/athletes/137493657',
     routeName: null,
-    goal: null,
+    goal: 'Einen Halbmarathon schaffen.',
   },
   products: [
     {

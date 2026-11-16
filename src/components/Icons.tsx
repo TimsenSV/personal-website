@@ -7,6 +7,10 @@ export function SpotifyMark({ className = '' }: { className?: string }) {
   return <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M6.4 8.6c3.7-1.2 7.7-.9 11.3 1M7.2 12c3.1-.9 6.4-.6 9.3.9M8 15.1c2.5-.6 5.1-.4 7.4.8" stroke="var(--spotify-line, #fff)" strokeWidth="1.6" strokeLinecap="round"/></svg>
 }
 
+export function StravaMark() {
+  return <svg viewBox="0 0 24 24" width="21" height="21" fill="currentColor" aria-hidden="true"><path d="m10 2 8 14h-5l-3-5-3 5H2L10 2Zm8 21-5-9h3l2 3 2-3h3l-5 9Z"/></svg>
+}
+
 export function RouteDrawing() {
   return <svg className="route-drawing" viewBox="0 0 440 190" fill="none" aria-hidden="true"><path className="route-ghost" d="M12 151C45 126 56 166 96 143S130 79 163 102s23 50 69 35S246 64 282 63s39 30 77 4S371 20 424 36"/><path className="route-path" d="M46 130c21 9 43 12 58-6s1-41 26-52 41 31 62 35 21-17 42-27 31 16 59-9 14-31 36-32 21 17 42 6"/><circle cx="46" cy="130" r="7" fill="var(--surface)" stroke="currentColor" strokeWidth="3"/><circle cx="371" cy="45" r="6" fill="currentColor"/><path d="M358 44h26m-13-13v26" stroke="currentColor" strokeWidth="1" opacity=".35"/></svg>
 }

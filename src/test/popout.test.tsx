@@ -34,7 +34,7 @@ describe('widget quick looks', () => {
   it('keeps just one preview open and dismisses on an outside click', async () => {
     const user = userEvent.setup()
     render(<App/>)
-    await user.click(screen.getByRole('button', { name: 'Repository-Vorschau öffnen' }))
+    await user.click(screen.getByRole('button', { name: 'Aktuellen Gedanken aufklappen' }))
     await user.click(screen.getByRole('button', { name: 'Playlist-Vorschau öffnen' }))
     expect(screen.getAllByRole('dialog')).toHaveLength(1)
     expect(screen.getByRole('dialog', { name: 'Eine Seite von mir' })).toBeVisible()
@@ -42,18 +42,15 @@ describe('widget quick looks', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
-  it('hands off to a full detail and restores the original folder trigger', async () => {
+  it('opens the repository detail from the header and returns focus there', async () => {
     const user = userEvent.setup()
     render(<App/>)
-    const trigger = screen.getByRole('button', { name: 'Repository-Vorschau öffnen' })
+    const trigger = screen.getByRole('button', { name: 'GitHub und Experimente öffnen' })
     await user.click(trigger)
-    await user.click(screen.getByRole('button', { name: 'Mehr aus der Werkbank' }))
     const detail = screen.getByRole('dialog', { name: 'Werkbank / GitHub & Experimente' })
-    expect(detail).toBeVisible()
-    expect(screen.queryByRole('dialog', { name: 'Auf der Werkbank' })).not.toBeInTheDocument()
+    expect(detail).toHaveTextContent('personal-website')
     fireEvent(detail, new Event('cancel', { cancelable: true }))
     expect(trigger).toHaveFocus()
-    expect(trigger).toHaveAttribute('aria-expanded', 'false')
   })
 
   it('shows an honest playlist placeholder without a player or fake play action', async () => {

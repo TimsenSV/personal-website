@@ -15,6 +15,8 @@
   .heatmap-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; font: 11px var(--mono); color: #5b6780; }
   .heatmap-heading > strong { font-size: 12px; font-weight: 500; color: #304d80; }
   .heatmap-year { margin-top: 13px; }
+  .heatmap-year-image, .heatmap-wide, .heatmap-stacked > span { display: block; }
+  .heatmap-trigger { display: block; padding: 0; width: 100%; min-height: 44px; background: none; border-radius: 5px; text-align: inherit; }
   .heatmap-svg { display: block; width: 100%; height: auto; overflow: visible; }
   .heatmap-month { font: 8px var(--mono); fill: #59667e; }
   .heatmap-svg rect { transition: opacity .15s; }.heatmap-svg rect:hover { opacity: .65; }
@@ -25,11 +27,6 @@
   .contribution-empty { min-height: 160px; display: flex; flex-direction: column; justify-content: center; }
   .contribution-empty > p { font-size: 11px; margin-top: 10px; color: #626e87; }.contribution-empty .text-button { color: var(--blue); }
   .heatmap-placeholder { display: grid; grid-template-columns: repeat(26,minmax(0,1fr)); gap: 3px; }.heatmap-placeholder > i { aspect-ratio: 1; border-radius: 2px; background: #edf0f7; }
-  .github-repo-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #edf0f5; padding-top: 11px; margin-top: 16px; }
-  .github-repo-footer > .popout-anchor { max-width: calc(100% - 88px); }
-  .repo-chip { display: flex; align-items: center; gap: 8px; padding: 8px 10px; min-height: 44px; text-align: left; border: 1px solid #e5e9f2; border-radius: 7px; background: #f7f9fd; color: #50627f; font: 10px var(--mono); }.repo-chip > span { overflow-wrap: anywhere; }
-  .pr-toggle { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-width: 76px; min-height: 44px; background: #f3f0fc; border: 1px solid #e5def6; border-radius: 8px; color: #6b46ad; font: 11px var(--mono); }
-  .pr-toggle > svg:last-child { transition: transform .2s; }.prs-open .pr-toggle > svg:last-child { transform: rotate(180deg); }
   .pr-rollout { position: absolute; top: 100%; left: 25px; right: 25px; padding-top: 12px; perspective: 900px; }
   .pr-roll { --pr-row-height: 66px; margin: 0; padding: 0; list-style: none; position: relative; height: calc(var(--pr-visible) * (var(--pr-row-height) + 8px) - 8px); }
   .pr-slot { position: absolute; inset: 0 0 auto; height: var(--pr-row-height); transform: translateY(calc(var(--pr-order) * (var(--pr-row-height) + 8px))); transition: transform .36s cubic-bezier(.2,.8,.25,1); }
@@ -59,8 +56,6 @@
     .heatmap-wide { display: none; }.heatmap-stacked { display: grid; gap: 12px; }
     .heatmap-month { font-size: 9px; }.heatmap-caption { flex-wrap: wrap; font-size: 8px; row-gap: 8px; }
     .heatmap-legend { font-size: 7px; margin-left: auto; }
-    .github-repo-footer { margin-top: 13px; gap: 8px; }.repo-chip { font-size: 8px; gap: 5px; padding: 8px; }
-    .pr-toggle { min-width: 66px; gap: 6px; }.github-repo-footer > .popout-anchor { max-width: calc(100% - 74px); }
     .pr-rollout { left: 8px; right: 8px; padding-top: 10px; }
     .pr-roll { --pr-row-height: 76px; }.pr-item { padding: 11px 10px; gap: 8px; }.pr-copy strong { font-size: 10px; }.pr-copy small { font-size: 7px; }.pr-status { min-width: 47px; font-size: 8px; padding: 5px; }.pr-item > svg { width: 16px; }
     .standard-detail > .contribution-calendar { padding: 14px; }
@@ -69,9 +64,5 @@
   }
   @media (max-width: 375px) {
     .github-card.heatmap-card { padding-left: 17px; padding-right: 17px; }.heatmap-heading, .heatmap-heading > strong { font-size: 9px; }
-    .repo-chip > svg:last-child { display: none; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .pr-item, .pr-status { animation: none; }.pr-toggle > svg { transform: none !important; }
   }
 }

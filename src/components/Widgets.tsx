@@ -1,14 +1,15 @@
 import { useState } from 'react'
-import { ArrowRight, ArrowUpRight, AudioLines, Camera, Code2, Footprints, GitBranch, Github, ImagePlus, Linkedin, Play, Plus, Sparkles } from 'lucide-react'
+import { ArrowUpRight, AudioLines, Camera, Code2, Footprints, GitBranch, Github, ImagePlus, Linkedin, Play, Plus, Sparkles } from 'lucide-react'
 import type { PortfolioConfig } from '../content/site'
 import { assetUrl, externalUrl, githubProfile, spotifyPlaylist } from '../lib/links'
 import { useGitHubActivity } from '../hooks/useGitHubActivity'
 import { BoulderPreview } from './BoulderGame'
 import { ExternalLink } from './ExternalLink'
-import { RouteDrawing, SpotifyMark } from './Icons'
+import { RouteDrawing, SpotifyMark, StravaMark } from './Icons'
 import { Popout } from './Popout'
 import { ChalkClimber } from './ChalkClimber'
 import { GitHubHeatmap } from './GitHubHeatmap'
+import { PixelRunner } from './PixelRunner'
 
 export function IntroWidget({ profile }: { profile: PortfolioConfig['profile'] }) {
   return <section className="card intro-card" aria-labelledby="intro-title">
@@ -61,11 +62,16 @@ export function MusicDetail({ config }: { config: PortfolioConfig['spotify'] }) 
 }
 
 export function RunningWidget({ config, onOpen }: { config: PortfolioConfig['running']; onOpen: () => void }) {
-  return <section className="card running-card" aria-labelledby="running-title"><div className="running-copy"><span className="eyebrow"><Footprints size={16}/> Draußen sein</span><h2 id="running-title">{config.title}</h2><p>{config.note}</p><button className="text-button" onClick={onOpen}>Ein paar Schritte raus <ArrowRight size={15}/></button></div><div className="route-art"><span className="route-label" aria-hidden="true">OFFLINE IS A<br/>GOOD PLACE.</span><RouteDrawing/><span className="route-pin" aria-hidden="true"><Footprints size={18}/></span></div></section>
+  const scene = <span className="runner-scene" aria-hidden="true"><span className="runner-track"/><span className="runner-speed"><i/><i/><i/></span><PixelRunner/></span>
+  return <section className="card running-card runner-card" aria-labelledby="running-title">
+    <div className="widget-top"><span className="eyebrow"><StravaMark/> Laufen</span><button className="round-link" onClick={onOpen} aria-label="Laufen: Details öffnen"><ArrowUpRight size={18}/></button></div>
+    <h2 id="running-title" lang="en">{config.title}</h2>
+    {externalUrl(config.stravaUrl) ? <ExternalLink href={config.stravaUrl} className="strava-run-link">{scene}<span className="strava-follow">Mit mir auf Strava laufen</span></ExternalLink> : <>{scene}<span className="small-note">Strava-Link folgt.</span></>}
+  </section>
 }
 
 export function RunningDetail({ config }: { config: PortfolioConfig['running'] }) {
-  return <div className="standard-detail running-detail"><p className="eyebrow"><Footprints size={16}/> Laufen</p><h3>{config.title}</h3><p>{config.note}</p><figure><RouteDrawing/><figcaption>Ein abstraktes Motiv, keine aufgezeichnete Strecke.</figcaption></figure><div className="contribution-grid"><section><h4>Meine Lieblingsstrecke</h4><p className={config.routeName ? '' : 'placeholder-copy'}>{config.routeName ?? 'Die ergänze ich hier noch.'}</p></section><section><h4>Worauf ich hinlaufe</h4><p className={config.goal ? '' : 'placeholder-copy'}>{config.goal ?? 'Hier ist Platz für mein nächstes persönliches Laufziel.'}</p></section></div></div>
+  return <div className="standard-detail running-detail"><p className="eyebrow"><Footprints size={16}/> Laufen</p><h3>{config.title}</h3><p>{config.note}</p><ExternalLink href={config.stravaUrl} className="button primary">Mit mir auf Strava laufen</ExternalLink><figure><RouteDrawing/><figcaption>Ein abstraktes Motiv, keine aufgezeichnete Strecke.</figcaption></figure><div className="contribution-grid"><section><h4>Meine Lieblingsstrecke</h4><p className={config.routeName ? '' : 'placeholder-copy'}>{config.routeName ?? 'Die ergänze ich hier noch.'}</p></section><section><h4>Worauf ich hinlaufe</h4><p className={config.goal ? '' : 'placeholder-copy'}>{config.goal ?? 'Hier ist Platz für mein nächstes persönliches Laufziel.'}</p></section></div></div>
 }
 
 export function BoulderWidget({ onOpen }: { onOpen: () => void }) {
