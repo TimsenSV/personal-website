@@ -4,7 +4,7 @@ Persönliche Bento-Canvas mit den drei Produkten shopvibes, showcase und Backlan
 
 React + TypeScript + Vite. Statische Website, ohne Backend, CMS, Zugangsdaten oder externe Schriftanbieter. Die Schriften werden lokal ausgeliefert.
 
-Die Gestaltung verwendet neutrale weiße Flächen, fast schwarze serifenlose Typografie, feine graue Konturen und kräftige blaue sowie orange Akzente. Die Widgets sind als eigenständige Objekte gestaltet: eine echte GitHub-Heatmap mit einrollenden KI-Gedankenspielen, ein Plattencover mit Vinyl, gestaffelte Produktansichten, eine Boulderwand mit Routenetikett und eine abstrakte Laufzeichnung. Referenzen für Farbe und Klarheit: [ana.sh](https://ana.sh) und [chanhdai.com](https://chanhdai.com).
+Die Gestaltung verwendet neutrale weiße Flächen, fast schwarze serifenlose Typografie, feine graue Konturen und kräftige blaue sowie orange Akzente. Die Widgets sind als eigenständige Objekte gestaltet: eine echte GitHub-Heatmap mit ausrollenden Pull Requests, ein Plattencover mit Vinyl, gestaffelte Produktansichten, eine Boulderwand mit Pixel-Figur und eine abstrakte Laufzeichnung. Referenzen für Farbe und Klarheit: [ana.sh](https://ana.sh) und [chanhdai.com](https://chanhdai.com).
 
 ## Lokal starten
 
@@ -51,9 +51,9 @@ Die Produktdarstellungen sind eigenständige schematische Illustrationen, keine 
 - Die kleine Pixel-Figur chalkt bei Hover einmal die Hände, klopft sie ab und erzeugt eine kurze Kreidewolke. Klick, Touch und Tastaturfokus lösen die Szene ebenfalls aus. Unter reduzierter Bewegung bleibt die Figur ruhig. Es ist eine frei gestaltete Figur, kein Porträt; die Palette liegt unter `profile.pixelAvatar`.
 - Das Boulder-Spiel ist mit Maus, Touch und Tastatur spielbar. Umrandete Griffe sind erreichbar. Ziel: Top in maximal sieben Zügen. Rückwege verbrauchen ebenfalls Kraft. Es gibt Gewinn, Verlust und Neustart.
 - Die öffentlichen GitHub-Ereignisse werden erst beim Öffnen des Detailfensters und nur mit konfiguriertem Nutzernamen abgefragt. Die offizielle öffentliche Events-API benötigt hier keine Zugangsdaten. Die Ansicht behandelt Laden, fehlende Aktivität, Fehler, Timeout und manuelles Wiederholen. Sie ist kein Contribution- oder Echtzeit-Tracker.
-- Die GitHub-Heatmap verwendet einen echten GraphQL-Snapshot für TimsenSV: 26 Wochen im Widget, das vollständige Jahr im Detail, jeweils mit Datenstand. Der Import speichert ausschließlich anonyme Tageszählungen und Intensitätsstufen, keine Repository-Namen oder Inhalte. Anonym gezählte private Beiträge sind enthalten, wie im GitHub-Kalender. Fiktive KI-Pull-Requests sind getrennt als Gedankenspiele gekennzeichnet; sie rollen bei Hover, Tastaturfokus oder Antippen einmal ein. Texte: `github.playfulPullRequests`.
+- Die GitHub-Heatmap verwendet einen echten GraphQL-Snapshot für TimsenSV: das vollständige letzte Jahr im breiten Widget und im Detail, auf kleinen Bildschirmen in zwei Kalenderzeilen, jeweils mit Datenstand. Der Import speichert ausschließlich anonyme Tageszählungen und Intensitätsstufen, keine Repository-Namen oder Inhalte. Anonym gezählte private Beiträge sind enthalten, wie im GitHub-Kalender. Die humorvollen KI-Pull-Requests sind eine lokale Animation ohne Verbindung zur echten Aktivitätsliste: Bei Hover, Tastaturfokus oder Antippen rollen sie unterhalb der Kachel aus und wechseln nacheinander von Draft über Review zu Merged. Dabei bleibt die Kachelhöhe konstant. Escape oder Antippen außerhalb schließt sie; ein erneutes Öffnen startet von vorn. Reduzierte Bewegung zeigt sofort den ruhigen Endzustand. Texte: `github.playfulPullRequests`.
 - Spotify wird ausschließlich bei gültigem Playlist-Link und erst beim Öffnen geladen. Kein OAuth, kein Autoplay. Ein direkter Spotify-Link bleibt als Alternative verfügbar.
-- Die Laufzeichnung ist als abstraktes Motiv gekennzeichnet. Sie behauptet weder einen realen Ort noch eine GPS-Aktivität.
+- Die Laufzeichnung bleibt ein abstraktes Motiv; der Hinweis dazu steht in der Detailansicht. Sie behauptet weder einen realen Ort noch eine GPS-Aktivität.
 - Titel, Beschreibung und Open-Graph-Text werden beim Build aus derselben Konfiguration eingesetzt. Eine echte kanonische URL und ein persönliches Social-Preview-Bild können nach Festlegung der Domain ergänzt werden.
 
 ## Projektstruktur
@@ -91,7 +91,7 @@ Der Workflow prüft den Code vor der Veröffentlichung. Er wird absichtlich nur 
 
 ## Geprüfter Stand · 16. November 2026
 
-- Produktionsbuild, TypeScript und ESLint erfolgreich; 32 automatisierte Tests für Spielregeln, Tastaturbedienung, Dialoge, Pop-outs, externe Links, Kalenderdaten und GitHub-Zustände.
+- Produktionsbuild, TypeScript und ESLint erfolgreich; 35 automatisierte Tests für Spielregeln, Tastaturbedienung, Dialoge, Pop-outs, externe Links, Kalenderdaten und GitHub-Zustände.
 - Browserprüfung bei 1440 × 1000, 768 × 1024, 390 × 844 und 320 × 740 Pixeln; kein horizontaler Seitenüberlauf.
 - Dock-Navigation, alle drei Produktansichten, Fenstervergrößerung, Escape, Tab/Shift-Tab und Rückkehr zum Auslöser geprüft.
 - Boulder-Route im mobilen Browser vollständig gespielt, Gewinn und Neustart geprüft; Verlust und Umwege zusätzlich automatisiert getestet.
@@ -99,6 +99,8 @@ Der Workflow prüft den Code vor der Veröffentlichung. Er wird absichtlich nur 
 - GitHub ist mit TimsenSV konfiguriert; Snapshot und öffentliche Ereignisse wurden im Browser geladen. Lade-, Leer- und Fehlerzustände sowie Wiederholen sind zusätzlich mit ausdrücklich gekennzeichneten Testdaten geprüft. Ein echter persönlicher Spotify-Player und die später hinterlegten persönlichen Ziel-URLs sind nach ihrer Ergänzung nochmals zu prüfen.
 
 Die letzte Widget-Überarbeitung wurde zusätzlich bei 320 px, rund 768 px und 1280 px CSS-Breite im Browser geprüft. Die Pop-outs bleiben im sichtbaren Bereich; der schmale Seitenüberlauf durch die reservierte Scrollbar wurde behoben. Escape, Tab-Austritt und der Wechsel aus der Vorschau in ein Detailfenster wurden im Browser und automatisiert geprüft.
+
+Die Jahresansicht und die ausrollenden PRs wurden bei 320, 767 und 1280 px CSS-Breite geprüft. Alle 366 vorhandenen Tageswerte sind enthalten. Öffnen und Schließen ändern weder die Höhe der GitHub-Kachel noch die des Rasters; auf Mobilgeräten wird das Jahr auf zwei Kalenderzeilen aufgeteilt. Die Statusfolge, erneutes Abspielen, Escape, Außenklick und der ruhige Endzustand bei reduzierter Bewegung sind automatisiert geprüft.
 
 ## GitHub-Kalender aktualisieren
 

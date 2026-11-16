@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowRight, ArrowUpRight } from 'lucide-react'
+import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import type { Product, ProductId } from '../content/site'
 import { assetUrl } from '../lib/links'
 import { ExternalLink } from './ExternalLink'
@@ -16,7 +16,7 @@ export function Products({ products, onOpen }: { products: Product[]; onOpen: (i
         <span className="product-summary">{product.summary}</span>
       </button>)}
     </div>
-    <div className="project-footnote"><span>Information <ArrowRight/> Darstellung <ArrowRight/> Handlung</span><span>Ein Blick auf meine Arbeit <ArrowDown size={12}/></span></div>
+    <div className="project-footnote"><span>Information <ArrowRight/> Darstellung <ArrowRight/> Handlung</span></div>
   </section>
 }
 

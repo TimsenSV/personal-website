@@ -312,7 +312,7 @@
     .intro-card { padding: 22px; }.projects-card { padding: 25px 22px 20px; }.product-grid { gap: 13px; }.quiet-label { font-size: 8px; }
     .github-card, .music-card, .boulder-card { padding: 20px; }.record-sleeve { width: 102px; height: 102px; }.music-content { gap: 14px; }.album-art-title { font-size: 17px; }
     .playlist-copy h2 { font-size: 18px; }.record-groove { height: 68px; width: 68px; }.record-groove::after { inset: 20px; }.widget-bottom > .small-note { display: none; }
-    .projects-card > h2 { font-size: 25px; }.product-name { font-size: 19px; }.project-footnote > span:last-child { display: none; }.running-card h2 { font-size: 31px; }
+    .projects-card > h2 { font-size: 25px; }.product-name { font-size: 19px; }.running-card h2 { font-size: 31px; }
   }
   @media (max-width: 960px) {
     .page-shell { max-width: 800px; padding-left: 26px; padding-right: 26px; }.site-header { min-height: 100px; }.bento-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; }

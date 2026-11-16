@@ -7,7 +7,7 @@ export function ChalkClimber({ cue = 0, compact = false }: { cue?: number; compa
   const colors = Object.fromEntries(Object.entries(siteConfig.profile.pixelAvatar).map(([key, value]) => [`--pixel-${key}`, value])) as CSSProperties
 
   return <button className={`chalk-climber ${compact ? 'is-compact' : ''}`} style={colors}
-    aria-label={`${siteConfig.profile.name}: Hände chalken`} title="Kurz chalken. Dann los."
+    aria-label={`${siteConfig.profile.name}: Hände chalken`}
     onPointerEnter={(event) => { if (event.pointerType !== 'touch') setReplay(value => value + 1) }}
     onFocus={(event) => { if (event.currentTarget.matches(':focus-visible')) setReplay(value => value + 1) }}
     onClick={() => setReplay(value => value + 1)}>
@@ -52,7 +52,6 @@ export function ChalkClimber({ cue = 0, compact = false }: { cue?: number; compa
       </g>
       <g className="pixel-chalk-spark" fill="#fff"><path d="M9 18h2v2H9zM32 17h2v2h-2zM22 13h1v1h-1z"/></g>
     </svg>
-    <span className="climber-name" aria-hidden="true">{siteConfig.profile.name}<span>kurz chalken ↗</span></span>
-    <span className="climber-bubble" aria-hidden="true">Chalk. Dann los.</span>
+    <span className="climber-name" aria-hidden="true">{siteConfig.profile.name}</span>
   </button>
 }

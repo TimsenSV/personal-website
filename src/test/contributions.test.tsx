@@ -1,9 +1,10 @@
-import { render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { calendarCells, fetchCalendar, parseCalendar } from '../services/contributions'
 import { GitHubHeatmap } from '../components/GitHubHeatmap'
 import { GithubWidget } from '../components/GithubWidget'
+import { PullRequestRollout } from '../components/PullRequestRollout'
 import { siteConfig } from '../content/site'
 import { calendarFixture } from './fixtures/calendar'
 
@@ -51,11 +52,19 @@ describe('verified contribution snapshots', () => {
     await userEvent.click(await screen.findByRole('button', { name: 'Erneut laden' }))
     expect(await screen.findByRole('img', { name: /^3 GitHub-Beiträge/ })).toBeVisible()
   })
+  it('includes the first and last day of the year in the widget, not just the latest half', async () => {
+    render(<GithubWidget config={siteConfig.github} onOpen={() => {}}/>)
+    const graph = await screen.findByRole('img', { name: /^3 GitHub-Beiträge/ })
+    expect(graph).toHaveAccessibleName(/16\. November 2025 bis 15\. November 2026/)
+    expect(graph.querySelectorAll('.heatmap-wide rect')).toHaveLength(365)
+    expect(graph.querySelectorAll('.heatmap-stacked rect')).toHaveLength(365)
+    expect(screen.getByText('Ein Jahr auf GitHub')).toBeVisible()
+  })
   it('makes the fictional PRs available by hover, keyboard and explicit toggle', async () => {
     const user = userEvent.setup({ skipHover: true })
     render(<GithubWidget config={siteConfig.github} onOpen={() => {}}/>)
     const card = screen.getByRole('region', { name: 'Commit für Commit.' })
-    const toggle = screen.getByRole('button', { name: /KI-Gedankenspiele/ })
+    const toggle = screen.getByRole('button', { name: 'Pull Requests anzeigen' })
     expect(toggle).toHaveAttribute('aria-expanded', 'false')
     await user.hover(card)
     expect(toggle).toHaveAttribute('aria-expanded', 'true')
@@ -68,5 +77,52 @@ describe('verified contribution snapshots', () => {
     expect(toggle).toHaveAttribute('aria-expanded', 'false')
     await user.tab({ shift: true })
     expect(toggle).toHaveAttribute('aria-expanded', 'true')
+    await user.keyboard('{Escape}')
+    expect(toggle).toHaveAttribute('aria-expanded', 'false')
+    await user.click(toggle)
+    await user.click(document.body)
+    expect(toggle).toHaveAttribute('aria-expanded', 'false')
+  })
+  it('moves each PR from draft through review to merged in order, and replays on reopening', () => {
+    vi.useFakeTimers()
+    try {
+      render(<GithubWidget config={siteConfig.github} onOpen={() => {}}/>)
+      const toggle = screen.getByRole('button', { name: 'Pull Requests anzeigen' })
+      fireEvent.click(toggle)
+      const statuses = () => screen.getAllByRole('listitem').map(item => item.querySelector('.pr-status')?.textContent)
+      expect(statuses()).toEqual(['Draft', 'Draft', 'Draft'])
+      act(() => vi.advanceTimersByTime(1000))
+      expect(statuses()).toEqual(['Review', 'Draft', 'Draft'])
+      act(() => vi.advanceTimersByTime(1200))
+      expect(statuses()).toEqual(['Merged', 'Draft', 'Draft'])
+      act(() => vi.advanceTimersByTime(400))
+      expect(statuses()).toEqual(['Merged', 'Review', 'Draft'])
+      act(() => vi.advanceTimersByTime(1200))
+      expect(statuses()).toEqual(['Merged', 'Merged', 'Draft'])
+      act(() => vi.advanceTimersByTime(400))
+      expect(statuses()).toEqual(['Merged', 'Merged', 'Review'])
+      act(() => vi.advanceTimersByTime(1200))
+      expect(statuses()).toEqual(['Merged', 'Merged', 'Merged'])
+      fireEvent.click(toggle)
+      fireEvent.click(toggle)
+      expect(statuses()).toEqual(['Draft', 'Draft', 'Draft'])
+      fireEvent.click(toggle)
+      expect(screen.queryByRole('listitem')).not.toBeInTheDocument()
+    } finally { vi.useRealTimers() }
+  })
+  it('shows a still end state with reduced motion and cancels pending sequence timers on close', () => {
+    vi.useFakeTimers()
+    try {
+      vi.stubGlobal('matchMedia', vi.fn(() => ({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() })))
+      const reduced = render(<PullRequestRollout requests={siteConfig.github.playfulPullRequests}/>)
+      expect(screen.getAllByText('Merged')).toHaveLength(3)
+      expect(vi.getTimerCount()).toBe(0)
+      reduced.unmount()
+      vi.stubGlobal('matchMedia', vi.fn(() => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })))
+      const animated = render(<PullRequestRollout requests={siteConfig.github.playfulPullRequests}/>)
+      expect(vi.getTimerCount()).toBe(6)
+      animated.unmount()
+      expect(vi.getTimerCount()).toBe(0)
+    } finally { vi.useRealTimers() }
   })
 })

@@ -50,8 +50,8 @@ export function MusicWidget({ config, onOpen }: { config: PortfolioConfig['spoti
     </>}>
       <><div className="popout-icon"><AudioLines size={24}/></div><h3>{config.title}</h3><p>{playlist ? config.note : 'Hier zieht bald meine Lieblingsplaylist ein. Bis dahin ist das Cover ein Platzhalter – und es bleibt still.'}</p></>
     </Popout>
-    <div className="playlist-copy"><h2 id="music-title">{config.title}</h2><p>{playlist ? config.note : 'Der persönliche Soundtrack folgt.'}</p></div>
-    <div className="music-bottom"><span className="record-side">SIDE A</span><span>{playlist ? 'Playlist entdecken' : 'Noch nicht aufgelegt'}</span><span className="equalizer" aria-hidden="true"><i/><i/><i/><i/><i/></span></div>
+    <div className="playlist-copy"><h2 id="music-title">{config.title}</h2>{playlist && <p>{config.note}</p>}</div>
+    <div className="music-bottom"><span className="record-side">SIDE A</span><span className="equalizer" aria-hidden="true"><i/><i/><i/><i/><i/></span></div>
   </section>
 }
 
@@ -61,7 +61,7 @@ export function MusicDetail({ config }: { config: PortfolioConfig['spotify'] }) 
 }
 
 export function RunningWidget({ config, onOpen }: { config: PortfolioConfig['running']; onOpen: () => void }) {
-  return <section className="card running-card" aria-labelledby="running-title"><div className="running-copy"><span className="eyebrow"><Footprints size={16}/> Draußen sein</span><h2 id="running-title">{config.title}</h2><p>{config.note}</p><button className="text-button" onClick={onOpen}>Ein paar Schritte raus <ArrowRight size={15}/></button></div><div className="route-art"><span className="route-label" aria-hidden="true">OFFLINE IS A<br/>GOOD PLACE.</span><RouteDrawing/><span className="route-pin" aria-hidden="true"><Footprints size={18}/></span><span className="route-legend">Freie Zeichnung · keine GPS-Daten</span></div></section>
+  return <section className="card running-card" aria-labelledby="running-title"><div className="running-copy"><span className="eyebrow"><Footprints size={16}/> Draußen sein</span><h2 id="running-title">{config.title}</h2><p>{config.note}</p><button className="text-button" onClick={onOpen}>Ein paar Schritte raus <ArrowRight size={15}/></button></div><div className="route-art"><span className="route-label" aria-hidden="true">OFFLINE IS A<br/>GOOD PLACE.</span><RouteDrawing/><span className="route-pin" aria-hidden="true"><Footprints size={18}/></span></div></section>
 }
 
 export function RunningDetail({ config }: { config: PortfolioConfig['running'] }) {
@@ -70,5 +70,5 @@ export function RunningDetail({ config }: { config: PortfolioConfig['running'] }
 
 export function BoulderWidget({ onOpen }: { onOpen: () => void }) {
   const [chalkCue, setChalkCue] = useState(0)
-  return <section className="card boulder-card" aria-labelledby="boulder-title" onPointerEnter={(event) => { if (event.pointerType !== 'touch') setChalkCue(value => value + 1) }} onFocus={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setChalkCue(value => value + 1) }}><div className="widget-top"><span className="eyebrow"><Sparkles size={15}/> Kopf & Hände</span><span className="tiny-tag">Spielbar</span></div><div className="boulder-heading"><h2 id="boulder-title">Noch ein<br/>Versuch.</h2><span className="boulder-number" aria-hidden="true">01</span></div><p className="widget-copy">Ein kleines Problem. Dein Weg nach oben.</p><div className="boulder-scene"><button className="boulder-preview-button" onClick={onOpen} aria-label="Boulder-Problem vergrößern und spielen"><BoulderPreview/><span className="board-open-hint"><Play size={12} fill="currentColor"/> Losklettern</span></button><div className="boulder-avatar"><ChalkClimber cue={chalkCue}/></div></div><div className="boulder-bottom"><span>Erst die Route lesen. Dann los.</span><button className="round-link" onClick={onOpen} aria-label="Boulder-Minispiel starten"><ArrowUpRight size={18}/></button></div></section>
+  return <section className="card boulder-card" aria-labelledby="boulder-title" onPointerEnter={(event) => { if (event.pointerType !== 'touch') setChalkCue(value => value + 1) }} onFocus={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setChalkCue(value => value + 1) }}><div className="widget-top"><span className="eyebrow"><Sparkles size={15}/> Kopf & Hände</span></div><div className="boulder-heading"><h2 id="boulder-title">Noch ein<br/>Versuch.</h2><span className="boulder-number" aria-hidden="true">01</span></div><div className="boulder-scene"><button className="boulder-preview-button" onClick={onOpen} aria-label="Boulder-Problem vergrößern und spielen"><BoulderPreview/><span className="board-open-hint"><Play size={12} fill="currentColor"/> Losklettern</span></button><div className="boulder-avatar"><ChalkClimber cue={chalkCue}/></div></div><div className="boulder-bottom"><button className="round-link" onClick={onOpen} aria-label="Boulder-Minispiel starten"><ArrowUpRight size={18}/></button></div></section>
 }
