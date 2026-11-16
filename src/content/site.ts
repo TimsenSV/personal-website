@@ -1,5 +1,6 @@
 export type ProductId = 'shopvibes' | 'showcase' | 'backlane'
 export type ImageAsset = { src: string; alt: string }
+export type ProfilePhoto = ImageAsset & { caption?: string; placeholder?: boolean; position?: string; zoom?: number; monochrome?: boolean }
 
 export type Product = {
   id: ProductId
@@ -24,7 +25,7 @@ export type PortfolioConfig = {
     personal: string
     focus: string
     pixelAvatar: { hair: string; hairHighlight: string; skin: string; shirt: string; trousers: string; chalkBag: string }
-    portrait: ImageAsset | null
+    photos: ProfilePhoto[]
     email: string | null
     linkedinUrl: string | null
   }
@@ -52,7 +53,12 @@ export const siteConfig: PortfolioConfig = {
     focus: 'Wie KI im E-Commerce wirklich nützlich wird.',
     // Stilisiertes Spiel-Avatar mit braunblondem Haar nach eigener Angabe; kein Porträt.
     pixelAvatar: { hair: '#9b774b', hairHighlight: '#ccb27b', skin: '#edbb96', shirt: '#3159f5', trousers: '#30394f', chalkBag: '#ff7140' },
-    portrait: null,
+    // One generated sample photo in three treatments, until real personal photos are supplied.
+    photos: [
+      { src: 'images/portrait-sample.png', alt: 'KI-generiertes Musterporträt, kein Foto von Tim', placeholder: true },
+      { src: 'images/portrait-sample.png', alt: 'Musterporträt in Schwarz-Weiß, kein Foto von Tim', placeholder: true, monochrome: true, zoom: 1.12 },
+      { src: 'images/portrait-sample.png', alt: 'Näherer Ausschnitt des Musterporträts, kein Foto von Tim', placeholder: true, zoom: 1.35, position: '50% 35%' },
+    ],
     email: null,
     linkedinUrl: null,
   },

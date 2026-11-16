@@ -29,7 +29,7 @@ Die typisierte Datei **`src/content/site.ts`** enthält alle persönlichen Texte
 
 | Bereich | Noch zu ergänzen |
 | --- | --- |
-| Profil | Vollständiger öffentlicher Name, echtes Porträt, ggf. Feinschliff an Kurzvorstellung und Fokus |
+| Profil | Vollständiger öffentlicher Name, eigene Fotos für den Polaroid-Stapel, ggf. Feinschliff an Kurzvorstellung und Fokus |
 | Kontakt | E-Mail-Adresse und LinkedIn-URL |
 | GitHub | TimsenSV ist verbunden; Links zu ausgewählten öffentlichen Repositories können noch ergänzt werden |
 | Spotify | Playlist-Link oder Embed-URL, Titel, optional eigenes Cover und Begleittext |
@@ -45,6 +45,7 @@ Die Produktdarstellungen sind eigenständige schematische Illustrationen, keine 
 ## Verhalten
 
 - Fehlende externe Dock-Aktionen werden vollständig ausgeblendet. Interne und konfigurierte externe Aktionen sind optisch getrennt.
+- Die größeren Profilfotos liegen als Polaroid-Stapel in der Einstiegskachel. Klick oder die seitlichen Pfeile blättern weiter; horizontales Ziehen folgt dem Zeiger und wechselt ab einer Schwelle das Foto. Kurze Gesten federn zurück, vertikales Scrollen und Pinch-Zoom bleiben auf Mobilgeräten möglich. Linke/rechte Pfeiltasten funktionieren bei Fokus in der Galerie. Es gibt kein Autoplay. Bei reduzierter Bewegung wechselt das Bild sofort. Leere und einzelne Galerien sowie fehlgeschlagene Bilder haben passende Zustände.
 - Gedanken und Playlist haben kleine, nichtmodale Pop-outs. Sie öffnen per Klick, Touch oder Tastatur, schließen per Escape, Klick daneben oder beim Verlassen mit Tab. Ein weiterführendes Detailfenster stellt den Fokus anschließend am ursprünglichen Widget wieder her.
 - Hover-Effekte bewegen gezielt die Objekte innerhalb der Widgets; Tastaturfokus bietet dieselben Hinweise. Die PR-Warteschlange läuft nur, solange sie geöffnet und der Browser-Tab sichtbar ist. `prefers-reduced-motion` unterbindet die Bewegung.
 - Produktfenster nutzen native HTML-Dialoge mit Escape, Fokusbindung und Rückkehr zum Auslöser. Auf Mobilgeräten werden sie bildschirmfüllend.
@@ -89,9 +90,9 @@ Der Workflow prüft den Code vor der Veröffentlichung. Er wird absichtlich nur 
 - [GitHub: öffentliche Events](https://docs.github.com/en/rest/activity/events#list-public-events-for-a-user)
 - [Spotify: Embeds](https://developer.spotify.com/documentation/embeds)
 
-## Geprüfter Stand · 16. November 2026
+## Geprüfter Stand · 17. November 2026
 
-- Produktionsbuild, TypeScript und ESLint erfolgreich; 37 automatisierte Tests für Spielregeln, Tastaturbedienung, Dialoge, Pop-outs, externe Links, Kalenderdaten und GitHub-Zustände.
+- Produktionsbuild, TypeScript und ESLint erfolgreich; 43 automatisierte Tests für Spielregeln, Tastaturbedienung, Dialoge, Pop-outs, externe Links, Kalenderdaten und GitHub-Zustände.
 - Browserprüfung bei 1440 × 1000, 768 × 1024, 390 × 844 und 320 × 740 Pixeln; kein horizontaler Seitenüberlauf.
 - Dock-Navigation, alle drei Produktansichten, Fenstervergrößerung, Escape, Tab/Shift-Tab und Rückkehr zum Auslöser geprüft.
 - Boulder-Route im mobilen Browser vollständig gespielt, Gewinn und Neustart geprüft; Verlust und Umwege zusätzlich automatisiert getestet.
@@ -111,3 +112,15 @@ npm run github:sync
 Der Import verwendet die offizielle GitHub-GraphQL-API über einen vorhandenen `gh`-Login oder `GH_TOKEN` / `GITHUB_TOKEN` im Build-Prozess. Niemals ein Token in die Inhaltskonfiguration oder eine `VITE_`-Variable schreiben. Bei einem Fehler bleibt der letzte gültige Snapshot unverändert. Die normale lokale Prüfung und der Build funktionieren offline mit diesem Snapshot.
 
 Der vorbereitete GitHub-Pages-Workflow aktualisiert den Snapshot vor dem Build mit dem kurzlebigen GitHub-Actions-Token. Bei einem API-Fehler bleibt der mitgelieferte Datenstand verwendbar; die Oberfläche zeigt dessen Datum und kennzeichnet ältere Daten. Es wurde kein automatischer Zeitplan angelegt und nichts veröffentlicht. API-Referenz: [GitHub ContributionCalendar](https://docs.github.com/en/graphql/reference/users#contributioncalendar).
+
+## Persönliche Polaroid-Fotos
+
+Die Einträge liegen unter `profile.photos` in `src/content/site.ts`. Für eigene Fotos `src` und `alt` ersetzen und `placeholder` entfernen. Optional sind `caption`, `position` (CSS-Objektposition), `zoom` und `monochrome` möglich. Die Reihenfolge im Array entspricht dem Stapel. Eine beliebige Anzahl von Bildern wird unterstützt; sichtbar sind höchstens drei Karten.
+
+Aktuell wird ein einziges KI-generiertes Musterfoto in drei Darstellungen verwendet: Farbe, Schwarz-Weiß und engerer Ausschnitt. Die Person ist fiktiv und **nicht Tim**. Das Bild ist zur Stilabnahme gedacht, jede Karte ist als Platzhalter markiert. Quelle: eingebautes Imagegen-Werkzeug, kein CLI/API-Fallback. Das unveränderte generierte Asset liegt unter `public/images/portrait-sample.png`.
+
+Die Galerie wurde mit echten Maus-Ziehgesten im Browser geprüft. Automatisierte Prüfungen decken Klick, Pfeiltasten, Umlauf, doppelte Klicks nach Ziehen, kurze Gesten, vertikales Scrollen, Abbruch, Fokus, reduzierte Bewegung, leere/einzelne Galerien und Bildfehler ab.
+
+Generierungs-Prompt:
+
+Use case: photorealistic-natural. Asset type: one temporary sample portrait photo for a personal website polaroid carousel prototype, clearly a fictional model, not a portrait of the real user. Primary request: a relaxed candid editorial portrait of a fictional adult man with short brown-blond hair, wearing a simple cobalt blue overshirt and white T-shirt. Waist-up framing, centered, face in upper middle with generous breathing space around head. Natural warm daylight, soft pale neutral background, authentic analog 35mm film feeling with fine grain, friendly understated expression. Square photograph, high quality natural skin texture, contemporary personal editorial aesthetic. No lettering, no frame, no collage, no logos, no watermarks. The website supplies the polaroid frame and placeholder label separately.
