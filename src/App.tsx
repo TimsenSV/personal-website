@@ -5,7 +5,7 @@ import { BoulderGame } from './components/BoulderGame'
 import { Dock } from './components/Dock'
 import { IntroWidget, GithubDetail, MusicWidget, MusicDetail, RunningWidget, RunningDetail, BoulderWidget } from './components/Widgets'
 import { GithubWidget } from './components/GithubWidget'
-import { Products, ProductDetail, WorkOverview } from './components/Products'
+import { Products, ProductDetail, ProjectNavigation, WorkOverview } from './components/Products'
 import { Window } from './components/Window'
 import { CvDetail } from './components/CvDetail'
 import { cvConfig } from './content/cv'
@@ -13,7 +13,7 @@ import { CLIMB_NAME } from './game/climber'
 import { useCanvasTilt } from './hooks/useCanvasTilt'
 
 type Detail = ProductId | 'work' | 'play' | 'github' | 'music' | 'running' | 'cv'
-const titles: Record<Detail, string> = { work: 'My work', shopvibes: 'My work / shopvibes', showcase: 'My work / showcase', backlane: 'My work / Backlane', play: CLIMB_NAME, github: 'Workbench / GitHub & experiments', music: 'On repeat / Spotify', running: 'Outside / Running', cv: `CV / ${cvConfig.name}` }
+const titles: Record<Detail, string> = { work: 'My work', shopvibes: 'My work / shopvibes', showcase: 'My work / showcase', backlane: 'My work / backlane', play: CLIMB_NAME, github: 'Workbench / GitHub & experiments', music: 'On repeat / Spotify', running: 'Outside / Running', cv: `CV / ${cvConfig.name}` }
 
 export default function App() {
   const [detail, setDetail] = useState<Detail | null>(null)
@@ -32,9 +32,10 @@ export default function App() {
       </main>
     </div>
     <Dock profile={siteConfig.profile} username={siteConfig.github.username} playlistUrl={siteConfig.spotify.url} onPlay={() => setDetail('play')} onWork={() => setDetail('work')}/>
-    {detail && <Window title={titles[detail]} expandable={detail !== 'play'} initialFocus={detail === 'play' ? '[data-game-start]' : undefined} onClose={() => setDetail(null)} variant={detail === 'play' ? 'game-window' : detail === 'cv' ? 'cv-window' : detail === 'work' || product ? 'work-window' : ''}>
+    {detail && <Window title={titles[detail]} expandable={detail !== 'play'} initialFocus={detail === 'play' ? '[data-game-start]' : undefined} onClose={() => setDetail(null)} variant={detail === 'play' ? 'game-window' : detail === 'cv' ? 'cv-window' : detail === 'work' || product ? 'work-window' : ''}
+      toolbar={product && <ProjectNavigation product={product} products={siteConfig.products} onSelect={setDetail} onOverview={() => setDetail('work')}/>}>
       {detail === 'work' && <WorkOverview products={siteConfig.products} onOpen={setDetail}/>}
-      {product && <ProductDetail product={product} products={siteConfig.products} onSelect={setDetail} onOverview={() => setDetail('work')}/>}
+      {product && <ProductDetail product={product}/>}
       {detail === 'play' && <BoulderGame/>}
       {detail === 'github' && <GithubDetail config={siteConfig.github}/>}
       {detail === 'music' && <MusicDetail config={siteConfig.spotify}/>}

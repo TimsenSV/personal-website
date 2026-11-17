@@ -47,7 +47,7 @@ export type PortfolioConfig = {
 
 // All personal content lives here. null means deliberately not yet supplied.
 // Place your own images in public/images and use relative paths: 'images/portrait.jpg'.
-// Book-cover graphics are illustrative. Product galleries contain real website and demo-app captures.
+// Book-cover graphics are illustrative. Product galleries contain real website and app captures.
 export const siteConfig: PortfolioConfig = {
   profile: {
     name: 'Tim',
@@ -159,18 +159,35 @@ export const siteConfig: PortfolioConfig = {
       contribution: null, decision: null, image: null, url: 'https://getshowcase.ai/en/',
     },
     {
-      id: 'backlane', name: 'Backlane', category: 'Action',
-      logo: { src: 'images/projects/backlane/logo.svg', alt: 'Backlane' },
+      id: 'backlane', name: 'backlane', category: 'Action',
+      logo: { src: 'images/projects/backlane/logo.svg', alt: 'backlane' },
       headline: 'Run your marketplace work from your AI chat.',
       summary: 'Connect your seller accounts to ChatGPT or Claude and handle marketplace workflows through conversation.',
-      shortDescription: 'Marketplace workflows, right in your AI chat.', role: null, screenshots: [],
+      shortDescription: 'Marketplace workflows, right in your AI chat.', role: null,
+      screenshots: [
+        {
+          src: 'images/projects/backlane/01-website.jpg',
+          alt: 'backlane website hero introducing its MCP connection for e-commerce teams',
+          caption: 'Your marketplace work, in your AI chat.', width: 1186, height: 749,
+        },
+        {
+          src: 'images/projects/backlane/02-welcome.png',
+          alt: 'backlane sign-in screen alongside an illustrative product-launch check in an AI conversation',
+          caption: 'A first look at everyday marketplace workflows.', width: 2000, height: 1143,
+        },
+        {
+          src: 'images/projects/backlane/03-integrations.png',
+          alt: 'backlane integrations screen showing AI assistant setup and connected Kaufland, home24 and OTTO accounts',
+          caption: 'Your marketplaces and AI connection, in one place.', width: 2000, height: 1122,
+        },
+      ],
       problem: 'Marketplace work is spread across different tools and repetitive tasks. There are often too many clicks between a question and getting it done.',
-      approach: 'Backlane connects marketplaces to AI assistants like ChatGPT and Claude, letting you run workflows through your assistant.',
+      approach: 'backlane connects marketplaces to AI assistants like ChatGPT and Claude, letting you run workflows through your assistant.',
       contribution: null, decision: null, image: null, url: 'https://getbacklane.com/en/',
     },
   ],
   seo: {
     title: 'Tim — Products, perspectives & a little movement',
-    description: 'A look into my world of product development, UX, AI and e-commerce. Featuring shopvibes, showcase, Backlane, music and movement.',
+    description: 'A look into my world of product development, UX, AI and e-commerce. Featuring shopvibes, showcase, backlane, music and movement.',
   },
 }

@@ -2,7 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { Maximize2, Minimize2, X } from 'lucide-react'
 import type { ReactNode } from 'react'
 
-export function Window({ title, children, onClose, variant = '', expandable = true, initialFocus }: { title: string; children: ReactNode; onClose: () => void; variant?: string; expandable?: boolean; initialFocus?: string }) {
+export function Window({ title, children, toolbar, onClose, variant = '', expandable = true, initialFocus }: { title: string; children: ReactNode; toolbar?: ReactNode; onClose: () => void; variant?: string; expandable?: boolean; initialFocus?: string }) {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const titleId = useId()
   const [expanded, setExpanded] = useState(false)
@@ -50,6 +50,7 @@ export function Window({ title, children, onClose, variant = '', expandable = tr
         <button className="icon-button" data-close onClick={onClose} aria-label="Close window"><X size={20}/><span className="mobile-close-label">Close</span></button>
       </div>
     </div>
+    {toolbar}
     <div className="window-body">{children}</div>
   </dialog>
 }

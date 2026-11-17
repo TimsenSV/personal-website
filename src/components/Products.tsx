@@ -46,11 +46,19 @@ function ProjectScreenshots({ product }: { product: Product }) {
   return screenshots.length ? <ProductGallery key={product.id} name={product.name} screenshots={screenshots} layout="strip"/> : <div className="project-screenshots-empty"><Images size={24} aria-hidden="true"/><span>Product screenshots coming soon.</span></div>
 }
 
-export function ProductDetail({ product, products, onSelect, onOverview }: { product: Product; products: Product[]; onSelect: (id: ProductId) => void; onOverview: () => void }) {
+export function ProjectNavigation({ product, products, onSelect, onOverview }: { product: Product; products: Product[]; onSelect: (id: ProductId) => void; onOverview: () => void }) {
+  return <nav className="project-navigation" aria-label="Projects">
+    <button className="project-back" onClick={onOverview} aria-label="All projects" title="All projects"><ArrowLeft size={17} aria-hidden="true"/><span>All projects</span></button>
+    <span className="project-nav-divider" aria-hidden="true"/>
+    <div className="project-switcher">{products.map(item => <button key={item.id} className={`project-choice choice-${item.id}`} onClick={() => onSelect(item.id)} aria-pressed={product.id === item.id}>
+      <span className="project-choice-book" aria-hidden="true"/>{item.name}
+    </button>)}</div>
+  </nav>
+}
+
+export function ProductDetail({ product }: { product: Product }) {
   const headingRef = useProjectHeading(product.id)
   return <div className={`product-detail detail-${product.id}`}>
-    <button className="work-back" onClick={onOverview}><ArrowLeft size={16}/>All projects</button>
-    <nav className="product-tabs" aria-label="Products">{products.map((item) => <button key={item.id} onClick={() => onSelect(item.id)} aria-pressed={product.id === item.id}>{item.name}</button>)}</nav>
     <div className="detail-intro"><ProductBrand product={product}/><h3 ref={headingRef} tabIndex={-1}>{product.headline}</h3><p>{product.summary}</p>{product.role && <p className="project-role">My role <strong>{product.role}</strong></p>}</div>
     <ProjectScreenshots product={product}/>
     <div className="detail-copy-grid"><section><span className="eyebrow">01 / The starting point</span><h4>The question behind it.</h4><p>{product.problem}</p></section><section><span className="eyebrow">02 / The approach</span><h4>What the product does.</h4><p>{product.approach}</p></section></div>

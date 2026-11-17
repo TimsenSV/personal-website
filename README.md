@@ -2,7 +2,7 @@
 
 Die gesamte Website ist auf Englisch: Canvas, Detailansichten, CV, Spiel, Statusmeldungen und zugängliche Beschriftungen. Datums- und Zahlenformate verwenden `en-GB`. Der Climber heißt „Grip Happens“. Die englische Fassung wurde bei 1280 und 320 Pixeln Breite im Browser geprüft, einschließlich CV, Projektansicht, PR-Vorschau und Tastaturstart des Spiels.
 
-Persönliche Bento-Canvas mit den drei Produkten shopvibes, showcase und Backlane, einem schwebenden Dock, nativen Detailfenstern und einem reaktionsbasierten Endless Climber.
+Persönliche Bento-Canvas mit den drei Produkten shopvibes, showcase und backlane, einem schwebenden Dock, nativen Detailfenstern und einem reaktionsbasierten Endless Climber.
 
 React + TypeScript + Vite, mit Motion für die Dock-Vergrößerung. Statische Website, ohne Backend, CMS, Zugangsdaten oder externe Schriftanbieter. Die Schriften werden lokal ausgeliefert.
 
@@ -35,14 +35,14 @@ Die typisierte Datei **`src/content/site.ts`** enthält die persönlichen Canvas
 | Kontakt | E-Mail-Adresse; LinkedIn ist im Dock hinterlegt |
 | GitHub | TimsenSV ist verbunden; Links zu ausgewählten öffentlichen Repositories können noch ergänzt werden |
 | Spotify | Playlist „Timsen“ mit Link und Originalcover ist hinterlegt; Begleittext optional anpassen |
-| Produkte | Eigener Beitrag, je eine konkrete Entscheidung und Backlane-Screenshots; Logos, Produktlinks sowie echte Website- und Demo-App-Aufnahmen für shopvibes und showcase sind hinterlegt |
+| Produkte | Eigener Beitrag und je eine konkrete Entscheidung; Logos, Produktlinks sowie echte Website- und App-Aufnahmen für alle drei Produkte sind hinterlegt |
 | Laufen | Strava und Halbmarathon-Ziel sind hinterlegt; Lieblingsstrecke optional |
 
 Für Bilder Dateien unter `public/images/` ablegen und z. B. `{ src: 'images/portrait.jpg', alt: '…' }` eintragen. Relative Pfade funktionieren auch in einem GitHub-Pages-Unterverzeichnis.
 
-Der Lebenslauf wurde am 17.11.2026 aus dem vom Nutzer verlinkten LinkedIn-Profil von Tim Hoffmann übernommen. Er enthält alle 14 beruflichen Stationen, vier Ausbildungsstationen, zehn Zertifikate, sechs Projekte, zwei Engagements, zwei Auszeichnungen, 16 Kenntnisse und drei Sprachen. Beschreibungen sind auf Englisch verdichtet; Rollen und Zeiträume stammen aus dem Profil. LinkedIn nennt beim Brandathon 2016 unterschiedliche Monate, daher steht bei der Auszeichnung nur das Jahr. Die Daten werden lokal gepflegt, ohne Laufzeitabruf oder Scraping; der Quellenlink und Stand bleiben im CV sichtbar. Nicht belegte Angaben, insbesondere eine Backlane-Rolle samt Zeitraum, wurden nicht ergänzt. Das Projekt liegt im privaten GitHub-Repository [TimsenSV/personal-website](https://github.com/TimsenSV/personal-website). Die Website ist noch nicht veröffentlicht. Der Repository-Link bleibt in der öffentlichen Canvas unkonfiguriert, solange das Repository privat ist.
+Der Lebenslauf wurde am 17.11.2026 aus dem vom Nutzer verlinkten LinkedIn-Profil von Tim Hoffmann übernommen. Er enthält alle 14 beruflichen Stationen, vier Ausbildungsstationen, zehn Zertifikate, sechs Projekte, zwei Engagements, zwei Auszeichnungen, 16 Kenntnisse und drei Sprachen. Beschreibungen sind auf Englisch verdichtet; Rollen und Zeiträume stammen aus dem Profil. LinkedIn nennt beim Brandathon 2016 unterschiedliche Monate, daher steht bei der Auszeichnung nur das Jahr. Die Daten werden lokal gepflegt, ohne Laufzeitabruf oder Scraping; der Quellenlink und Stand bleiben im CV sichtbar. Nicht belegte Angaben, insbesondere eine backlane-Rolle samt Zeitraum, wurden nicht ergänzt. Das Projekt liegt im privaten GitHub-Repository [TimsenSV/personal-website](https://github.com/TimsenSV/personal-website). Die Website ist noch nicht veröffentlicht. Der Repository-Link bleibt in der öffentlichen Canvas unkonfiguriert, solange das Repository privat ist.
 
-Die Illustrationen auf den Projektbänden sind eigenständig gestaltet, keine Screenshots. Die Work-App und Projektansichten verwenden echte Logos und zeigen nur ausdrücklich konfigurierte Produktbilder. Das Backlane-Signet stammt aus dem bereits vorhandenen Markenasset `backlane/backlane_logo/backlane-signet.svg`. Die inhaltliche Klammer Information → Darstellung → Handlung ist keine Unternehmenschronologie oder technische Abhängigkeitskette.
+Die Illustrationen auf den Projektbänden sind eigenständig gestaltet, keine Screenshots. Die Work-App und Projektansichten verwenden echte Logos und zeigen nur ausdrücklich konfigurierte Produktbilder. Das backlane-Signet stammt aus dem bereits vorhandenen Markenasset `backlane/backlane_logo/backlane-signet.svg`. Die inhaltliche Klammer Information → Darstellung → Handlung ist keine Unternehmenschronologie oder technische Abhängigkeitskette.
 
 ## Verhalten
 
@@ -146,7 +146,7 @@ Use case: photorealistic-natural. Asset type: one temporary sample portrait phot
 
 ## Projektbilder und Produktregal
 
-Das Produktregal zeigt shopvibes, showcase und Backlane als drei eigene Bände. Hover oder Tastaturfokus zieht den jeweiligen Band leicht heraus. Auf kleinen Bildschirmen stehen die Bände untereinander, mit Produktname und Kurzbeschreibung daneben. Gestaltung: `src/components/ProjectBook.tsx` und `src/work-shelf.css`.
+Das Produktregal zeigt shopvibes, showcase und backlane als drei eigene Bände. Hover oder Tastaturfokus zieht den jeweiligen Band leicht heraus. Auf kleinen Bildschirmen stehen die Bände untereinander, mit Produktname und Kurzbeschreibung daneben. Gestaltung: `src/components/ProjectBook.tsx` und `src/work-shelf.css`.
 
 Mehrere Screenshots lassen sich je Produkt unter `products[].screenshots` in `src/content/site.ts` hinterlegen. Dateien beispielsweise unter `public/images/projects/` ablegen:
 
@@ -176,10 +176,16 @@ Bei der Browserprüfung am 17.11.2026 wurden Cover und Titel korrekt geladen, di
 
 Die Logos liegen unverändert als SVG unter `public/images/projects/<produkt>/logo.svg` und sind unter `products[].logo` konfiguriert. Quellen sind die bereits vorhandenen Originaldateien: `shopvibes-frontend/public/logo_black.svg`, `shopvibes-imagestudio-website/src/assets/showcase-logo.svg` und `backlane_logo/backlane-logo.svg`. Die dunklen Buchcover verwenden eine weiße Darstellung derselben Konturen.
 
-Die Produktlinks und Aussagen wurden anhand der offiziellen Seiten geprüft: [shopvibes](https://www.shop-vibes.de/), [showcase](https://getshowcase.ai/en/) und [Backlane](https://getbacklane.com/en/). `headline` enthält das klare Nutzenversprechen für die Work-App und Details; `shortDescription` die knappe Version unter dem Projektband. `summary` konkretisiert Zielgruppe und Funktion. Nicht belegte Rollen oder Ergebnisse wurden nicht ergänzt.
+Die Produktlinks und Aussagen wurden anhand der offiziellen Seiten geprüft: [shopvibes](https://www.shop-vibes.de/), [showcase](https://getshowcase.ai/en/) und [backlane](https://getbacklane.com/en/). `headline` enthält das klare Nutzenversprechen für die Work-App und Details; `shortDescription` die knappe Version unter dem Projektband. `summary` konkretisiert Zielgruppe und Funktion. Nicht belegte Rollen oder Ergebnisse wurden nicht ergänzt.
 
 Für neue Screenshots sind die drei Ordner `public/images/projects/shopvibes/`, `showcase/` und `backlane/` vorbereitet. Dateien dort ablegen und in `products[].screenshots` eintragen. Bildreihen sind mit markierten lokalen Testmotiven auf Desktop und bei 320 Pixeln geprüft: horizontales Scrollen, Tastaturauswahl, Vergrößern des gewählten Bildes, Umlauf, Escape und Fokus-Rückkehr funktionieren. Die Testmotive sind kein Bestandteil des Portfolios. Der Fensterkopf bleibt beim Tastaturscrollen stehen.
 
-shopvibes und showcase enthalten seit dem 17.11.2026 jeweils drei echte Chrome-Aufnahmen. Den Einstieg bildet der obere Abschnitt der jeweiligen englischen Produktwebsite (`shop-vibes.de` bzw. `getshowcase.ai/en/`). Darauf folgen der shopvibes-Demokatalog und die Kanalverwaltung bzw. das showcase-Demostudio und vorhandene Sofa-Varianten in der Bibliothek. Es wurden keine neuen Bilder generiert oder Produktdaten verändert. Die App-Aufnahmen sind auf 2000 Pixel Breite optimiert; die fotoreiche Variantenansicht verwendet JPEG. Backlane wartet weiterhin auf ausgewählte Screenshots.
+shopvibes und showcase enthalten seit dem 17.11.2026 jeweils drei echte Chrome-Aufnahmen. Den Einstieg bildet der obere Abschnitt der jeweiligen englischen Produktwebsite (`shop-vibes.de` bzw. `getshowcase.ai/en/`). Darauf folgen der shopvibes-Demokatalog und die Kanalverwaltung bzw. das showcase-Demostudio und vorhandene Sofa-Varianten in der Bibliothek. Es wurden keine neuen Bilder generiert oder Produktdaten verändert. Die App-Aufnahmen sind auf 2000 Pixel Breite optimiert; die fotoreiche Variantenansicht verwendet JPEG.
 
-Die echten Bildreihen wurden bei 1280 und 390 Pixeln im Browser geprüft: Einstieg und Reihenfolge stimmen, alle sechs Bilder laden, Vergrößern und Bildwechsel funktionieren. Escape schließt nur die Galerie und setzt den Fokus auf das auslösende Bild zurück; mobil entsteht kein seitlicher Seitenüberlauf. Lint, alle 72 Tests und der Produktionsbuild sind erfolgreich.
+backlane zeigt ebenfalls drei Bilder: zuerst den englischen Website-Einstieg von `getbacklane.com/en/`, danach Tims bereitgestellte Screenshots vom 17.11.2026 (Anmeldung um 16:40:44 und Integrationen um 16:42:03). Die beiden gelieferten Aufnahmen wurden nur auf 2000 Pixel Breite verkleinert; Inhalt und Sprache bleiben unverändert.
+
+Die echten Bildreihen wurden bei 1280 und 390 Pixeln im Browser geprüft: Einstieg und Reihenfolge stimmen, alle neun Bilder laden, Vergrößern und Bildwechsel funktionieren. Escape schließt nur die Galerie und setzt den Fokus auf das auslösende Bild zurück; mobil entsteht kein seitlicher Seitenüberlauf. Lint, alle 72 Tests und der Produktionsbuild sind erfolgreich.
+
+Die Projekt-Navigation sitzt als kompakte, feststehende Leiste direkt unter dem Fensterkopf. „All projects“ und die drei farblich zum Regal passenden Projektbände bilden eine Zeile; mobil bleibt der Zurück-Pfeil mit zugänglicher Beschriftung erhalten. Der Markenname backlane wird durchgängig kleingeschrieben.
+
+Beim Hover oder Tastaturfokus erscheinen hinter den Büchern gestaffelte Ebenen: shopvibes-Datenkarten, showcase-Fotoabzüge und backlane-Chat/Verbindungssymbole. Die echten Produktausschnitte nutzen kleine lokale JPEG-Vorschauen (je 640 Pixel breit); die beiden Fotoabzüge sind CSS-Ausschnitte aus der vorhandenen showcase-Bibliothek. Die Elemente sind rein dekorativ, fangen keine Klicks ab und werden auf Touch-Geräten, unter 621 Pixeln sowie bei reduzierter Bewegung ausgeblendet. Gestaltung: `src/book-artifacts.css`. Desktop-Hover und Tastaturfokus sowie die Projektnavigation bei 1280, 390 und 320 Pixeln wurden im Browser geprüft.

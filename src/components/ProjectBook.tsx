@@ -1,5 +1,6 @@
-import { ArrowUpRight } from 'lucide-react'
+import { ArrowUpRight, Check, Database, Link2, Sparkles } from 'lucide-react'
 import type { Product } from '../content/site'
+import { assetUrl } from '../lib/links'
 import { BacklaneMark } from './Icons'
 import { ProductBrand } from './ProductBrand'
 
@@ -19,9 +20,34 @@ function CoverArt({ id }: { id: Product['id'] }) {
   return <span className="book-connection-art" aria-hidden="true"><span className="book-orbit orbit-one"/><span className="book-orbit orbit-two"/><BacklaneMark/><i/><i/><i/></span>
 }
 
+function BookArtifacts({ id }: { id: Product['id'] }) {
+  const preview = assetUrl(`images/projects/${id}/shelf-preview.jpg`)
+  return <span className="book-artifacts" aria-hidden="true">
+    <span className={`book-artifact artifact-preview ${id === 'showcase' ? 'artifact-photo' : 'artifact-screen'}`}>
+      {id !== 'showcase' && <span className="artifact-screen-bar"><i/><i/><i/></span>}
+      <span className="artifact-image"><img src={preview} alt="" width="640" height="360" loading="lazy" decoding="async" draggable={false}/></span>
+    </span>
+    {id === 'shopvibes' && <>
+      <span className="book-artifact artifact-data"><span><Database size={18}/><Check size={13}/></span><i/><i/><i/></span>
+      <span className="book-artifact artifact-token"><Check size={22} strokeWidth={3}/></span>
+    </>}
+    {id === 'showcase' && <>
+      <span className="book-artifact artifact-photo artifact-photo-second"><span className="artifact-image"><img src={preview} alt="" width="640" height="360" loading="lazy" decoding="async" draggable={false}/></span></span>
+      <span className="book-artifact artifact-token"><Sparkles size={23}/></span>
+    </>}
+    {id === 'backlane' && <>
+      <span className="book-artifact artifact-chat"><span/><span/><span/><i><Check size={12}/></i></span>
+      <span className="book-artifact artifact-token"><Link2 size={25}/></span>
+    </>}
+  </span>
+}
+
 export function ProjectBook({ product, onOpen }: { product: Product; onOpen: () => void }) {
   return <button className={`project-volume volume-${product.id}`} onClick={onOpen} aria-label={`${product.name}: open details`}>
-    <span className="volume-object" aria-hidden="true"><span className="volume-pages"/><span className="volume-cover"><span className="volume-title"><ProductBrand product={product}/></span><span className="volume-art"><CoverArt id={product.id}/></span><span className="volume-mark">t<span>.</span></span></span></span>
+    <span className="volume-scene" aria-hidden="true">
+      <BookArtifacts id={product.id}/>
+      <span className="volume-object"><span className="volume-pages"/><span className="volume-cover"><span className="volume-title"><ProductBrand product={product}/></span><span className="volume-art"><CoverArt id={product.id}/></span><span className="volume-mark">t<span>.</span></span></span></span>
+    </span>
     <span className="volume-caption"><strong>{product.name}</strong><span>{product.shortDescription}</span><ArrowUpRight size={16} aria-hidden="true"/></span>
   </button>
 }

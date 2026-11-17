@@ -12,6 +12,7 @@ import './cv.css'
 import './dock.css'
 import './climber.css'
 import './work-shelf.css'
+import './book-artifacts.css'
 import './canvas-tilt.css'
 import App from './App'
 

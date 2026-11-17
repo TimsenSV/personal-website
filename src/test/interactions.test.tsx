@@ -11,7 +11,7 @@ describe('canvas interactions', () => {
     const trigger = screen.getByRole('button', { name: 'Work' })
     await userEvent.click(trigger)
     const overview = screen.getByRole('dialog', { name: 'My work' })
-    for (const name of ['shopvibes', 'showcase', 'Backlane']) expect(within(overview).getByRole('button', { name: `${name}: open details` })).toBeVisible()
+    for (const name of ['shopvibes', 'showcase', 'backlane']) expect(within(overview).getByRole('button', { name: `${name}: open details` })).toBeVisible()
     await userEvent.click(within(overview).getByRole('button', { name: 'shopvibes: open details' }))
     expect(screen.getByRole('dialog', { name: 'My work / shopvibes' })).toBeVisible()
     await userEvent.click(screen.getByRole('button', { name: 'All projects' }))
@@ -22,7 +22,7 @@ describe('canvas interactions', () => {
   })
   it('shows all three products and hides unconfigured external dock actions', () => {
     render(<App/>)
-    for (const name of ['shopvibes', 'showcase', 'Backlane']) expect(screen.getByRole('button', { name: `${name}: open details` })).toBeVisible()
+    for (const name of ['shopvibes', 'showcase', 'backlane']) expect(screen.getByRole('button', { name: `${name}: open details` })).toBeVisible()
     const dock = screen.getByRole('navigation', { name: 'Quick navigation' })
     expect(within(dock).getAllByRole('link')).toHaveLength(4)
     expect(within(dock).getByRole('link', { name: /Spotify/ })).toHaveAttribute('href', siteConfig.spotify.url)

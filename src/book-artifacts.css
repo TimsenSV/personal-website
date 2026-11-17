@@ -1,0 +1,47 @@
+@layer widgets {
+  .book-artifacts { position: absolute; inset: 0; pointer-events: none; }
+  .book-artifact {
+    position: absolute;
+    display: block;
+    opacity: 0;
+    transform: perspective(600px) translate3d(0,18px,-40px) rotate(0) scale(.7);
+    transition: transform .56s cubic-bezier(.18,.85,.25,1.15), opacity .18s ease;
+    box-shadow: 0 8px 16px #1b244522, 0 1px 3px #1b244518;
+  }
+  .artifact-preview { top: 0; left: 0; width: 78%; --artifact-out: perspective(600px) translate3d(-30%,-32%,0) rotateY(8deg) rotate(-14deg); }
+  .artifact-screen { overflow: hidden; padding: 4px; border: 1px solid #dce2ee; border-radius: 7px; background: #fff; }
+  .artifact-screen-bar { display: flex; gap: 3px; height: 10px; padding: 1px 3px; align-items: center; }
+  .artifact-screen-bar i { width: 3px; height: 3px; border-radius: 50%; background: #aebbd2; }
+  .artifact-image { position: relative; display: block; overflow: hidden; aspect-ratio: 16/10; border-radius: 3px; }
+  .artifact-image > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .artifact-data { top: 16%; right: 0; width: 54%; padding: 13px 11px; border: 1px solid #c3d1ff; border-radius: 9px; background: #e9efff; color: #3159f5; --artifact-out: perspective(600px) translate3d(34%,-56%,0) rotateY(-12deg) rotate(15deg); }
+  .artifact-data > span { display: flex; align-items: center; justify-content: space-between; margin-bottom: 11px; }
+  .artifact-data > i { display: block; height: 4px; margin-top: 5px; border-radius: 2px; background: #93aafa; }
+  .artifact-data > i:nth-last-child(2) { width: 76%; }.artifact-data > i:last-child { width: 88%; }
+  .artifact-token { right: 0; bottom: 21%; display: grid; place-items: center; width: 45px; height: 45px; border-radius: 13px; border: 1px solid #ffffff60; color: #fff; background: #3159f5; box-shadow: inset 0 2px 1px #ffffff50, inset 0 -4px 0 #1735bd, 0 8px 12px #24365a24; --artifact-out: perspective(600px) translate3d(90%,0,0) rotateY(-16deg) rotate(16deg); }
+  .artifact-photo { width: 65%; padding: 6px 6px 17px; border: 1px solid #e8ded4; background: #fffefb; border-radius: 2px; --artifact-out: perspective(600px) translate3d(-32%,-27%,0) rotateY(8deg) rotate(-16deg); }
+  .artifact-photo .artifact-image { aspect-ratio: 1; border-radius: 0; }
+  /* Two real sofa scenes, cropped from the existing showcase library capture. */
+  .artifact-photo .artifact-image > img { position: absolute; max-width: none; width: 666.667%; height: auto; left: -12.5%; top: -133.333%; }
+  .artifact-photo-second { top: 8%; left: auto; right: 0; --artifact-out: perspective(600px) translate3d(35%,-40%,0) rotateY(-10deg) rotate(17deg); }
+  .artifact-photo-second .artifact-image > img { left: -229.167%; }
+  .volume-showcase .artifact-token { border-radius: 50%; background: #ffd9a6; color: #b3532d; box-shadow: inset 0 2px 1px #fff5dd, inset 0 -4px 0 #efb376, 0 8px 12px #63322124; }
+  .artifact-chat { display: flex; align-items: center; justify-content: center; gap: 6px; top: 16%; right: 0; width: 65%; height: 55px; border: 1px solid #cab8ff; border-radius: 15px 15px 15px 4px; background: #e9dfff; --artifact-out: perspective(600px) translate3d(29%,-74%,0) rotateY(-12deg) rotate(13deg); }
+  .artifact-chat > span { width: 7px; height: 7px; border-radius: 50%; background: #7953b9; }
+  .artifact-chat > i { position: absolute; bottom: -8px; right: -4px; width: 23px; height: 23px; display: grid; place-items: center; border: 3px solid #fff; border-radius: 50%; background: #322a53; color: white; }
+  .volume-backlane .artifact-token { background: #d5f24e; color: #263400; box-shadow: inset 0 2px 1px #f3ffb4, inset 0 -4px 0 #a6bf35, 0 8px 12px #26340024; }
+  .project-volume:focus-visible { z-index: 3; }
+  .project-volume:focus-visible .book-artifact { opacity: 1; transform: var(--artifact-out); }
+  .project-volume:focus-visible .book-artifact:nth-child(2) { transition-delay: 45ms; }
+  .project-volume:focus-visible .book-artifact:nth-child(3) { transition-delay: 90ms; }
+  @media (hover: hover) and (pointer: fine) {
+    .project-volume:hover { z-index: 3; }
+    .project-volume:hover .book-artifact { opacity: 1; transform: var(--artifact-out); }
+    .project-volume:hover .book-artifact:nth-child(2) { transition-delay: 45ms; }
+    .project-volume:hover .book-artifact:nth-child(3) { transition-delay: 90ms; }
+  }
+  @media (max-width:620px), (hover: none), (prefers-reduced-motion:reduce) {
+    .book-artifacts { display: none; }
+    .book-artifact { transition: none; }
+  }
+}
