@@ -70,8 +70,7 @@
   .climb-input:active > span { background: #dfe8ff; transform: translateY(2px); box-shadow: none; }
   .climb-input:focus { outline: none; }.climb-input:focus-visible > span { outline: 2px solid #344f9d; outline-offset: 3px; }
   .climb-overlay { position: absolute; inset: 0; z-index: 5; display: grid; place-items: center; padding: 22px; background: #eef2fdbd; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
-  .overlay-fallen { animation: climb-overlay-in .3s .4s both; }.overlay-paused { background: #edf1f7d9; }
-  @keyframes climb-overlay-in { from { opacity: 0; } to { opacity: 1; } }
+  .overlay-paused { background: #edf1f7d9; }
   .climb-overlay-card { width: 100%; max-width: 340px; text-align: center; position: relative; }
   .climb-overlay-card .chalk-climber { position: absolute; width: 62px; height: 80px; right: 5px; top: 16px; pointer-events: none; }
   .climb-overlay-card .chalk-climber .climber-name { display: none; }
@@ -88,8 +87,6 @@
   .climb-legend { display: flex; justify-content: center; gap: 15px; margin-top: 25px; color: #59647b; font-size: 8px; }
   .climb-legend > span { display: flex; align-items: center; gap: 5px; }.climb-legend i { width: 9px; height: 7px; border-radius: 4px; }.legend-normal { background: #3657ef; }.legend-jug { background: #7d52d7; }.legend-crimp { background: #ef7444; }
   .legend-loose { background: #ce5968; clip-path: polygon(0 0,45% 0,55% 45%,40% 70%,50% 100%,0 100%,0 0,65% 0,75% 45%,60% 70%,70% 100%,100% 100%,100% 0); }
-  .climb-run-stats { display: flex; justify-content: center; gap: 26px; font-size: 10px; color: #596980; margin: 0 0 24px; }.climb-run-stats strong { display: block; font-size: 23px; color: #344565; margin-bottom: 2px; }
-  .climb-local-note { display: block; font-size: 9px; color: #6a758a; margin-top: 20px; }
   .climb-timing-arc { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
   .climb-arc-backing { stroke: #fffffff2; stroke-width: 18px; stroke-linecap: round; }
   .climb-arc-track { stroke: #cbd4e8; stroke-width: 10px; stroke-linecap: round; }

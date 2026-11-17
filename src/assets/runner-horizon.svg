@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="56" viewBox="0 0 240 56" shape-rendering="crispEdges">
+  <!-- A tile of distant hills at first light; both edges meet at the same elevation. -->
+  <path fill="#ffd1a1" d="M181 5h7v1h3v2h2v3h1v6h-1v3h-2v2h-3v1h-7v-1h-3v-2h-2v-3h-1v-6h1V8h2V6h3z"/>
+  <path fill="#f1ddce" d="M7 10h8V8h8v1h4v2h10v1H7zM91 15h7v-2h4v-2h10v2h6v2h5v1H91zM174 17h14v1h-14z"/>
+  <path fill="#e5dadb" d="M0 41h11v-2h10v-3h8v-2h7v-3h9v-3h5v-2h9v3h7v2h5v3h10v3h9v2h11v3h13v2h12v-3h6v-2h9v-3h6v-2h5v-4h8v-3h6v-2h5v-2h8v2h5v3h8v3h7v3h8v3h9v2h6v2h17v15H0z"/>
+  <path fill="#c7c5cf" d="M0 47h12v-3h7v-2h11v-3h6v-3h6v-2h6v-1h6v3h7v2h4v3h9v2h10v2h15v3h14v-2h6v-3h9v-2h7v-3h6v-3h4v-1h7v2h6v3h7v1h9v3h11v2h12v1h11v-1h9v-3h11v-2h9v2h7v3h8v2h5v9H0z"/>
+  <path fill="#f5e9e4" d="M44 32h5v-3h5v-2h5v2h3v1h-5v1h-4v2h-9zM158 32h5v-3h5v-2h5v-2h5v1h-3v2h-4v2h-5v2h-8z"/>
+</svg>

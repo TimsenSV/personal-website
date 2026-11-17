@@ -11,6 +11,27 @@
   .strava-follow > svg { width: 17px; height: 17px; flex-shrink: 0; }
   .strava-run-link:hover .strava-follow { text-decoration: underline; text-underline-offset: 4px; }
   .runner-scene { display: block; position: relative; width: 100%; height: 142px; overflow: hidden; }
+  .runner-scenery {
+    position: absolute; inset: 0 0 27px; overflow: hidden; pointer-events: none;
+    mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  }
+  .runner-scenery::before, .runner-scenery::after {
+    content: ''; position: absolute; bottom: 0; left: 0; height: 100%;
+    width: calc(100% + var(--strip-width)); background-repeat: repeat-x;
+    background-position: left bottom; background-size: var(--strip-width) auto;
+    image-rendering: pixelated;
+    animation: runner-pan var(--lap-time) linear infinite;
+    animation-play-state: var(--running);
+  }
+  .runner-scenery::before {
+    --strip-width: 384px; --lap-time: 48s;
+    background-image: url('./assets/runner-horizon.svg');
+  }
+  .runner-scenery::after {
+    --strip-width: 258px; --lap-time: 9s;
+    background-image: url('./assets/runner-trackside.svg');
+  }
+  @keyframes runner-pan { to { transform: translateX(calc(0px - var(--strip-width))); } }
   .pixel-runner { position: absolute; width: 128px; height: 144px; bottom: 3px; left: calc(50% - 54px); image-rendering: pixelated; overflow: visible; }
   .runner-track { position: absolute; height: 20px; left: 8%; right: 8%; bottom: 8px; border-top: 2px solid #eac9af; border-bottom: 1px solid #edd7c5; transform: skewX(-35deg); background: repeating-linear-gradient(90deg,transparent 0 25px,#edceb7 25px 34px,transparent 34px 66px); background-size: 66px 100%; }
   .runner-speed { position: absolute; top: 58px; left: calc(50% - 73px); width: 30px; }

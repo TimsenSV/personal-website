@@ -5,6 +5,8 @@ import { PixelTimHead } from './PixelTimHead'
 
 import { limbPath, type JointPair, type Point } from './pixelLimb'
 
+type SpritePose = ClimbingPose | 'land'
+
 type Drawing = {
   body: Point
   frontArm: JointPair; backArm: JointPair
@@ -13,7 +15,7 @@ type Drawing = {
 
 // Elbow and palm, knee and toe, in the same pixel grid as the shared face.
 // The leading palm rests at (30, 8) across the planted poses.
-const poses: Record<ClimbingPose, Drawing> = {
+const poses: Record<SpritePose, Drawing> = {
   hang:  { body: [-1, -1], frontArm: [[33,18],[30,8]], backArm: [[7,18],[12,9]], frontLeg: [[34,38],[28,46]], backLeg: [[12,42],[8,46]] },
   load:  { body: [-2, -5], frontArm: [[34,17],[30,8]], backArm: [[5,16],[12,9]], frontLeg: [[33,29],[27,38]], backLeg: [[7,34],[11,42]] },
   reach: { body: [-3, -1], frontArm: [[30,17],[35,6]], backArm: [[7,26],[2,20]], frontLeg: [[27,37],[21,45]], backLeg: [[9,40],[1,45]] },
@@ -21,6 +23,7 @@ const poses: Record<ClimbingPose, Drawing> = {
   slip:  { body: [3, 1], frontArm: [[34,19],[30,8]], backArm: [[9,31],[3,27]], frontLeg: [[34,43],[37,52]], backLeg: [[16,44],[10,51]] },
   boost: { body: [-2,-2], frontArm: [[30,15],[35,4]], backArm: [[4,23],[0,17]], frontLeg: [[34,30],[31,39]], backLeg: [[10,39],[2,35]] },
   fall:  { body: [0,0], frontArm: [[36,21],[39,15]], backArm: [[4,18],[2,12]], frontLeg: [[32,37],[36,45]], backLeg: [[9,39],[3,35]] },
+  land:  { body: [0,4], frontArm: [[34,29],[38,24]], backArm: [[6,30],[2,25]], frontLeg: [[33,40],[29,47]], backLeg: [[8,39],[10,47]] },
   hero:  { body: [0,0], frontArm: [[34,21],[32,12]], backArm: [[7,29],[15,31]], frontLeg: [[27,40],[30,47]], backLeg: [[15,40],[12,47]] },
 }
 
@@ -50,7 +53,7 @@ function Leg({ root, joints, front }: { root: Point; joints: JointPair; front?: 
 
 const colors = Object.fromEntries(Object.entries(siteConfig.profile.pixelAvatar).map(([key, value]) => [`--pixel-${key}`, value])) as CSSProperties
 
-export const ClimbingTim = memo(function ClimbingTim({ pose }: { pose: ClimbingPose }) {
+export const ClimbingTim = memo(function ClimbingTim({ pose }: { pose: SpritePose }) {
   const { body: [x,y], frontArm, backArm, frontLeg, backLeg } = poses[pose]
   return <g className={`climb-tim pose-${pose}`} style={colors} shapeRendering="crispEdges">
     <Leg root={[17+x,34+y]} joints={backLeg}/>

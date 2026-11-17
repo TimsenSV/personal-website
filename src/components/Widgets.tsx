@@ -3,7 +3,7 @@ import { ArrowUpRight, AudioLines, Code2, FileUser, Footprints, GitBranch, Githu
 import type { PortfolioConfig } from '../content/site'
 import { assetUrl, externalUrl, githubProfile, spotifyPlaylist } from '../lib/links'
 import { useGitHubActivity } from '../hooks/useGitHubActivity'
-import { BoulderPreview } from './BoulderGame'
+import { BoulderPreview } from './BoulderPreview'
 import { ExternalLink } from './ExternalLink'
 import { RouteDrawing, SpotifyMark, StravaMark } from './Icons'
 import { useSpotifyConsent } from '../hooks/useSpotifyConsent'
@@ -85,7 +85,10 @@ export function MusicDetail({ config, onPrivacy }: { config: PortfolioConfig['sp
 
 export function RunningWidget({ config, onOpen }: { config: PortfolioConfig['running']; onOpen: () => void }) {
   const previewRef = useScrollPreview<HTMLElement>('viewport')
-  const scene = <span className="runner-scene" aria-hidden="true"><span className="runner-track"/><span className="runner-speed"><i/><i/><i/></span><PixelRunner/></span>
+  const scene = <span className="runner-scene" aria-hidden="true">
+    <span className="runner-scenery"/><span className="runner-track"/>
+    <span className="runner-speed"><i/><i/><i/></span><PixelRunner/>
+  </span>
   return <section ref={previewRef} className="card running-card runner-card" aria-labelledby="running-title">
     <div className="runner-heading"><h2 id="running-title" lang="en">{config.title}</h2><button className="round-link" onClick={onOpen} aria-label="Running: open details"><ArrowUpRight size={18}/></button></div>
     {externalUrl(config.stravaUrl) ? <ExternalLink href={config.stravaUrl} className="strava-run-link">{scene}<span className="strava-follow"><StravaMark/>Run with me on Strava</span></ExternalLink> : <>{scene}<span className="small-note">Strava link coming soon.</span></>}
@@ -99,5 +102,14 @@ export function RunningDetail({ config }: { config: PortfolioConfig['running'] }
 export function BoulderWidget({ onOpen }: { onOpen: () => void }) {
   const previewRef = useScrollPreview<HTMLElement>('viewport')
   const [chalkCue, setChalkCue] = useState(0)
-  return <section ref={previewRef} className="card boulder-card" aria-labelledby="boulder-title" onPointerEnter={(event) => { if (event.pointerType !== 'touch') setChalkCue(value => value + 1) }} onFocus={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setChalkCue(value => value + 1) }}><div className="boulder-heading"><h2 id="boulder-title" lang="en">{CLIMB_NAME}.</h2><span className="boulder-number" aria-hidden="true">∞</span></div><div className="boulder-scene"><button className="boulder-preview-button" onClick={onOpen} aria-label="Open and play the climbing game"><BoulderPreview/><span className="board-open-hint"><Play size={12} fill="currentColor"/> Start climbing</span></button><div className="boulder-avatar"><ChalkClimber cue={chalkCue}/></div></div><div className="boulder-bottom"><button className="round-link" onClick={onOpen} aria-label="Start climbing game"><ArrowUpRight size={18}/></button></div></section>
+  return <section ref={previewRef} className="card boulder-card" aria-labelledby="boulder-title"
+    onPointerEnter={event => { if (event.pointerType !== 'touch') setChalkCue(value => value + 1) }}
+    onFocus={event => { if (!event.currentTarget.contains(event.relatedTarget)) setChalkCue(value => value + 1) }}>
+    <div className="boulder-heading"><h2 id="boulder-title" lang="en">{CLIMB_NAME}.</h2></div>
+    <div className="boulder-scene">
+      <button className="boulder-preview-button" onClick={onOpen} aria-label="Open and play the climbing game"><BoulderPreview/></button>
+      <div className="boulder-avatar"><ChalkClimber cue={chalkCue}/></div>
+    </div>
+    <div className="boulder-bottom"><button className="boulder-start" aria-label="Start climbing game" onClick={onOpen}><Play size={12} fill="currentColor"/>Start climbing</button></div>
+  </section>
 }

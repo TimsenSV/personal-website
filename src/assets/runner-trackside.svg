@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="172" height="30" viewBox="0 0 172 30" shape-rendering="crispEdges">
+  <defs>
+    <g id="poplar">
+      <path fill="#8e9b97" d="M5 0h2v2h2v3h1v5h2v8h-1v3H9v2H4v-2H2v-4H1v-6h1V6h2V2h1z"/>
+      <path fill="#b6c1ad" d="M5 2h2v3H6v6H5v4H3v-4h1V6h1z"/>
+      <path fill="#958b80" d="M6 20h2v8H6z"/>
+    </g>
+  </defs>
+  <path fill="#c9cbba" d="M0 26h12v-1h9v-2h12v1h8v2h21v-2h7v-2h8v1h10v2h18v1h11v-2h7v-1h15v2h8v1h16v-1h10v5H0z"/>
+  <use href="#poplar" transform="translate(17 2)"/>
+  <use href="#poplar" transform="translate(32 9) scale(.75)"/>
+  <use href="#poplar" transform="translate(142 10) scale(.72)"/>
+  <!-- One old-fashioned track rail runs through the seam of the repeating strip. -->
+  <path fill="#bd9d87" d="M0 24h172v1H0zM7 23h2v7H7zM50 23h2v7h-2zM93 23h2v7h-2zM136 23h2v7h-2z"/>
+  <path fill="#e9cdb4" d="M0 26h172v1H0z"/>
+</svg>

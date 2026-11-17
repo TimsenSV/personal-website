@@ -1,0 +1,102 @@
+@layer widgets {
+  .is-fallen .climb-stage {
+    height: auto;
+    min-height: 0;
+    overflow-y: auto;
+    background: #17243b;
+  }
+  .is-fallen .climb-wall { position: absolute; inset: 0; }
+  .climb-result {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    background: #17243b;
+    color: #fff3db;
+    text-align: center;
+    animation: result-arrives .22s ease-out both;
+  }
+  .landing-scene {
+    display: block;
+    width: 100%;
+    height: clamp(148px, 26dvh, 215px);
+    flex: 1 0 auto;
+    background: #354373;
+  }
+  .landing-tim { transform-origin: 20px 52px; animation: land-on-pad .55s steps(5, end) both; }
+  .landing-chalk { opacity: 0; animation: landing-puff .38s .24s steps(4, end); }
+  .result-content {
+    width: min(100%, 420px);
+    align-self: center;
+    padding: 4px 26px 29px;
+  }
+  .result-altitude h3 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    margin: 0;
+    color: #c6d4eb;
+    font: 500 10px/1.4 var(--mono);
+    letter-spacing: 1.45px;
+    text-transform: uppercase;
+  }
+  .result-altitude h3 svg { width: 14px; height: 14px; }
+  .is-record .result-altitude h3 { color: #ffd78b; }
+  .result-altitude p {
+    margin: 4px 0 0;
+    color: #fff5dc;
+    font-size: clamp(54px, 8dvh, 78px);
+    line-height: 1.05;
+    font-weight: 750;
+    letter-spacing: -.065em;
+    font-variant-numeric: tabular-nums;
+  }
+  .result-altitude p span { font-size: .42em; letter-spacing: -.04em; margin-left: .18em; color: #becde9; }
+  .result-hint { color: #d4dfef; font-size: 14px; line-height: 1.45; margin: 9px 0 21px; text-wrap: balance; }
+  .result-splits {
+    display: flex;
+    margin: 0 0 19px;
+    padding: 12px 0;
+    border-block: 1px solid #3e4a60;
+  }
+  .result-splits div { flex: 1; padding: 0 4px; }
+  .result-splits div + div { border-left: 1px solid #3e4a60; }
+  .result-splits dt { color: #bac9dd; font: 10px/1.4 var(--mono); }
+  .result-splits dd { margin: 3px 0 0; color: #f3f5fb; font-size: 19px; line-height: 1.15; font-weight: 650; font-variant-numeric: tabular-nums; }
+  .result-retry {
+    max-width: none;
+    border-radius: 5px;
+    background: #ffdfa0;
+    color: #222d43;
+    box-shadow: 0 4px 0 #b38353;
+  }
+  .result-retry:hover { background: #ffebbf; }
+  .result-retry:active { box-shadow: 0 1px 0 #b38353; }
+  .result-retry:focus-visible { outline: 2px solid #e1edff; outline-offset: 4px; }
+  .result-retry kbd { display: inline-flex; align-items: center; padding: 2px 4px; border: 1px solid #a98855; border-bottom-width: 2px; border-radius: 3px; }
+  @keyframes result-arrives { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes land-on-pad {
+    0% { transform: translateY(-62px) rotate(-8deg); }
+    49% { transform: translateY(-5px); }
+    58% { transform: scale(1.12,.81); }
+    76% { transform: translateY(-4px) scale(.98,1.03); }
+    100% { transform: none; }
+  }
+  @keyframes landing-puff {
+    0%, 60% { opacity: .92; }
+    100% { opacity: 0; transform: translateY(-8px); }
+  }
+  @media (max-width:620px) {
+    .is-fallen .climb-stage { display: flex; flex-direction: column; }
+    .climb-result { flex: 1 0 auto; }
+    .landing-scene { flex-basis: clamp(145px, 29dvh, 250px); }
+    .result-content { padding: 14px 24px max(32px, env(safe-area-inset-bottom)); margin-bottom: auto; }
+  }
+  @media (max-height:620px) {
+    .landing-scene { height: 110px; flex-basis: 110px; }
+    .result-content { padding-top: 0; padding-bottom: 17px; }
+    .result-hint { margin: 5px 0 12px; }
+    .result-splits { padding: 8px 0; margin-bottom: 12px; }
+  }
+}

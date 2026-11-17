@@ -35,7 +35,7 @@
   .project-volume:focus-visible .book-artifact:nth-child(2) { transition-delay: 45ms; }
   .project-volume:focus-visible .book-artifact:nth-child(3) { transition-delay: 90ms; }
   .project-volume[data-scroll-active] { z-index: 3; }
-  .project-volume[data-scroll-active] .volume-object { transform: perspective(900px) translateY(-9px) rotateY(-4deg) rotateZ(-1deg); filter: drop-shadow(5px 10px 6px #24365a2b); }
+  .project-volume[data-scroll-active] .volume-object { transform: perspective(900px) translateY(-9px) rotateY(-4deg) rotateZ(-1deg); --book-shadow: 4px 9px 12px #24365a28; }
   .project-volume[data-scroll-active] .book-artifact { opacity: 1; transform: var(--artifact-out); }
   .project-volume[data-scroll-active] .book-artifact:nth-child(2) { transition-delay: 45ms; }
   .project-volume[data-scroll-active] .book-artifact:nth-child(3) { transition-delay: 90ms; }

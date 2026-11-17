@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="de">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>My work · Einbandstudie</title>
+  <style>
+    @font-face {
+      font-family: DM;
+      src: url('../node_modules/@fontsource-variable/dm-sans/files/dm-sans-latin-wght-normal.woff2')
+        format('woff2');
+      font-weight: 100 1000;
+      font-display: swap;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      background: #f5f4ef;
+      color: #232421;
+      font:
+        15px/1.5 DM,
+        'Helvetica Neue',
+        Arial,
+        sans-serif;
+    }
+    button {
+      font: inherit;
+      color: inherit;
+    }
+    main {
+      max-width: 1120px;
+      margin: auto;
+      padding: 46px 38px 56px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 28px;
+      margin: 0 0 24px;
+    }
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+    h1 {
+      font-size: clamp(34px, 5vw, 62px);
+      line-height: 1;
+      letter-spacing: -0.066em;
+      font-weight: 630;
+    }
+    header p {
+      font-size: 14px;
+      line-height: 1.4;
+      color: #595950;
+      max-width: 33ch;
+    }
+    h1 b {
+      color: #3459f4;
+    }
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding: 4px;
+      background: #e8e7df;
+      border-radius: 9px;
+      width: max-content;
+      max-width: 100%;
+      margin-bottom: 18px;
+    }
+    nav button {
+      min-height: 39px;
+      border: 0;
+      border-radius: 6px;
+      padding: 6px 15px;
+      font-size: 13px;
+      background: transparent;
+      cursor: pointer;
+    }
+    nav button[aria-pressed='true'] {
+      background: #fff;
+      color: #141514;
+      box-shadow: 0 1px 3px #302a1f20;
+      font-weight: 650;
+    }
+    button:focus-visible {
+      outline: 3px solid #3157ee;
+      outline-offset: 4px;
+    }
+    .variant {
+      display: grid;
+      grid-template-columns: 210px minmax(0, 1fr);
+      border-top: 1px solid #cdccc4;
+      padding: 28px 0;
+      align-items: center;
+      gap: 24px;
+    }
+    .variant[hidden] {
+      display: none;
+    }
+    .note h2 {
+      font-size: 26px;
+      letter-spacing: -0.055em;
+      line-height: 1.1;
+      margin-bottom: 10px;
+    }
+    .note p {
+      font-size: 14px;
+      line-height: 1.45;
+      color: #55574e;
+    }
+    .stage {
+      min-width: 0;
+      background: #fff;
+      border: 1px solid #e2e2db;
+      border-radius: 15px;
+      padding: 22px 25px 16px;
+      box-shadow: 0 4px 10px #22221904;
+    }
+    .stage h3 {
+      font-size: 25px;
+      letter-spacing: -0.055em;
+      line-height: 1;
+      font-weight: 670;
+    }
+    .stage h3 span {
+      color: #3658ed;
+    }
+    .rack {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      position: relative;
+      align-items: end;
+      gap: 10px;
+      margin-top: 27px;
+    }
+    .rack:after {
+      content: '';
+      position: absolute;
+      inset: auto -5px 0;
+      height: 7px;
+      background: #f4f2e9;
+      border: 1px solid #d9d8d1;
+      border-bottom: 3px solid #d6d4cb;
+      border-radius: 2px 2px 4px 4px;
+      box-shadow: 0 6px 8px -5px #26324450;
+      pointer-events: none;
+    }
+    .book {
+      --w: min(69%, 132px);
+      --base: #1947ee;
+      --light: #5784ff;
+      --dark: #15287c;
+      --ink: #f2f0e4;
+      --foil: #a9d3ff;
+      --elastic: #fb552a;
+      --lean: -3deg;
+      display: grid;
+      place-items: end center;
+      position: relative;
+      aspect-ratio: auto;
+      min-width: 0;
+      border: 0;
+      background: none;
+      padding: 0 0 12px;
+      min-height: 44px;
+      cursor: pointer;
+      border-radius: 6px;
+      isolation: isolate;
+      touch-action: manipulation;
+    }
+    .book.showcase {
+      --base: #f34c18;
+      --light: #ff9756;
+      --dark: #8d260d;
+      --ink: #30190e;
+      --foil: #ffe0ab;
+      --elastic: #692d98;
+      --lean: 2deg;
+    }
+    .book.backlane {
+      --base: #392b68;
+      --light: #7753ad;
+      --dark: #211434;
+      --ink: #e9ff65;
+      --foil: #c8ef52;
+      --elastic: #c2ef41;
+      --lean: -1deg;
+    }
+    .book .object {
+      position: relative;
+      display: block;
+      width: var(--w);
+      aspect-ratio: 0.754;
+      transform-origin: 50% 100%;
+      transform: rotate(var(--lean)) skewY(-2.5deg);
+      transition: transform 0.42s cubic-bezier(0.2, 0.75, 0.18, 1);
+    }
+    .book:where(:focus-visible, [aria-pressed='true']) .object {
+      transform: translateY(-9px) rotate(-1deg) skewY(-4deg);
+    }
+    @media (hover: hover) {
+      .book:hover .object {
+        transform: translateY(-9px) rotate(-1deg) skewY(-4deg);
+      }
+    }
+    .book .backboard,
+    .book .leaves,
+    .book .face,
+    .book .insert,
+    .book .case-side {
+      display: block;
+      position: absolute;
+    }
+    .backboard {
+      inset: -3px -10px 3px 10px;
+      border-radius: 3px 5px 4px 3px;
+      background: var(--dark);
+      box-shadow: 4px 7px 9px #23222e33;
+    }
+    .leaves {
+      inset: 0 -8px 3px 4px;
+      transform: skewY(-2deg);
+      border: 1px solid #b1a994;
+      border-radius: 1px 3px 2px 1px;
+      background: repeating-linear-gradient(
+        90deg,
+        #fff9e6 0 1px,
+        #d8d1bd 1px 2px,
+        #eee9da 2px 3px
+      );
+    }
+    .face {
+      inset: 0;
+      z-index: 2;
+      border-radius: 4px 4px 4px 3px;
+      background: var(--base);
+      color: var(--ink);
+      overflow: hidden;
+      box-shadow:
+        inset 1px 1px 1px #ffffff90,
+        inset -1px -2px 1px #0003;
+    }
+    .brand {
+      position: absolute;
+      left: 16%;
+      right: 9%;
+      top: 10%;
+      height: 11%;
+      background: currentColor;
+      mask: var(--logo) no-repeat left center/contain;
+      -webkit-mask: var(--logo) no-repeat left center/contain;
+    }
+    .art {
+      display: block;
+      position: absolute;
+      left: 16%;
+      right: 8%;
+      top: 30%;
+      bottom: 13%;
+      color: var(--foil);
+    }
+    .art svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+    .colophon {
+      position: absolute;
+      bottom: 6%;
+      left: 16%;
+      font:
+        750 14px/1 DM,
+        Arial;
+      letter-spacing: -1px;
+    }
+    .label {
+      display: flex;
+      justify-content: space-around;
+      gap: 10px;
+      font-size: 12px;
+      font-weight: 590;
+      color: #4e514c;
+      margin-top: 10px;
+    }
+    .label span {
+      flex: 1;
+      text-align: center;
+    }
+    .insert {
+      inset: 13% 0 19% 1%;
+      background: #fffdf5;
+      border: 4px solid #fffdf5;
+      border-bottom-width: 9px;
+      box-shadow: 0 4px 8px #24262b28;
+      transition: transform 0.42s cubic-bezier(0.2, 0.75, 0.18, 1);
+      transform: rotate(3deg);
+      overflow: hidden;
+    }
+    .insert img,
+    .plate img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top left;
+    }
+    .book:where(:focus-visible, [aria-pressed='true']) .insert {
+      transform: translate(23%, -40%) rotate(13deg);
+    }
+    @media (hover: hover) {
+      .book:hover .insert {
+        transform: translate(23%, -40%) rotate(13deg);
+      }
+    }
+    .linen .face {
+      background-color: var(--base);
+      background-image:
+        repeating-linear-gradient(0deg, #0808120c 0 1px, transparent 1px 3px),
+        repeating-linear-gradient(90deg, #ffffff10 0 1px, transparent 1px 3px);
+    }
+    .linen .face:before,
+    .case .face:after {
+      content: '';
+      position: absolute;
+      z-index: 2;
+      inset: 0 auto 0 0;
+      width: 11%;
+      border-right: 1px solid #0003;
+      background: linear-gradient(
+        90deg,
+        #06062a55,
+        #fff3 24%,
+        transparent 47%,
+        #11112629 78%,
+        #0004 91%,
+        #fff3
+      );
+    }
+    .linen .art {
+      filter: drop-shadow(0 1px 0 #0005);
+    }
+    .linen .bookmark {
+      display: block;
+      position: absolute;
+      left: 78%;
+      bottom: -4px;
+      background: var(--foil);
+      width: 8%;
+      height: 16px;
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
+    }
+    .field .face {
+      border-radius: 2px;
+      background-color: var(--base);
+      background-image: linear-gradient(135deg, #ffffff18, transparent 58%);
+    }
+    .field .shopvibes {
+      --base: #1f49ef;
+    }
+    .field .showcase {
+      --base: #ff7135;
+    }
+    .field .backlane {
+      --base: #bdf03a;
+      --dark: #304d1c;
+      --ink: #202720;
+      --elastic: #554089;
+    }
+    .field .brand {
+      left: 18%;
+      right: 7%;
+      top: 8%;
+    }
+    .field .object {
+      aspect-ratio: 0.8;
+    }
+    .field .plate {
+      display: block;
+      position: absolute;
+      inset: 28% 8% 12% 18%;
+      background: #ffeaca;
+      border: 3px solid #f9f4df;
+      border-bottom: 7px solid #f9f4df;
+      overflow: hidden;
+      transform: rotate(-3deg);
+      box-shadow: 2px 3px 0 #2223;
+    }
+    .field .plate img {
+      width: 155%;
+      height: 152%;
+      max-width: none;
+      object-fit: cover;
+    }
+    .plate svg,
+    .insert svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .linen .leaves:before {
+      content: '';
+      position: absolute;
+      inset: -4px 0 auto 2px;
+      height: 6px;
+      transform: skewX(-42deg);
+      background: repeating-linear-gradient(#fff9e6 0 1px, #d5cbb6 1px 2px);
+      border-radius: 1px;
+    }
+    .field .colophon {
+      left: 18%;
+      bottom: 4%;
+      font-size: 10px;
+    }
+    .field .art {
+      display: none;
+    }
+    .field .rings {
+      display: flex;
+      position: absolute;
+      z-index: 5;
+      top: 9%;
+      bottom: 9%;
+      left: -6%;
+      width: 15%;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .rings i {
+      height: 3.6%;
+      min-height: 2px;
+      border-radius: 50%;
+      background: linear-gradient(#252b32, #cad0cc 44%, #626966 73%, #1f2322);
+      box-shadow: 1px 1px 0 #101522;
+      position: relative;
+    }
+    .rings i:after {
+      content: '';
+      position: absolute;
+      right: -1px;
+      top: 0;
+      height: 100%;
+      width: 22%;
+      border-radius: 50%;
+      background: #292b29;
+      z-index: -1;
+    }
+    .field .register {
+      position: absolute;
+      right: -10%;
+      top: 14%;
+      width: 13%;
+      height: 14%;
+      background: var(--elastic);
+      border-radius: 0 2px 3px 0;
+      box-shadow: inset -1px -1px #0003;
+      transform: rotate(-1deg);
+    }
+    .field .leaves {
+      border-radius: 1px;
+    }
+    .case .book {
+      --w: min(67%, 126px);
+    }
+    .case .object {
+      aspect-ratio: 0.72;
+    }
+    .case .shell {
+      position: absolute;
+      inset: 9% -2% 0 0;
+      z-index: 3;
+      display: block;
+      transition: transform 0.45s ease;
+    }
+    .case .face {
+      background-color: var(--base);
+      background-image: linear-gradient(118deg, #fff2, transparent 44%);
+      border-radius: 2px 3px 2px 2px;
+      box-shadow:
+        inset 2px 2px 1px #fff5,
+        inset -1px -2px #0004;
+    }
+    .case .case-side {
+      right: -13%;
+      top: -3.5%;
+      width: 14%;
+      height: 100%;
+      background: var(--dark);
+      transform: skewY(-25deg);
+      border-block: 1px solid #0003;
+      box-shadow: 3px 5px 6px #15142626;
+    }
+    .case .face:after {
+      width: 3%;
+      opacity: 0.5;
+    }
+    .case .brand {
+      left: 10%;
+      top: 9%;
+      right: 8%;
+    }
+    .case .art {
+      inset: 29% 6% 11% 8%;
+    }
+    .case .colophon {
+      left: 10%;
+      bottom: 5%;
+    }
+    .case .inner {
+      position: absolute;
+      inset: 0 1% 6% 5%;
+      display: block;
+      background: var(--foil);
+      color: var(--dark);
+      border-radius: 3px 4px 1px 1px;
+      box-shadow:
+        inset 3px 0 #fff6,
+        3px -2px var(--ink),
+        5px -3px var(--dark);
+      transition: transform 0.46s cubic-bezier(0.2, 0.75, 0.18, 1);
+    }
+    .case .inner b {
+      display: block;
+      margin: 6% 9%;
+      text-align: left;
+      font: 600 9px/1 monospace;
+    }
+    .case .face:before {
+      content: '';
+      position: absolute;
+      z-index: 2;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      height: 5%;
+      background: var(--foil);
+    }
+    .case .book:where(:focus-visible, [aria-pressed='true']) .inner {
+      transform: translate(3%, -15%) rotate(3deg);
+    }
+    .case .book:where(:focus-visible, [aria-pressed='true']) .object {
+      transform: translateY(-2px) rotate(var(--lean)) skewY(-2.5deg);
+    }
+    @media (hover: hover) {
+      .case .book:hover .inner {
+        transform: translate(3%, -15%) rotate(3deg);
+      }
+      .case .book:hover .object {
+        transform: translateY(-2px) rotate(var(--lean)) skewY(-2.5deg);
+      }
+    }
+    @media (min-width: 1000px) {
+      main.is-single .variant {
+        grid-template-columns: 200px 1fr;
+      }
+      main.is-single .stage {
+        padding: 32px 34px 22px;
+      }
+      main.is-single .rack {
+        margin-top: 40px;
+      }
+      main.is-single .object {
+        --w: min(76%, 165px);
+      }
+    }
+    @media (max-width: 760px) {
+      main {
+        padding: 26px 15px;
+      }
+      header {
+        display: block;
+      }
+      header p {
+        margin-top: 10px;
+        max-width: none;
+      }
+      .variant {
+        display: block;
+        padding: 22px 0;
+      }
+      .note h2 {
+        font-size: 23px;
+      }
+      .note p {
+        margin-bottom: 13px;
+      }
+      .stage {
+        padding: 16px 15px 10px;
+      }
+      .stage h3 {
+        font-size: 22px;
+      }
+      .book {
+        --w: 69%;
+      }
+      .label {
+        font-size: 11px;
+      }
+      .rack {
+        gap: 4px;
+        margin-top: 18px;
+      }
+      nav {
+        width: 100%;
+        overflow: auto;
+      }
+      nav button {
+        flex: 1;
+        padding: 5px 7px;
+        font-size: 12px;
+      }
+      .colophon {
+        font-size: 11px;
+      }
+      .case .inner b {
+        font-size: 7px;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        transition: none !important;
+      }
+    }
+  </style>
+  <main>
+    <header>
+      <h1>Die Projektbände<b>.</b></h1>
+      <p>
+        Drei Einbände auf demselben Regal. Bewege den Zeiger über ein Buch oder
+        tippe es an, um die Bewegung zu vergleichen.
+      </p>
+    </header>
+    <nav aria-label="Ansicht auswählen">
+      <button type="button" data-view="all" aria-pressed="true">
+        Vergleich
+      </button>
+    </nav>
+    <div id="variants"></div>
+  </main>
+  <script>
+    const projects = ['shopvibes', 'showcase', 'backlane']
+    const concepts = [
+      {
+        id: 'linen',
+        name: 'Leinenband',
+        copy: 'Gewebter Einband, runder Rücken und ein cremefarbener Buchschnitt. Beim Anheben kommt ein Produktbild zum Vorschein.',
+      },
+      {
+        id: 'field',
+        name: 'Werkbuch',
+        copy: 'Metallringe, farbige Register und ein eingeklebter Ausschnitt aus der App. Beim Anheben fächert ein zweites Blatt auf.',
+      },
+      {
+        id: 'case',
+        name: 'Schuber',
+        copy: 'Ein fester Schuber mit dunkler Seitenwand. Der Buchblock gleitet nach oben und gibt seinen farbigen Rücken frei.',
+      },
+    ]
+    const subject = ['Product data', 'Product imagery', 'Marketplace AI']
+    const assets =
+      location.protocol === 'file:'
+        ? '../public/images/projects/'
+        : '/images/projects/'
+    const art = [
+      '<path d="M13 66 47 45l43 21-33 22z" fill="currentColor" opacity=".44"/><path d="M12 55l34-22 45 21-34 23z" fill="currentColor" opacity=".72"/><path d="M12 42 45 20l46 21-34 23z" fill="currentColor"/><g fill="none" stroke="var(--base)" stroke-width="2.5"><path d="m32 41 19-13m-11 16 20-13m-12 16 14-9"/></g>',
+      '<path d="M12 78V43a38 38 0 0176 0v35z" fill="currentColor"/><circle cx="69" cy="29" r="12" fill="var(--base)"/><g fill="var(--dark)"><path d="M32 53V37q0-7 7-7h15q7 0 9 7l4 15-6 4-28 1z"/><path d="M27 55q18-9 42-2v8H27zm4 7h4l-3 13h-4zm28 0h4l5 13h-4z"/></g>',
+      '<g fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="square" stroke-linejoin="round"><path d="M11 29h18q10 0 16 9l13 23q4 7 12 7h19"/><path d="M11 64h16q10 0 15-8l15-24q4-7 13-7h19"/></g><g fill="var(--base)" stroke="currentColor" stroke-width="4"><rect x="9" y="23" width="11" height="11" rx="2"/><rect x="79" y="62" width="11" height="11" rx="2"/></g>',
+    ]
+    const ornament = (i) =>
+      '<span class="art"><svg viewBox="0 0 100 95" aria-hidden="true">' +
+      art[i] +
+      '</svg></span>'
+    function book(p, i, mode) {
+      const preview = assets + p + '/shelf-preview.jpg'
+      const photo =
+        p === 'showcase'
+          ? '<svg viewBox="171 100 75 74" preserveAspectRatio="xMidYMid slice"><image href="' +
+            preview +
+            '" width="500" height="281"/></svg>'
+          : '<img src="' + preview + '" alt="">'
+      const logo = '<span class="brand"></span>'
+      const mark = '<span class="colophon">t.</span>'
+      const face =
+        '<span class="face">' +
+        logo +
+        ornament(i) +
+        (mode === 'field' ? '<span class="plate">' + photo + '</span>' : '') +
+        mark +
+        '</span>'
+      const inserted = '<span class="insert">' + photo + '</span>'
+      let content =
+        '<span class="backboard"></span><span class="leaves"></span><span class="bookmark"></span>' +
+        face
+      if (mode === 'field')
+        content =
+          '<span class="backboard"></span><span class="leaves"></span><span class="register"></span>' +
+          face +
+          '<span class="rings">' +
+          '<i></i>'.repeat(9) +
+          '</span>'
+      if (mode === 'case')
+        content =
+          '<span class="inner"><b>' +
+          subject[i] +
+          '</b></span><span class="shell"><span class="case-side"></span>' +
+          face +
+          '</span>'
+      return (
+        '<button type="button" class="book ' +
+        p +
+        '" aria-label="' +
+        p +
+        ', ' +
+        concepts.find((c) => c.id === mode).name +
+        ' bewegen" aria-pressed="false" style="--logo:url(' +
+        assets +
+        p +
+        '/logo.svg)"><span class="object" aria-hidden="true">' +
+        (mode === 'case' ? '' : inserted) +
+        content +
+        '</span></button>'
+      )
+    }
+    const navigation = document.querySelector('nav'),
+      variants = document.querySelector('#variants'),
+      main = document.querySelector('main')
+    for (const c of concepts) {
+      const button = document.createElement('button')
+      button.type = 'button'
+      button.textContent = c.name
+      button.dataset.view = c.id
+      button.setAttribute('aria-pressed', 'false')
+      navigation.append(button)
+      const section = document.createElement('section')
+      section.className = 'variant ' + c.id
+      section.dataset.concept = c.id
+      section.setAttribute('aria-label', c.name)
+      section.innerHTML =
+        '<div class="note"><h2>' +
+        c.name +
+        '</h2><p>' +
+        c.copy +
+        '</p></div><div class="stage"><h3>My work<span>.</span></h3><div class="rack">' +
+        projects.map((p, i) => book(p, i, c.id)).join('') +
+        '</div><div class="label" aria-hidden="true">' +
+        projects.map((p) => '<span>' + p + '</span>').join('') +
+        '</div></div>'
+      variants.append(section)
+    }
+    navigation.addEventListener('click', (e) => {
+      const choice = e.target.closest('button')
+      if (!choice) return
+      const view = choice.dataset.view
+      for (const b of navigation.querySelectorAll('button'))
+        b.setAttribute('aria-pressed', String(b === choice))
+      for (const v of variants.children)
+        v.hidden = view !== 'all' && v.dataset.concept !== view
+      main.classList.toggle('is-single', view !== 'all')
+    })
+    variants.addEventListener('click', (e) => {
+      const b = e.target.closest('.book')
+      if (!b) return
+      const on = b.getAttribute('aria-pressed') === 'false'
+      for (const other of b.closest('.rack').children)
+        other.setAttribute('aria-pressed', String(on && b === other))
+    })
+  </script>
+</html>

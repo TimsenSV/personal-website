@@ -1,27 +1,13 @@
 import { memo, useEffect, useReducer, useRef, useState, type KeyboardEvent } from 'react'
 import { ArrowLeft, ArrowRight, ArrowUp, CornerDownLeft, Hand, Pause, Play, RotateCcw, Trophy } from 'lucide-react'
+import { ClimbResult } from './ClimbResult'
 import { ClimbPoster } from './ClimbPoster'
 import { EnergyBar, PixelType } from './PixelType'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { ClimbingTim } from './ClimbingTim'
 import { ClimbBackdrop } from './ClimbBackdrop'
 import { climbMotion, laneX, type ClimbMotion } from '../game/climbMotion'
-import { holds } from '../game/boulder'
 import { climbReducer, createClimb, formatHeight, CLIMB_NAME, isInTimingZone, isThreeLaneRow, readBest, routeRow, saveBest, zoneBounds, type ClimbState, type HoldKind, type Side, type TimingZone } from '../game/climber'
-
-export function BoulderPreview() {
-  return <svg className="boulder-preview" viewBox="0 0 300 280" fill="none" aria-hidden="true">
-    <defs><pattern id="wall-bolts" width="27" height="27" patternUnits="userSpaceOnUse"><circle cx="13" cy="13" r="1" fill="#bac4dc" opacity=".5"/></pattern></defs>
-    <path d="M22 0h256v280H22z" fill="url(#wall-bolts)"/>
-    <polyline className="boulder-preview-route" points={holds.slice(0, 3).map(hold => `${20 + hold.x * 2.6},${8 + hold.y * 2.65}`).join(' ')} stroke="#3159f5" strokeWidth="2" strokeDasharray="4 5"/>
-    {[
-      ...holds.map(hold => [20 + hold.x * 2.6, 8 + hold.y * 2.65, hold.rotation, 'blue']),
-      [51, 63, 20, 'sand'], [251, 119, -20, 'sand'], [164, 244, 10, 'sand'],
-    ].map(([x, y, rotation, color], i) => <g key={i} transform={`translate(${x} ${y}) rotate(${rotation})`}><path d="M-17 3c-3-9 2-15 12-15S13-9 17-1s-8 15-17 13S-14 10-17 3Z" fill={color === 'blue' ? '#3159f5' : '#dce3f0'}/><path d="M-11-2c4-5 13-5 18-1" stroke={color === 'blue' ? '#94adff' : '#f4f7ff'} strokeWidth="3" strokeLinecap="round"/></g>)}
-    <circle cx="72" cy="246" r="25" stroke="#3159f5" strokeDasharray="3 4" opacity=".5"/>
-    <text x="103" y="271" fill="#60646f" fontSize="10" letterSpacing="2">START</text><text x="136" y="32" fill="#60646f" fontSize="10" letterSpacing="2">∞</text>
-  </svg>
-}
 
 const holdNames: Record<HoldKind, string> = { normal: 'regular hold', jug: 'jug hold', crimp: 'small hold', loose: 'cracked hold — breaks if grabbed' }
 const sideNames: Record<Side, string> = { left: 'left', center: 'middle', right: 'right' }
@@ -174,7 +160,7 @@ export function BoulderGame() {
   return <div ref={gameRef} className={`climb-game is-${game.status} ${game.boost ? 'has-boost' : ''}`} onKeyDown={keyDown} onBlur={event => {
     if (active && event.relatedTarget && !event.currentTarget.contains(event.relatedTarget)) dispatch({ type: 'pause' })
   }}>
-    {game.status !== 'ready' && <header className="climb-hud">
+    {(active || game.status === 'paused') && <header className="climb-hud">
       <div className="climb-altitude"><div className="climb-height"><span>{game.boost ? 'BOOST ↑' : 'HEIGHT'}</span><strong>{formatHeight(displayHeight)}<small> m</small></strong></div><div className="climb-best"><Trophy size={12}/><span>BEST <strong>{formatHeight(best)} m</strong></span></div></div>
       <div className={`climb-lives ${lives === 1 ? 'last-life' : ''}`} role="img" aria-label={`${lives} of 2 lives`}>
         <span className="climb-life-icons" aria-hidden="true">{[0, 1].map(index => <span key={`${index}-${index < lives}`} className={`climb-life ${index < lives ? 'is-full' : 'is-empty'}`}><Hand size={25} strokeWidth={1.8}/></span>)}</span>
@@ -186,6 +172,7 @@ export function BoulderGame() {
       <ClimbBackdrop key={game.seed} step={motion.camera}/>
       <ClimbWall seed={game.seed} step={game.step} side={game.side} kind={game.kind} status={game.status} event={game.event} tired={active && progress > .78} record={record} height={displayHeight} advancedFrom={game.advancedFrom} reason={game.reason} boost={game.boost} {...motion}/>
       {!game.boost && (active || game.status === 'paused') && <ClimbTimingArc progress={progress} zone={game.zone} x={motion.x} y={motion.y}/>}
+      {game.status !== 'fallen' && <>
       <div className="climb-live-info" aria-hidden="true">
         <span className={`climb-combo ${game.combo >= 3 ? 'in-flow' : ''}`}>{game.combo > 1 ? <><b>{game.combo}×</b> FLOW</> : 'JUST ONE MORE HOLD.'}</span>
         {next.some(hold => hold.powerup) && !game.boost && <span className="climb-energy-tip">Energy bar!<small>Clean hit → Dyno-Boost</small></span>}
@@ -199,25 +186,22 @@ export function BoulderGame() {
         <button className="climb-input input-right" aria-label="Reach right" aria-keyshortcuts="ArrowRight D" disabled={!canReach} onClick={() => reach('right')}><span><span>RIGHT</span><ArrowRight size={22}/></span></button>
       </div>
       </>}
-      {game.status !== 'playing' && <div className={`climb-overlay overlay-${game.status}`}>
+      </>}
+      {game.status === 'fallen' && <ClimbResult run={game} previousBest={record} restartRef={primaryRef} onRestart={start}/>}
+      {(game.status === 'ready' || game.status === 'paused') && <div className={`climb-overlay overlay-${game.status}`}>
         <div className="climb-overlay-card">
           {game.status === 'ready' ? <>
             <ClimbPoster/>
             <button ref={primaryRef} data-game-start className="climb-primary" onClick={start} aria-keyshortcuts="Enter Space"><Play size={17} fill="currentColor" aria-hidden="true"/> Start climbing <kbd className="climb-enter-key" aria-hidden="true"><CornerDownLeft size={15}/></kbd></button>
-          </> : game.status === 'paused' ? <>
+          </> : <>
             <span className="climb-kicker">TAKE A BREATHER</span><h3>Shake<br/><em>it out.</em></h3><p>Your run will be right here.</p>
             <button ref={primaryRef} className="climb-primary" onClick={resume}><Play size={17} fill="currentColor"/> Keep climbing</button>
             <button className="climb-secondary" onClick={start}><RotateCcw size={14}/> Start over</button>
-          </> : <>
-            <span className="climb-kicker">{newRecord ? 'NEW PERSONAL BEST' : 'THE MAT HAS YOUR BACK'}</span><h3>{formatHeight(game.height)}<em> m.</em></h3><p>{game.feedback}</p>
-            <div className="climb-run-stats"><span><strong>{game.grips}</strong> holds</span><span><strong>{game.maxCombo}×</strong> best combo</span></div>
-            <button ref={primaryRef} className="climb-primary" onClick={start} aria-keyshortcuts="Enter Space"><RotateCcw size={17}/> Chalk up again</button>
-            <span className="climb-local-note">Your personal best stays in this browser.</span>
           </>}
           {game.status === 'paused' && <div className="climb-legend"><span><i className="legend-normal"/>Normal</span><span><i className="legend-jug"/>More time</span><span><i className="legend-crimp"/>Move fast</span>{threeLanes && <span><i className="legend-loose"/>Breaks</span>}</div>}
         </div>
       </div>}
     </div>
-    <span id="climb-next" className="sr-only" role="status" aria-live="polite" aria-atomic="true">{game.status === 'ready' ? 'Press Enter or Space to start climbing.' : game.status === 'paused' ? 'Game paused.' : game.boost ? 'Dyno-Boost! Skipping three holds. Timing resumes after landing.' : game.status === 'fallen' ? `${formatHeight(game.height)} metres. ${game.feedback}` : `Next hold: ${direction}. ${next.map(hold => `${sideNames[hold.side]}: ${holdNames[hold.kind]}${hold.powerup ? ', energy bar — clean hit for Dyno-Boost' : ''}`).join('; ')}. ${threeLanes ? 'Arrow Up or W for the middle. ' : ''}${game.feedback} ${lives} of 2 lives.`}</span>
+    <span id="climb-next" className="sr-only" role="status" aria-live="polite" aria-atomic="true">{game.status === 'ready' ? 'Press Enter or Space to start climbing.' : game.status === 'paused' ? 'Game paused.' : game.boost ? 'Dyno-Boost! Skipping three holds. Timing resumes after landing.' : game.status === 'fallen' ? `${formatHeight(game.height)} metres. ${game.feedback}${newRecord ? ' New personal best.' : ''}` : `Next hold: ${direction}. ${next.map(hold => `${sideNames[hold.side]}: ${holdNames[hold.kind]}${hold.powerup ? ', energy bar — clean hit for Dyno-Boost' : ''}`).join('; ')}. ${threeLanes ? 'Arrow Up or W for the middle. ' : ''}${game.feedback} ${lives} of 2 lives.`}</span>
   </div>
 }
