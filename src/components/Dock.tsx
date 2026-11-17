@@ -8,7 +8,7 @@ import { CLIMB_NAME } from '../game/climber'
 import { SpotifyMark } from './Icons'
 
 type DockIcon = ComponentType<{ className?: string; size?: number; strokeWidth?: number; 'aria-hidden'?: boolean }>
-type DockEntry = { label: string; accessibleLabel?: string; caption?: string; href?: string; onClick?: () => void; Icon: DockIcon; color: string; external?: boolean; current?: boolean }
+type DockEntry = { label: string; accessibleLabel?: string; href?: string; onClick?: () => void; Icon: DockIcon; color: string; external?: boolean; current?: boolean }
 
 const hoverQuery = '(min-width: 621px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)'
 const subscribe = (notify: () => void) => {
@@ -34,7 +34,7 @@ function DockItem({ entry, index, pointerX, focusIndex, enabled }: { entry: Dock
   const { Icon } = entry
   const content = <>
     <span className="dock-tooltip" aria-hidden="true">{entry.label}{entry.external ? ' ↗' : ''}</span>
-    <span className={`dock-icon ${entry.color}`}><Icon size={27} strokeWidth={2.1} aria-hidden={true}/>{entry.caption && <span className="dock-caption" aria-hidden="true">{entry.caption}</span>}{entry.external && <ArrowUpRight className="dock-external" size={10} aria-hidden="true"/>}</span>
+    <span className={`dock-icon ${entry.color}`}><Icon size={27} strokeWidth={2.1} aria-hidden={true}/>{entry.external && <ArrowUpRight className="dock-external" size={10} aria-hidden="true"/>}</span>
     {entry.current && <span className="dock-indicator" aria-hidden="true"/>}
   </>
   return <m.div ref={ref} className="dock-slot" style={{ width }}>
@@ -64,7 +64,7 @@ export function Dock({ profile, username, playlistUrl, onPlay, onWork, onLegal }
     { label: 'Work', onClick: onWork, Icon: Layers3, color: 'work' },
     { label: CLIMB_NAME, accessibleLabel: `Play ${CLIMB_NAME}`, onClick: onPlay, Icon: Gamepad2, color: 'play' },
     ...external,
-    { label: 'Impressum & Privacy', caption: 'Impressum', onClick: onLegal, Icon: FileText, color: 'legal' },
+    { label: 'Impressum & Privacy', onClick: onLegal, Icon: FileText, color: 'legal' },
   ]
   return <LazyMotion features={domAnimation} strict><nav className="dock" aria-label="Quick navigation" data-magnification={enabled ? 'on' : 'off'}
     onPointerMove={(event) => {
