@@ -9,6 +9,7 @@ import './pixel-runner.css'
 import './photo-carousel.css'
 import './intro-card.css'
 import './cv.css'
+import './dock.css'
 import App from './App'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(<React.StrictMode><App/></React.StrictMode>)

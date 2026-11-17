@@ -2,7 +2,7 @@
 
 Persönliche Bento-Canvas mit den drei Produkten shopvibes, showcase und Backlane, einem schwebenden Dock, nativen Detailfenstern und einem kleinen Boulder-Spiel.
 
-React + TypeScript + Vite. Statische Website, ohne Backend, CMS, Zugangsdaten oder externe Schriftanbieter. Die Schriften werden lokal ausgeliefert.
+React + TypeScript + Vite, mit Motion für die Dock-Vergrößerung. Statische Website, ohne Backend, CMS, Zugangsdaten oder externe Schriftanbieter. Die Schriften werden lokal ausgeliefert.
 
 Die Gestaltung verwendet neutrale weiße Flächen, fast schwarze serifenlose Typografie, feine graue Konturen und kräftige blaue sowie orange Akzente. Die Widgets sind als eigenständige Objekte gestaltet: eine echte GitHub-Heatmap mit ausrollenden Pull Requests, ein Plattencover mit Vinyl, gestaffelte Produktansichten, eine Boulderwand mit Pixel-Figur und einen Pixel-Runner mit Strava-Link. Referenzen für Farbe und Klarheit: [ana.sh](https://ana.sh) und [chanhdai.com](https://chanhdai.com).
 
@@ -45,6 +45,7 @@ Die Produktdarstellungen sind eigenständige schematische Illustrationen, keine 
 ## Verhalten
 
 - Fehlende externe Dock-Aktionen werden vollständig ausgeblendet. Interne und konfigurierte externe Aktionen sind optisch getrennt.
+- Das Dock nutzt eine abstandsabhängige Vergrößerung mit Motion-Federn: Das Icon unter der Maus wächst von 50 auf bis zu 78 Pixel, seine Nachbarn abgestuft mit. Die Leiste wird breiter, behält ihre Höhe und lässt die Icons nach oben wachsen. Tastaturfokus unterstützt dieselbe Hervorhebung; Tooltips und Fokusrahmen folgen dem Icon. Auf kleinen Bildschirmen bleiben alle Ziele 44 Pixel groß, bei Touch und reduzierter Bewegung bleibt die Vergrößerung aus. Kräftiges Blau, Violett und Orange verbinden das Dock mit den Widgets. Einstellungen: `src/lib/dock.ts`, `src/components/Dock.tsx`, `src/dock.css`.
 - Die größeren Profilfotos liegen als Polaroid-Stapel in der Einstiegskachel. Klick oder die seitlichen Pfeile blättern weiter; horizontales Ziehen folgt dem Zeiger und wechselt ab einer Schwelle das Foto. Kurze Gesten federn zurück, vertikales Scrollen und Pinch-Zoom bleiben auf Mobilgeräten möglich. Linke/rechte Pfeiltasten funktionieren bei Fokus in der Galerie. Es gibt kein Autoplay. Bei reduzierter Bewegung wechselt das Bild sofort. Leere und einzelne Galerien sowie fehlgeschlagene Bilder haben passende Zustände.
 - Gedanken und Playlist haben kleine, nichtmodale Pop-outs. Sie öffnen per Klick, Touch oder Tastatur, schließen per Escape, Klick daneben oder beim Verlassen mit Tab. Ein weiterführendes Detailfenster stellt den Fokus anschließend am ursprünglichen Widget wieder her.
 - Hover-Effekte bewegen gezielt die Objekte innerhalb der Widgets; Tastaturfokus bietet dieselben Hinweise. Die PR-Warteschlange läuft nur, solange sie geöffnet und der Browser-Tab sichtbar ist. `prefers-reduced-motion` unterbindet die Bewegung.
@@ -88,6 +89,8 @@ Der Workflow prüft den Code vor der Veröffentlichung. Er wird absichtlich nur 
 
 ## Technische Referenzen
 
+- [Magic UI: Dock-Referenz](https://magicui.design/docs/components/dock) · eigenes angepasstes Dock, ohne Tailwind oder weitere UI-Komponenten
+- [Motion: Spring-Animationen](https://motion.dev/docs/react-use-spring)
 - [Vite: GitHub Pages](https://vite.dev/guide/static-deploy.html#github-pages)
 - [GitHub: öffentliche Events](https://docs.github.com/en/rest/activity/events#list-public-events-for-a-user)
 - [Spotify: Embeds](https://developer.spotify.com/documentation/embeds)
