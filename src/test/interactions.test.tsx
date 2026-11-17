@@ -3,7 +3,6 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import App from '../App'
 import { Dock } from '../components/Dock'
-import { BoulderGame } from '../components/BoulderGame'
 import { siteConfig } from '../content/site'
 
 describe('canvas interactions', () => {
@@ -78,18 +77,5 @@ describe('canvas interactions', () => {
     expect(screen.getByRole('link', { name: /LinkedIn/ })).toHaveAttribute('target', '_blank')
     expect(screen.getByRole('link', { name: /E-Mail/ })).toHaveAttribute('href', 'mailto:me@example.com')
     expect(screen.getByRole('link', { name: /E-Mail/ })).not.toHaveAttribute('target')
-  })
-  it('plays to a win, can restart and supports keyboard selection', async () => {
-    render(<BoulderGame/>)
-    for (const name of ['Griff 1, erreichbar', 'Griff 2, erreichbar', 'Griff 3, erreichbar', 'Griff 4, erreichbar', 'Top, erreichbar']) {
-      const hold = screen.getByRole('button', { name })
-      hold.focus()
-      await userEvent.keyboard('{Enter}')
-    }
-    expect(screen.getByRole('status')).toHaveTextContent(/Top!.*5 Zügen/)
-    expect(screen.getByRole('button', { name: 'Neu starten' })).toHaveFocus()
-    await userEvent.click(screen.getByRole('button', { name: 'Neu starten' }))
-    expect(screen.getByRole('button', { name: 'Start, du bist hier' })).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getByRole('status')).toHaveTextContent(/Du bist am Start/)
   })
 })

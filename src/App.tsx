@@ -11,7 +11,7 @@ import { CvDetail } from './components/CvDetail'
 import { cvConfig } from './content/cv'
 
 type Detail = ProductId | 'play' | 'github' | 'music' | 'running' | 'cv'
-const titles: Record<Detail, string> = { shopvibes: 'Meine Arbeit / shopvibes', showcase: 'Meine Arbeit / showcase', backlane: 'Meine Arbeit / Backlane', play: 'Eine kleine Pause / Boulder No. 01', github: 'Werkbank / GitHub & Experimente', music: 'Auf den Ohren / Spotify', running: 'Draußen sein / Laufen', cv: `Lebenslauf / ${cvConfig.name}` }
+const titles: Record<Detail, string> = { shopvibes: 'Meine Arbeit / shopvibes', showcase: 'Meine Arbeit / showcase', backlane: 'Meine Arbeit / Backlane', play: 'Noch ein Griff / Endless Climber', github: 'Werkbank / GitHub & Experimente', music: 'Auf den Ohren / Spotify', running: 'Draußen sein / Laufen', cv: `Lebenslauf / ${cvConfig.name}` }
 
 export default function App() {
   const [detail, setDetail] = useState<Detail | null>(null)

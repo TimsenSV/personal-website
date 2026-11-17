@@ -1,6 +1,6 @@
 # Ein Raum für Ideen
 
-Persönliche Bento-Canvas mit den drei Produkten shopvibes, showcase und Backlane, einem schwebenden Dock, nativen Detailfenstern und einem kleinen Boulder-Spiel.
+Persönliche Bento-Canvas mit den drei Produkten shopvibes, showcase und Backlane, einem schwebenden Dock, nativen Detailfenstern und einem reaktionsbasierten Endless Climber.
 
 React + TypeScript + Vite, mit Motion für die Dock-Vergrößerung. Statische Website, ohne Backend, CMS, Zugangsdaten oder externe Schriftanbieter. Die Schriften werden lokal ausgeliefert.
 
@@ -52,7 +52,8 @@ Die Produktdarstellungen sind eigenständige schematische Illustrationen, keine 
 - Über den kompakten CV-Button in der aufgeräumten Ich-Kachel öffnet sich ein Lebenslauf-Fenster. Die aktuellen Rollen und Ausbildung sind direkt sichtbar; frühere Stationen, Zertifikate, Projekte, Engagement und Auszeichnungen lassen sich per Maus oder Tastatur aufklappen. Die Canvas selbst bleibt frei von einer chronologischen Timeline.
 - Produkt- und CV-Fenster nutzen native HTML-Dialoge mit Escape, Fokusbindung und Rückkehr zum Auslöser. Auf Mobilgeräten werden sie bildschirmfüllend.
 - Die kleine Pixel-Figur chalkt bei Hover einmal die Hände, klopft sie ab und erzeugt eine kurze Kreidewolke. Klick, Touch und Tastaturfokus lösen die Szene ebenfalls aus. Unter reduzierter Bewegung bleibt die Figur ruhig. Es ist eine frei gestaltete Figur, kein Porträt; die Palette liegt unter `profile.pixelAvatar`.
-- Das Boulder-Spiel ist mit Maus, Touch und Tastatur spielbar. Umrandete Griffe sind erreichbar. Ziel: Top in maximal sieben Zügen. Rückwege verbrauchen ebenfalls Kraft. Es gibt Gewinn, Verlust und Neustart.
+- Der Endless Climber ersetzt das frühere Routenrätsel. Pfeiltasten oder A/D sowie die beiden antippbaren Wandhälften steuern Pixel-Tim. Der umkreiste nächste Griff gibt die Richtung vor. Der Zeitzeiger startet nach jedem Zug neu; in der blauen Zone entstehen Combos. Zu frühes Greifen, eine falsche Richtung oder ablaufender Halt kosten zunächst die einmalige Rettung, danach endet der Run. Normale Griffe, große Ruhegriffe und bröselige Griffe haben unterschiedliche Zeitbudgets. Ab dem zehnten Zug bieten regelmäßige Verzweigungen die Wahl zwischen mehr Höhe und mehr Zeit. Die Schwierigkeit steigt begrenzt; Ruhegriffe bleiben erhalten. Die nächsten Griffe werden aus einem Seed vorab erzeugt und stimmen mit der spielbaren Route überein.
+- P, Leertaste und die Pause-Schaltfläche pausieren das Spiel. Tab, Verlassen des Spiels, ein unsichtbarer Browser-Tab, Fensterwechsel und größere Unterbrechungen der Bildausgabe pausieren ebenfalls; Fortsetzen ist ausdrücklich. Pfeiltasten halten löst keine Zugfolge aus. Schließen beendet die Animationsschleife. Der persönliche Höhenrekord liegt ausschließlich im Browser (`tim:endless-climber:best:v1`); blockierter Speicher verhindert das Spielen nicht. Eine Markierung an der Wand zeigt den Rekord zu Beginn des Runs. Reduzierte Bewegung deaktiviert Sprünge, Kamerafahrten, Zittern und Partikel; die Spielregeln bleiben gleich.
 - Die öffentlichen GitHub-Ereignisse werden erst beim Öffnen des Detailfensters und nur mit konfiguriertem Nutzernamen abgefragt. Die offizielle öffentliche Events-API benötigt hier keine Zugangsdaten. Die Ansicht behandelt Laden, fehlende Aktivität, Fehler, Timeout und manuelles Wiederholen. Sie ist kein Contribution- oder Echtzeit-Tracker.
 - Die GitHub-Heatmap verwendet einen echten GraphQL-Snapshot für TimsenSV: das vollständige letzte Jahr im breiten Widget und im Detail, auf kleinen Bildschirmen in zwei Kalenderzeilen, jeweils mit Datenstand. Der Import speichert ausschließlich anonyme Tageszählungen und Intensitätsstufen, keine Repository-Namen oder Inhalte. Anonym gezählte private Beiträge sind enthalten, wie im GitHub-Kalender. Die humorvollen KI-Pull-Requests sind eine lokale Animation ohne Verbindung zur echten Aktivitätsliste: Bei Hover, Tastaturfokus oder Antippen rollen sie unterhalb der Kachel aus und wechseln nacheinander von Draft über Review zu Merged. Es sind immer höchstens drei PRs sichtbar: Beim Review klappt das Status-Badge um, das Icon dreht kurz ein und eine grüne Fortschrittslinie läuft durch. Beim Merge zeichnet sich ein weißes Häkchen in einem violetten Feld ein; ein kurzer Impuls und Ring markieren den Abschluss. Der oberste bleibt kurz als Merged stehen und löst sich auf; die übrigen rücken hoch und unten kommt der nächste aus dem Pool von zwölf Ideen hinzu. Nach der letzten Idee beginnt die Reihe erneut. Kachel und Pop-out behalten dabei ihre Höhe. Escape oder Antippen außerhalb schließt sie; ein erneutes Öffnen startet von vorn. Es gibt keine Fußleiste oder separaten PR-Schalter: Die Heatmap selbst lässt sich antippen oder per Tastatur aktivieren. Repository-Infos bleiben über den Pfeil im GitHub-Kopf erreichbar. Reduzierte Bewegung zeigt sofort den ruhigen Endzustand. Texte: `github.playfulPullRequests`.
 - Spotify wird ausschließlich bei gültigem Playlist-Link und erst beim Öffnen geladen. Kein OAuth, kein Autoplay. Ein direkter Spotify-Link bleibt als Alternative verfügbar.
@@ -70,7 +71,9 @@ src/services/contributions.ts  Snapshot-Validierung und Kalenderdarstellung
 scripts/update-github-contributions.mjs  GitHub-GraphQL-Import (nur lokal / CI)
 public/data/github-contributions.json    Anonyme Tageswerte mit Zeitstempel
 src/hooks/               Ladezustände und Abbruch/Timeout
-src/game/boulder.ts      Unabhängige Spielregeln
+src/game/climber.ts      Endless-Climber-Regeln, Routen und lokaler Rekord
+src/game/boulder.ts      Griffpositionen der statischen Canvas-Vorschau
+src/climber.css          Spielfeld, Pixel-Bewegungen und mobile Vollbildansicht
 src/lib/links.ts          Linkvalidierung und Asset-Pfade
 src/test/                Spiel-, API-, Link- und Interaktionstests
 src/styles.css           Grundlayout, Details, Dock und responsive Regeln
@@ -97,10 +100,10 @@ Der Workflow prüft den Code vor der Veröffentlichung. Er wird absichtlich nur 
 
 ## Geprüfter Stand · 17. November 2026
 
-- Produktionsbuild, TypeScript und ESLint erfolgreich; 47 automatisierte Tests für Spielregeln, Tastaturbedienung, Dialoge, Pop-outs, externe Links, Kalenderdaten und GitHub-Zustände.
+- Produktionsbuild, TypeScript und ESLint erfolgreich; 58 automatisierte Tests für Spielregeln, Tastaturbedienung, Dialoge, Pop-outs, externe Links, Kalenderdaten und GitHub-Zustände.
 - Browserprüfung bei 1440 × 1000, 768 × 1024, 390 × 844 und 320 × 740 Pixeln; kein horizontaler Seitenüberlauf.
 - Dock-Navigation, alle drei Produktansichten, Fenstervergrößerung, Escape, Tab/Shift-Tab und Rückkehr zum Auslöser geprüft.
-- Boulder-Route im mobilen Browser vollständig gespielt, Gewinn und Neustart geprüft; Verlust und Umwege zusätzlich automatisiert getestet.
+- Endless Climber im Browser mit Pfeiltasten und mobilen Steuerflächen gespielt; Combos, Ruhegriffe und Verzweigungen geprüft. Spielregeln, begrenzte Schwierigkeit, 249 aufeinanderfolgende Züge je Test-Seed, Rettung, Verlust, Neustart, Pause und Speicherung sind automatisiert geprüft.
 - Sichtbare Begleittexte auf den farbigen Flächen nach einer Kontrastprüfung nachgedunkelt. Die reduzierte Bewegung ist als gültige CSS-Medienregel geprüft: Übergänge, Animationen, Hover-Bewegung und weiches Scrollen werden abgeschaltet. Eine Betriebssystem-Emulation dieser Einstellung wurde nicht durchgeführt.
 - GitHub ist mit TimsenSV konfiguriert; Snapshot und öffentliche Ereignisse wurden im Browser geladen. Lade-, Leer- und Fehlerzustände sowie Wiederholen sind zusätzlich mit ausdrücklich gekennzeichneten Testdaten geprüft. Ein echter persönlicher Spotify-Player und die später hinterlegten persönlichen Ziel-URLs sind nach ihrer Ergänzung nochmals zu prüfen.
 
