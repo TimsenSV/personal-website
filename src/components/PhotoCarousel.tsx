@@ -8,15 +8,16 @@ import { PhotoLightbox } from './PhotoLightbox'
 type Gesture = { pointer: number; x: number; y: number; width: number; scale: number; axis: 'pending' | 'horizontal' | 'vertical'; offset: number }
 type Departure = { photo: ProfilePhoto; index: number; direction: number; offset: number }
 
-function PhotoImage({ photo }: { photo: ProfilePhoto }) {
+function PhotoImage({ photo, expanded, active }: { photo: ProfilePhoto; expanded: boolean; active: boolean }) {
   const [failed, setFailed] = useState(false)
+  const srcSet = photo.preview && photo.width ? `${assetUrl(photo.preview.src)} ${photo.preview.width}w, ${assetUrl(photo.src)} ${photo.width}w` : undefined
   return <span className="polaroid-media">
-    {failed ? <span className="polaroid-missing"><Camera size={30}/><span>Photo unavailable</span></span> : <img src={assetUrl(photo.src)} alt={photo.alt} width="640" height="640" draggable={false} decoding="async" onError={() => setFailed(true)} style={{ objectPosition: photo.position, transform: `scale(${photo.zoom ?? 1})`, filter: photo.monochrome ? 'grayscale(1)' : undefined }}/>}
+    {failed ? <span className="polaroid-missing"><Camera size={30}/><span>Photo unavailable</span></span> : <img src={assetUrl(photo.src)} srcSet={srcSet} sizes={expanded ? '(max-width: 520px) calc(100vw - 88px), 440px' : '230px'} alt={photo.alt} width={photo.width ?? 640} height={photo.height ?? 640} draggable={false} decoding="async" loading={active ? 'eager' : 'lazy'} fetchPriority={active ? 'high' : 'low'} onError={() => setFailed(true)} style={{ objectPosition: photo.position, transform: `scale(${photo.zoom ?? 1})`, filter: photo.monochrome ? 'grayscale(1)' : undefined }}/>}
   </span>
 }
 
-function PhotoPrint({ photo, index, total }: { photo: ProfilePhoto; index: number; total: number }) {
-  return <><PhotoImage key={photo.src} photo={photo}/><span className="polaroid-caption"><span>{photo.placeholder ? 'Placeholder' : photo.caption ?? 'A little bit of me.'}</span><span>{String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}</span></span></>
+function PhotoPrint({ photo, index, total, expanded = false, active = false }: { photo: ProfilePhoto; index: number; total: number; expanded?: boolean; active?: boolean }) {
+  return <><PhotoImage key={photo.src} photo={photo} expanded={expanded} active={active}/><span className="polaroid-caption"><span>{photo.placeholder ? 'Placeholder' : photo.caption}</span><span>{String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}</span></span></>
 }
 
 function PhotoDeck({ photos, name, index, onChange, onOpen, expanded = false }: {
@@ -113,9 +114,9 @@ function PhotoDeck({ photos, name, index, onChange, onOpen, expanded = false }: 
           if (onOpen) onOpen(event.currentTarget)
           else flip(1)
         }}>
-        <PhotoPrint photo={photos[current]} index={current} total={photos.length}/>
+        <PhotoPrint photo={photos[current]} index={current} total={photos.length} expanded={expanded} active/>
       </button>
-      {departure && <div className="polaroid-frame photo-departing" aria-hidden="true" style={{ '--flip-direction': -departure.direction, '--flip-start': `${departure.offset}px` } as CSSProperties}><PhotoPrint photo={departure.photo} index={departure.index} total={photos.length}/></div>}
+      {departure && <div className="polaroid-frame photo-departing" aria-hidden="true" style={{ '--flip-direction': -departure.direction, '--flip-start': `${departure.offset}px` } as CSSProperties}><PhotoPrint photo={departure.photo} index={departure.index} total={photos.length} expanded={expanded}/></div>}
     </div>
     {canFlip && <><button className="photo-nav photo-prev" aria-label="Previous photo" onClick={() => flip(-1)}><ArrowLeft size={15}/></button><button className="photo-nav photo-next" aria-label="Next photo" onClick={() => flip(1)}><ArrowRight size={15}/></button></>}
     <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">Photo {current + 1} of {photos.length}{photos[current].placeholder ? ' · Placeholder' : ''}</span>

@@ -31,7 +31,7 @@ Die typisierte Datei **`src/content/site.ts`** enthält die persönlichen Canvas
 
 | Bereich | Noch zu ergänzen |
 | --- | --- |
-| Profil | Eigene Fotos für den Polaroid-Stapel, ggf. Feinschliff an Kurzvorstellung und Fokus |
+| Profil | Sieben eigene Fotos sind hinterlegt; Kurzvorstellung und Fokus können noch verfeinert werden |
 | Kontakt | E-Mail-Adresse; LinkedIn ist im Dock hinterlegt |
 | GitHub | TimsenSV ist verbunden; Links zu ausgewählten öffentlichen Repositories können noch ergänzt werden |
 | Spotify | Playlist „Timsen“ mit Link und Originalcover ist hinterlegt; Begleittext optional anpassen |
@@ -132,17 +132,15 @@ Der vorbereitete GitHub-Pages-Workflow aktualisiert den Snapshot vor dem Build m
 
 ## Persönliche Polaroid-Fotos
 
-Die Einträge liegen unter `profile.photos` in `src/content/site.ts`. Für eigene Fotos `src` und `alt` ersetzen und `placeholder` entfernen. Optional sind `caption`, `position` (CSS-Objektposition), `zoom` und `monochrome` möglich. Die Reihenfolge im Array entspricht dem Stapel. Eine beliebige Anzahl von Bildern wird unterstützt; sichtbar sind höchstens drei Karten.
+Die Einträge liegen unter `profile.photos` in `src/content/site.ts`. Für neue Fotos `src`, `alt`, `width` und `height` eintragen. `preview: { src, width }` ergänzt eine kleine Version für responsive Bildauswahl. Optional sind `caption`, `position` (CSS-Objektposition), `zoom` und `monochrome` möglich. Ohne Bildunterschrift bleibt nur der Bildzähler sichtbar. Die Reihenfolge im Array entspricht dem Stapel. Eine beliebige Anzahl von Bildern wird unterstützt; sichtbar sind höchstens drei Karten.
 
-Aktuell wird ein einziges KI-generiertes Musterfoto in drei Darstellungen verwendet: Farbe, Schwarz-Weiß und engerer Ausschnitt. Die Person ist fiktiv und **nicht Tim**. Das Bild ist zur Stilabnahme gedacht, jede Karte ist als Platzhalter markiert. Quelle: eingebautes Imagegen-Werkzeug, kein CLI/API-Fallback. Das unveränderte generierte Asset liegt unter `public/images/portrait-sample.png`.
+Seit dem 17.11.2026 enthält der Stapel sieben von Tim bereitgestellte Fotos: IMG_1247, IMG_2460, IMG_2721, IMG_2725, IMG_6695, IMG_9989 und ef42442b-27aa-4d2a-908e-f8c3c53486ca – in dieser Reihenfolge. Die Platzhalter wurden ersetzt. Die WebP-Dateien unter `public/images/photos/` sind korrekt ausgerichtet, nach sRGB konvertiert und von Metadaten befreit. Große Varianten sind maximal 1600 Pixel lang, Vorschauen maximal 640 Pixel. Das bereits 640 × 640 Pixel große zweite Foto wird nicht hochskaliert und braucht keine zusätzliche Vorschau. Die Originale bleiben unverändert außerhalb des Repos. Alle Web-Dateien einschließlich Vorschauen zusammen sind ca. 1,53 MB groß (Originale: 8,95 MB); die ersten drei sichtbaren Bilder benötigen bei Nutzung der kleinen Varianten ca. 92 KB.
+
+Der Browser wählt über `srcset` und `sizes` passend zur Bildschirmdichte und Galeriegröße. Nur das aktuelle Bild wird priorisiert; die zwei sichtbaren Stapelrückseiten verwenden kleine Vorschauen. Weitere Fotos werden erst beim Blättern eingebunden. Beim Aufklappen lädt das aktive Foto bei Bedarf in höherer Auflösung, ohne das bestehende Bild-Element zu ersetzen.
 
 Ein Klick auf den kleinen Stapel bewegt denselben, bereits geladenen Stapel mit einer kurzen 3D-Drehung aus seiner exakten Position in die große Ansicht. Es wird keine zweite Galerie eingeblendet; Bildausschnitt und Proportionen bleiben während der Bewegung erhalten. In der großen Ansicht blättert ein Klick weiter. Ziehen, Navigationsknöpfe und Pfeiltasten funktionieren in beiden Größen; das ausgewählte Foto bleibt beim Schließen erhalten. Escape, Schließen oder ein Klick neben den Stapel schließen die native modale Galerie und geben den Fokus zurück. Reduzierte Bewegung deaktiviert die räumlichen Übergänge.
 
 Die Galerie wurde auf Desktop und Mobilgröße mit echten Maus-Ziehgesten im Browser geprüft. Automatisierte Prüfungen decken Vergrößern, Klick, Pfeiltasten, Umlauf, doppelte Klicks nach Ziehen, kurze Gesten, vertikales Scrollen, Abbruch, Fokusbegrenzung und -rückkehr, Schließen, reduzierte Bewegung, leere/einzelne Galerien und Bildfehler ab.
-
-Generierungs-Prompt:
-
-Use case: photorealistic-natural. Asset type: one temporary sample portrait photo for a personal website polaroid carousel prototype, clearly a fictional model, not a portrait of the real user. Primary request: a relaxed candid editorial portrait of a fictional adult man with short brown-blond hair, wearing a simple cobalt blue overshirt and white T-shirt. Waist-up framing, centered, face in upper middle with generous breathing space around head. Natural warm daylight, soft pale neutral background, authentic analog 35mm film feeling with fine grain, friendly understated expression. Square photograph, high quality natural skin texture, contemporary personal editorial aesthetic. No lettering, no frame, no collage, no logos, no watermarks. The website supplies the polaroid frame and placeholder label separately.
 
 ## Projektbilder und Produktregal
 

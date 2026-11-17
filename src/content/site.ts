@@ -1,7 +1,7 @@
 export type ProductId = 'shopvibes' | 'showcase' | 'backlane'
 export type ImageAsset = { src: string; alt: string }
 export type ProductScreenshot = ImageAsset & { caption?: string; width?: number; height?: number }
-export type ProfilePhoto = ImageAsset & { caption?: string; placeholder?: boolean; position?: string; zoom?: number; monochrome?: boolean }
+export type ProfilePhoto = ImageAsset & { width?: number; height?: number; preview?: { src: string; width: number }; caption?: string; placeholder?: boolean; position?: string; zoom?: number; monochrome?: boolean }
 
 export type Product = {
   id: ProductId
@@ -58,11 +58,15 @@ export const siteConfig: PortfolioConfig = {
     focus: 'Making AI genuinely useful in e-commerce.',
     // Stylised game avatar with brown-blond hair as supplied by Tim; not a portrait.
     pixelAvatar: { hair: '#9b774b', hairHighlight: '#ccb27b', skin: '#edbb96', shirt: '#3159f5', trousers: '#30394f', chalkBag: '#ff7140' },
-    // One generated sample photo in three treatments, until real personal photos are supplied.
+    // User-supplied photos. IMG_1247 first, IMG_2460 second; web derivatives only.
     photos: [
-      { src: 'images/portrait-sample.png', alt: 'AI-generated sample portrait, not a photo of Tim', placeholder: true },
-      { src: 'images/portrait-sample.png', alt: 'Black-and-white sample portrait, not a photo of Tim', placeholder: true, monochrome: true, zoom: 1.12 },
-      { src: 'images/portrait-sample.png', alt: 'Close-up of the sample portrait, not a photo of Tim', placeholder: true, zoom: 1.35, position: '50% 35%' },
+      { src: 'images/photos/01-portrait.webp', preview: { src: 'images/photos/01-portrait-small.webp', width: 640 }, width: 1600, height: 1600, alt: 'Tim smiling in front of a blue and turquoise wall' },
+      { src: 'images/photos/02-profile.webp', width: 640, height: 640, alt: 'Black-and-white side portrait of Tim wearing glasses' },
+      { src: 'images/photos/03-climbing-wall.webp', preview: { src: 'images/photos/03-climbing-wall-small.webp', width: 480 }, width: 1200, height: 1600, alt: 'Tim climbing an indoor wall with colourful holds', position: '50% 40%' },
+      { src: 'images/photos/04-climbing.webp', preview: { src: 'images/photos/04-climbing-small.webp', width: 480 }, width: 1200, height: 1600, alt: 'Tim hanging in his climbing harness, seen from below', position: '50% 55%' },
+      { src: 'images/photos/05-evening.webp', preview: { src: 'images/photos/05-evening-small.webp', width: 480 }, width: 1200, height: 1600, alt: 'Tim laughing at an outdoor table under warm lights', position: '50% 30%' },
+      { src: 'images/photos/06-climbing-gear.webp', preview: { src: 'images/photos/06-climbing-gear-small.webp', width: 480 }, width: 1200, height: 1600, alt: 'A view down at climbing gear clipped to a harness' },
+      { src: 'images/photos/07-city-evening.webp', preview: { src: 'images/photos/07-city-evening-small.webp', width: 480 }, width: 1200, height: 1600, alt: 'Tim in a cap sitting beside a stone wall on an evening street', position: '50% 28%' },
     ],
     email: null,
     linkedinUrl: 'https://www.linkedin.com/in/timsenhoffmann/',
