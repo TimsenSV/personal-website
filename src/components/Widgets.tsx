@@ -1,12 +1,12 @@
-import { useState } from 'react'
-import { ArrowUpRight, AudioLines, Code2, FileUser, Footprints, GitBranch, Github, ImagePlus, Play, Plus } from 'lucide-react'
+import { useRef, useState } from 'react'
+import { ArrowUpRight, AudioLines, Code2, FileUser, Footprints, GitBranch, Github, ImagePlus, Play } from 'lucide-react'
 import type { PortfolioConfig } from '../content/site'
 import { assetUrl, externalUrl, githubProfile, spotifyPlaylist } from '../lib/links'
 import { useGitHubActivity } from '../hooks/useGitHubActivity'
 import { BoulderPreview } from './BoulderGame'
 import { ExternalLink } from './ExternalLink'
 import { RouteDrawing, SpotifyMark, StravaMark } from './Icons'
-import { Popout } from './Popout'
+import { useSpotifyConsent } from '../hooks/useSpotifyConsent'
 import { ChalkClimber } from './ChalkClimber'
 import { GitHubHeatmap } from './GitHubHeatmap'
 import { PixelRunner } from './PixelRunner'
@@ -18,9 +18,6 @@ export function IntroWidget({ profile, onOpenCv }: { profile: PortfolioConfig['p
     <div className="portrait-row"><PhotoCarousel photos={profile.photos} name={profile.name}/><div className="intro-name"><h1 id="intro-title">{profile.name}<span>.</span></h1></div></div>
     <div className="intro-copy"><p className="intro-positioning">{profile.positioning}</p></div>
     <div className="intro-actions">
-    <Popout className="focus-popout" buttonClassName="current-focus" label="Open current thought" title="On my mind" trigger={<><span className="focus-dot"/><span><span className="eyebrow">On my mind</span><span className="focus-preview">{profile.focus}</span></span><Plus size={15}/></>}>
-      <><span className="note-symbol" aria-hidden="true">✳</span><p className="popout-thought">{profile.focus}</p><p>My three products explore it from different angles: information, presentation and action.</p></>
-    </Popout>
     <button className="cv-trigger" onClick={onOpenCv} aria-label="Open CV" aria-haspopup="dialog"><FileUser size={18} aria-hidden="true"/><span>CV</span><ArrowUpRight size={14} aria-hidden="true"/></button>
     </div>
   </section>
@@ -56,11 +53,25 @@ export function MusicWidget({ config, onOpen }: { config: PortfolioConfig['spoti
   </section>
 }
 
-export function MusicDetail({ config }: { config: PortfolioConfig['spotify'] }) {
+export function MusicDetail({ config, onPrivacy }: { config: PortfolioConfig['spotify']; onPrivacy?: () => void }) {
   const playlist = spotifyPlaylist(config.url)
+  const { allowed, allow, revoke } = useSpotifyConsent()
+  const consentButton = useRef<HTMLButtonElement>(null)
+  const changePermission = (next: boolean) => {
+    if (next) allow()
+    else revoke()
+    requestAnimationFrame(() => consentButton.current?.focus())
+  }
   return <div className="music-detail">{playlist ? <>
-    <iframe className="spotify-embed" src={playlist.embed} title={`Spotify playlist: ${config.title}`} width="100%" height="520" allow="encrypted-media; fullscreen; picture-in-picture" loading="lazy"/>
-    <ExternalLink href={playlist.url} className="button primary">Open on Spotify</ExternalLink>
+    {allowed ? <iframe className="spotify-embed" src={playlist.embed} title={`Spotify playlist: ${config.title}`} width="100%" height="520" allow="encrypted-media; fullscreen; picture-in-picture" loading="lazy" referrerPolicy="no-referrer"/> : <section className="spotify-permission" aria-labelledby="spotify-permission-title">
+      <SpotifyMark className="spotify-permission-icon"/>
+      <h3 id="spotify-permission-title">Load Spotify player?</h3>
+      <p>Spotify will receive your IP address and browser data and may use cookies. If you’re signed in, Spotify may link your activity to your account.</p>
+      <button ref={consentButton} className="button primary" onClick={() => changePermission(true)}>Allow Spotify</button>
+      <p className="spotify-permission-note">Remembered in this browser for 180 days. You can withdraw your permission here or under Privacy at any time.</p>
+      {onPrivacy && <button className="legal-text-button" onClick={onPrivacy}>Privacy details</button>}
+    </section>}
+    <div className="music-detail-actions"><ExternalLink href={playlist.url} className="button primary">Open on Spotify</ExternalLink>{allowed && <button ref={consentButton} className="legal-text-button" onClick={() => changePermission(false)}>Disable Spotify</button>}</div>
   </> : <div className="honest-empty"><ImagePlus size={24}/><p>Playlist coming soon. Until then, a little quiet.</p></div>}</div>
 }
 

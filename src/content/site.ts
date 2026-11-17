@@ -28,7 +28,6 @@ export type PortfolioConfig = {
     positioning: string
     introduction: string
     personal: string
-    focus: string
     pixelAvatar: { hair: string; hairHighlight: string; skin: string; shirt: string; trousers: string; chalkBag: string }
     photos: ProfilePhoto[]
     email: string | null
@@ -40,6 +39,12 @@ export type PortfolioConfig = {
     repositories: { name: string; description: string; url: string | null; tags: string[] }[]
   }
   spotify: { title: string; note: string | null; url: string | null; cover: ImageAsset | null }
+  legal: {
+    name: string
+    address: string[]
+    email: { local: string[]; domain: string[] }
+    updatedAt: string
+  }
   running: { title: string; note: string; stravaUrl: string | null; routeName: string | null; goal: string | null }
   products: Product[]
   seo: { title: string; description: string; url: string }
@@ -55,7 +60,6 @@ export const siteConfig: PortfolioConfig = {
     positioning: 'Product, UX & an entrepreneurial mindset.',
     introduction: 'I’m interested in turning complex workflows into clear, useful products.',
     personal: 'Somewhere between product ideas, a good playlist and the next hold.',
-    focus: 'Making AI genuinely useful in e-commerce.',
     // Stylised game avatar with brown-blond hair as supplied by Tim; not a portrait.
     pixelAvatar: { hair: '#9b774b', hairHighlight: '#ccb27b', skin: '#edbb96', shirt: '#3159f5', trousers: '#30394f', chalkBag: '#ff7140' },
     // User-supplied photos. IMG_1247 first, IMG_2460 second; web derivatives only.
@@ -98,7 +102,14 @@ export const siteConfig: PortfolioConfig = {
     title: 'Timsen',
     note: null,
     url: 'https://open.spotify.com/playlist/7crg0zzkXhWfEMMetYnd6O',
-    cover: { src: 'https://image-cdn-fa.spotifycdn.com/image/ab67706c0000da842dd8f22a296b4003cfb3421a', alt: 'Cover of the Spotify playlist Timsen' },
+    cover: { src: 'images/photos/02-profile.webp', alt: 'Cover of the Spotify playlist Timsen' },
+  },
+  legal: {
+    name: 'Tim Hoffmann',
+    address: ['Renatastr. 32', '80634 München', 'Germany'],
+    // Assembled only inside the legal window; deters simple source-text harvesting.
+    email: { local: ['tim', 'hoffmann96'], domain: ['gmx', 'de'] },
+    updatedAt: '2026-11-17',
   },
   running: {
     title: 'Join me on my quest to not die in a half marathon.',

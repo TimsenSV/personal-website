@@ -1,0 +1,41 @@
+@layer widgets {
+  .legal-window { width: min(640px, calc(100% - 48px)); }
+  .legal-detail { padding: 24px 32px 32px; }
+  .legal-sections { display: flex; gap: 6px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+  .legal-sections button { min-height: 44px; padding: 10px 13px; border-radius: 8px; background: transparent; color: var(--muted); font-size: 12px; }
+  .legal-sections button[aria-pressed="true"] { background: #eef2ff; color: #284ac5; }
+  .legal-sections button:hover { background: #f1f3f8; }
+  .legal-imprint { padding-top: 30px; }
+  .legal-label { color: var(--muted); font-size: 12px; margin-bottom: 9px; }
+  .legal-imprint h3, .privacy-copy h3 { font-size: 30px; font-weight: 600; letter-spacing: -1px; line-height: 1.2; }
+  .legal-imprint address { display: grid; gap: 3px; margin-top: 16px; font-size: 15px; line-height: 1.6; font-style: normal; color: #525b6b; }
+  .legal-contact { border-top: 1px solid var(--line); margin-top: 26px; padding-top: 20px; }
+  .legal-contact h4 { font-size: 12px; color: var(--muted); font-weight: 500; margin-bottom: 6px; }
+  .legal-email { display: inline-flex; gap: 10px; align-items: center; min-height: 44px; color: #284ac5; font-size: 14px; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+  .legal-email > span { overflow-wrap: anywhere; }.legal-email svg { flex-shrink: 0; }
+  .privacy-copy { padding-top: 28px; font-size: 13px; line-height: 1.75; color: #525b6b; }
+  .privacy-copy h3, .privacy-copy h4 { color: var(--ink); }
+  .privacy-copy h4 { font-size: 16px; font-weight: 600; line-height: 1.4; margin-bottom: 10px; }
+  .privacy-copy p + p { margin-top: 10px; }
+  .privacy-copy section { margin-top: 28px; }
+  .privacy-copy .legal-updated { font: 10px var(--mono); margin: 10px 0 22px; }
+  .privacy-copy .external-link { min-height: 44px; color: #284ac5; font-size: 12px; }
+  .privacy-preference { padding: 16px; background: #f4f6fa; border: 1px solid #e5e9f1; border-radius: 10px; margin: 10px 0; }
+  .privacy-preference .button { margin-top: 12px; }
+  .legal-text-button { min-height: 44px; padding: 8px 4px; background: none; color: #58637b; text-decoration: underline; text-underline-offset: 4px; font-size: 12px; }
+  .music-detail-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; width: 100%; }
+  .spotify-permission { min-height: clamp(352px, calc(100dvh - 240px), 560px); width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 18px; padding: 32px 26px; border: 1px solid #e3e7ee; border-radius: 12px; background: #f7f9fc; text-align: center; }
+  .spotify-permission-icon { width: 36px; height: 36px; color: #14181e; --spotify-line: #f7f9fc; }
+  .spotify-permission h3 { font-size: 23px; line-height: 1.25; letter-spacing: -.5px; }
+  .spotify-permission p { max-width: 390px; color: #596477; font-size: 13px; line-height: 1.65; }
+  .spotify-permission .spotify-permission-note { max-width: 340px; font-size: 11px; }
+  .spotify-permission .legal-text-button { margin-top: -12px; }
+  @media (max-width: 620px) {
+    .legal-window { width: 100%; }
+    .legal-detail { padding: 18px 22px 28px; }
+    .legal-sections { gap: 4px; padding-bottom: 16px; }
+    .legal-sections button { padding-inline: 10px; }
+    .legal-imprint { padding-top: 26px; }
+    .spotify-permission { padding: 28px 18px; }
+  }
+}

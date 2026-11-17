@@ -1,4 +1,4 @@
-import { ArrowUpRight, Gamepad2, Github, LayoutGrid, Layers3, Linkedin, Mail } from 'lucide-react'
+import { ArrowUpRight, FileText, Gamepad2, Github, LayoutGrid, Layers3, Linkedin, Mail } from 'lucide-react'
 import { Fragment, useEffect, useRef, useSyncExternalStore, type ComponentType } from 'react'
 import { m, LazyMotion, domAnimation, useMotionValue, useSpring, useTransform, type MotionValue } from 'motion/react'
 import type { PortfolioConfig } from '../content/site'
@@ -8,7 +8,7 @@ import { CLIMB_NAME } from '../game/climber'
 import { SpotifyMark } from './Icons'
 
 type DockIcon = ComponentType<{ className?: string; size?: number; strokeWidth?: number; 'aria-hidden'?: boolean }>
-type DockEntry = { label: string; accessibleLabel?: string; href?: string; onClick?: () => void; Icon: DockIcon; color: string; external?: boolean; current?: boolean }
+type DockEntry = { label: string; accessibleLabel?: string; caption?: string; href?: string; onClick?: () => void; Icon: DockIcon; color: string; external?: boolean; current?: boolean }
 
 const hoverQuery = '(min-width: 621px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)'
 const subscribe = (notify: () => void) => {
@@ -34,16 +34,16 @@ function DockItem({ entry, index, pointerX, focusIndex, enabled }: { entry: Dock
   const { Icon } = entry
   const content = <>
     <span className="dock-tooltip" aria-hidden="true">{entry.label}{entry.external ? ' ↗' : ''}</span>
-    <span className={`dock-icon ${entry.color}`}><Icon size={27} strokeWidth={2.1} aria-hidden={true}/>{entry.external && <ArrowUpRight className="dock-external" size={10} aria-hidden="true"/>}</span>
+    <span className={`dock-icon ${entry.color}`}><Icon size={27} strokeWidth={2.1} aria-hidden={true}/>{entry.caption && <span className="dock-caption" aria-hidden="true">{entry.caption}</span>}{entry.external && <ArrowUpRight className="dock-external" size={10} aria-hidden="true"/>}</span>
     {entry.current && <span className="dock-indicator" aria-hidden="true"/>}
   </>
   return <m.div ref={ref} className="dock-slot" style={{ width }}>
     {entry.href ? <a className="dock-item" href={entry.href} target={entry.external ? '_blank' : undefined} rel={entry.external ? 'noopener noreferrer' : undefined} aria-label={entry.accessibleLabel ?? entry.label}>{content}</a>
-      : <button className="dock-item" onClick={entry.onClick} aria-label={entry.accessibleLabel ?? entry.label}>{content}</button>}
+      : <button className="dock-item" onClick={entry.onClick} aria-label={entry.accessibleLabel ?? entry.label} aria-haspopup="dialog">{content}</button>}
   </m.div>
 }
 
-export function Dock({ profile, username, playlistUrl, onPlay, onWork }: { profile: PortfolioConfig['profile']; username: string | null; playlistUrl?: string | null; onPlay: () => void; onWork: () => void }) {
+export function Dock({ profile, username, playlistUrl, onPlay, onWork, onLegal }: { profile: PortfolioConfig['profile']; username: string | null; playlistUrl?: string | null; onPlay: () => void; onWork: () => void; onLegal: () => void }) {
   const enabled = useSyncExternalStore(subscribe, canMagnify, () => false)
   const pointerX = useMotionValue(Infinity)
   const focusIndex = useMotionValue(-1)
@@ -64,6 +64,7 @@ export function Dock({ profile, username, playlistUrl, onPlay, onWork }: { profi
     { label: 'Work', onClick: onWork, Icon: Layers3, color: 'work' },
     { label: CLIMB_NAME, accessibleLabel: `Play ${CLIMB_NAME}`, onClick: onPlay, Icon: Gamepad2, color: 'play' },
     ...external,
+    { label: 'Impressum & Privacy', caption: 'Impressum', onClick: onLegal, Icon: FileText, color: 'legal' },
   ]
   return <LazyMotion features={domAnimation} strict><nav className="dock" aria-label="Quick navigation" data-magnification={enabled ? 'on' : 'off'}
     onPointerMove={(event) => {

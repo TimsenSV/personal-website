@@ -102,7 +102,7 @@ describe('canvas interactions', () => {
     expect(screen.getByRole('button', { name: 'Open CV' })).toHaveFocus()
   })
   it('gives configured external actions valid and distinct destinations', () => {
-    render(<Dock username="octocat" profile={{ ...siteConfig.profile, linkedinUrl: 'https://www.linkedin.com/in/example/', email: 'me@example.com' }} onPlay={() => {}} onWork={() => {}}/>)
+    render(<Dock username="octocat" profile={{ ...siteConfig.profile, linkedinUrl: 'https://www.linkedin.com/in/example/', email: 'me@example.com' }} onPlay={() => {}} onWork={() => {}} onLegal={() => {}}/>)
     expect(screen.getByRole('link', { name: /GitHub/ })).toHaveAttribute('href', 'https://github.com/octocat')
     expect(screen.getByRole('link', { name: /LinkedIn/ })).toHaveAttribute('target', '_blank')
     expect(screen.getByRole('link', { name: /Email/ })).toHaveAttribute('href', 'mailto:me@example.com')

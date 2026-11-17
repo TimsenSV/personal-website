@@ -18,6 +18,8 @@ export async function fetchGitHubActivity(username: string, signal: AbortSignal)
   if (!githubProfile(username)) throw new Error('That GitHub username isn’t valid.')
   const response = await fetch(`https://api.github.com/users/${encodeURIComponent(username)}/events/public?per_page=30`, {
     signal,
+    credentials: 'omit',
+    referrerPolicy: 'no-referrer',
     headers: { Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2026-03-10' },
   })
   if (!response.ok) {

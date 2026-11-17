@@ -13,6 +13,9 @@
   .dock .dock-icon.ink { background: #101116; }
   .dock .dock-icon.linkedin { background: #0769f9; }
   .dock .dock-icon.mail { background: #ed2877; }
+  .dock .dock-icon.legal { flex-direction: column; gap: 2px; background: #f1f2f5; color: #515965; }
+  .dock .dock-icon.legal > svg { width: 43%; height: 43%; }
+  .dock-caption { font-size: 8px; line-height: 1; font-weight: 600; }
   .dock .dock-external { right: 5%; top: 5%; width: 20%; height: 20%; opacity: .85; }
   .dock .dock-divider { flex-shrink: 0; align-self: center; }
   .dock .dock-tooltip { bottom: calc(100% + 13px); font-size: 11px; padding: 8px 11px; border: 1px solid #ffffff20; box-shadow: 0 4px 12px #14245120; }
@@ -25,9 +28,9 @@
   }
   @media (max-width: 620px) {
     .dock { --dock-size: 44px; gap: 6px; padding: 9px 10px 12px; border-radius: 20px; }
-    .dock .dock-tooltip { font-size: 10px; }
+    .dock .dock-tooltip { display: none; }
   }
-  @media (max-width: 375px) { .dock { gap: 3px; padding-inline: 6px; } }
+  @media (max-width: 375px) { .dock { --dock-size: 40px; gap: 3px; padding-inline: 6px; } .dock-caption { font-size: 7px; } }
   @media (prefers-reduced-motion: reduce) {
     .dock .dock-slot { width: var(--dock-size) !important; }
     .dock .dock-icon, .dock .dock-tooltip { transition: none; }
