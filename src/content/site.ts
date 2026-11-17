@@ -90,10 +90,10 @@ export const siteConfig: PortfolioConfig = {
     }],
   },
   spotify: {
-    title: 'Life needs a soundtrack.',
-    note: 'A little space for the soundtrack to my world.',
-    url: null,
-    cover: null,
+    title: 'Timsen',
+    note: 'The soundtrack to my world.',
+    url: 'https://open.spotify.com/playlist/7crg0zzkXhWfEMMetYnd6O',
+    cover: { src: 'https://image-cdn-fa.spotifycdn.com/image/ab67706c0000da842dd8f22a296b4003cfb3421a', alt: 'Cover of the Spotify playlist Timsen' },
   },
   running: {
     title: 'Join me on my quest to not die in a half marathon.',

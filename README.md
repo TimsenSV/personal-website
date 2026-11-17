@@ -34,7 +34,7 @@ Die typisierte Datei **`src/content/site.ts`** enthält die persönlichen Canvas
 | Profil | Eigene Fotos für den Polaroid-Stapel, ggf. Feinschliff an Kurzvorstellung und Fokus |
 | Kontakt | E-Mail-Adresse; LinkedIn ist im Dock hinterlegt |
 | GitHub | TimsenSV ist verbunden; Links zu ausgewählten öffentlichen Repositories können noch ergänzt werden |
-| Spotify | Playlist-Link oder Embed-URL, Titel, optional eigenes Cover und Begleittext |
+| Spotify | Playlist „Timsen“ mit Link und Originalcover ist hinterlegt; Begleittext optional anpassen |
 | Produkte | Eigener Beitrag, je eine konkrete Entscheidung, Produktlinks, optional echte Screenshots |
 | Laufen | Strava und Halbmarathon-Ziel sind hinterlegt; Lieblingsstrecke optional |
 
@@ -112,7 +112,7 @@ Der Workflow prüft den Code vor der Veröffentlichung. Er wird absichtlich nur 
 - Endless Climber im Browser mit Pfeiltasten und mobilen Steuerflächen gespielt; Combos, Ruhegriffe und Verzweigungen geprüft. Spielregeln, begrenzte Schwierigkeit, 249 aufeinanderfolgende Züge je Test-Seed, Rettung, Verlust, Neustart, Pause und Speicherung sind automatisiert geprüft.
 - Adaptive Trefferzonen, Vergrößern/Verkleinern nach Treffern, Lebensverlust und die kompakte Fensterhöhe im Browser geprüft. Bei 320 × 740 Pixeln passen Lebensanzeige und Steuerung ohne seitlichen Überlauf. Start mit Leertaste, Neustart mit Enter und Fokus-Rückkehr nach Escape ebenfalls geprüft; automatisierte Tests decken zusätzlich die Zonengrenzen und das Verhalten bei Pausen und wiederholten Tastendrücken ab.
 - Sichtbare Begleittexte auf den farbigen Flächen nach einer Kontrastprüfung nachgedunkelt. Die reduzierte Bewegung ist als gültige CSS-Medienregel geprüft: Übergänge, Animationen, Hover-Bewegung und weiches Scrollen werden abgeschaltet. Eine Betriebssystem-Emulation dieser Einstellung wurde nicht durchgeführt.
-- GitHub ist mit TimsenSV konfiguriert; Snapshot und öffentliche Ereignisse wurden im Browser geladen. Lade-, Leer- und Fehlerzustände sowie Wiederholen sind zusätzlich mit ausdrücklich gekennzeichneten Testdaten geprüft. Ein echter persönlicher Spotify-Player und die später hinterlegten persönlichen Ziel-URLs sind nach ihrer Ergänzung nochmals zu prüfen.
+- GitHub ist mit TimsenSV konfiguriert; Snapshot und öffentliche Ereignisse wurden im Browser geladen. Lade-, Leer- und Fehlerzustände sowie Wiederholen sind zusätzlich mit ausdrücklich gekennzeichneten Testdaten geprüft. Der persönliche Spotify-Player wurde nach Ergänzung der Playlist geprüft; später ergänzte persönliche Ziel-URLs sind erneut zu prüfen.
 
 Die letzte Widget-Überarbeitung wurde zusätzlich bei 320 px, rund 768 px und 1280 px CSS-Breite im Browser geprüft. Die Pop-outs bleiben im sichtbaren Bereich; der schmale Seitenüberlauf durch die reservierte Scrollbar wurde behoben. Escape, Tab-Austritt und der Wechsel aus der Vorschau in ein Detailfenster wurden im Browser und automatisiert geprüft.
 
@@ -167,3 +167,7 @@ Das ist ein Konfigurationsbeispiel, kein bereits vorhandenes Asset. Pro Screensh
 Die neue Galerie wurde mit ausdrücklich markierten lokalen Testmotiven auf Desktop und Mobilgröße geprüft. Es wurden keine Produktscreenshots erfunden. Automatisiert geprüft sind Bildwechsel, Umlauf, leere/einzelne Galerien, Bildfehler, verschachtelte Dialoge und Fokus-Rückkehr. Die Canvas-Neigung wurde auf ihre Grenzen, Abschaltung für Touch/reduzierte Bewegung/offene Dialoge und Zurücksetzen vor Interaktionen geprüft.
 
 Produktregal und Work-App wurden bei 1280, 680, 390 und 320 Pixeln CSS-Breite geprüft: keine seitlichen Überläufe. Die App öffnet vom Dock, wechselt zwischen Übersicht und Detail und gibt beim Schließen den Fokus zurück. Herausziehen der Bände, bestehende Polaroid-Galerie und Gedanken-Pop-out wurden im Browser kontrolliert. Die Screenshot-Galerie wurde mit lokalen Testmotiven bei Desktop- und Mobilgröße geöffnet, durchgeblättert und per Escape in das weiterhin offene Projekt zurückgeführt.
+
+Die Spotify-Playlist [Timsen](https://open.spotify.com/playlist/7crg0zzkXhWfEMMetYnd6O) ist hinterlegt, ohne den Freigabeparameter `si`. Titel und Originalcover wurden über Spotifys öffentliche [oEmbed-Schnittstelle](https://developer.spotify.com/documentation/embeds/reference/oembed) übernommen und lokal konfiguriert. Das Cover wird direkt vom Spotify-CDN geladen; bei einem Bildfehler bleibt die gestaltete Plattenhülle sichtbar. Der Player lädt erst beim Öffnen der Detailansicht und startet nicht automatisch. Ein direkter Spotify-Link bleibt zusätzlich verfügbar.
+
+Bei der Browserprüfung am 17.11.2026 wurden Cover und Titel korrekt geladen, die eingebettete Spotify-Vorschau lieferte in dieser Sitzung jedoch keine Titelliste. Die Ursache ist nicht geklärt; der direkte Spotify-Link ist unabhängig davon hinterlegt.

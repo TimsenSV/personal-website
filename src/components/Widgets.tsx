@@ -44,10 +44,11 @@ export function GithubDetail({ config }: { config: PortfolioConfig['github'] }) 
 
 export function MusicWidget({ config, onOpen }: { config: PortfolioConfig['spotify']; onOpen: () => void }) {
   const playlist = spotifyPlaylist(config.url)
+  const [failedCover, setFailedCover] = useState<string | null>(null)
   return <section className="card music-card" aria-labelledby="music-title">
     <Popout className="record-popout" buttonClassName="record-object" label="Open playlist preview" title="A side of me" action={playlist ? { label: 'Open playlist', onClick: onOpen } : undefined} trigger={<>
       <span className="vinyl-disc" aria-hidden="true"><span><AudioLines size={20}/></span></span>
-      <span className="record-sleeve">{config.cover ? <img src={assetUrl(config.cover.src)} alt={config.cover.alt} width="160" height="160" loading="lazy"/> : <span className="album-art" aria-hidden="true"><span className="album-art-title">A SIDE<br/>OF ME<span>01</span></span><span className="album-star">✳</span><span className="album-art-bottom">MUSIC IS A GOOD PLACE.</span></span>}</span>
+      <span className="record-sleeve">{config.cover && failedCover !== config.cover.src ? <img src={assetUrl(config.cover.src)} alt={config.cover.alt} width="160" height="160" loading="lazy" onError={() => setFailedCover(config.cover?.src ?? null)}/> : <span className="album-art" aria-hidden="true"><span className="album-art-title">A SIDE<br/>OF ME<span>01</span></span><span className="album-star">✳</span><span className="album-art-bottom">MUSIC IS A GOOD PLACE.</span></span>}</span>
       <span className="record-sticker" aria-hidden="true">{playlist ? 'LISTEN IN ↗' : 'PLAYLIST SOON'}</span>
     </>}>
       <><div className="popout-icon"><AudioLines size={24}/></div><h3>{config.title}</h3><p>{playlist ? config.note : 'My favourite playlist will move in here soon. For now, the cover is a placeholder and the needle stays up.'}</p></>

@@ -56,7 +56,7 @@ describe('widget quick looks', () => {
   })
 
   it('shows an honest playlist placeholder without a player or fake play action', async () => {
-    render(<App/>)
+    render(<MusicWidget config={{ ...siteConfig.spotify, url: null, cover: null }} onOpen={() => {}}/>)
     await userEvent.click(screen.getByRole('button', { name: 'Open playlist preview' }))
     const preview = screen.getByRole('dialog', { name: 'A side of me' })
     expect(preview).toHaveTextContent('cover is a placeholder')
