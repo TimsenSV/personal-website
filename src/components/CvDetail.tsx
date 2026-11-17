@@ -1,5 +1,6 @@
-import { ChevronDown, MapPin } from 'lucide-react'
+import { ChevronDown, Download, MapPin } from 'lucide-react'
 import type { CvConfig, CvEntry } from '../content/cv'
+import { assetUrl } from '../lib/links'
 import { ExternalLink } from './ExternalLink'
 
 function Entries({ entries, compact = false }: { entries: CvEntry[]; compact?: boolean }) {
@@ -18,7 +19,10 @@ function Collection({ title, entries }: { title: string; entries: CvEntry[] }) {
 export function CvDetail({ config }: { config: CvConfig }) {
   return <article className="cv-detail">
     <header className="cv-header">
-      <div className="cv-heading-row"><span className="cv-label">Curriculum vitae</span><ExternalLink href={config.source.url}>LinkedIn</ExternalLink></div>
+      <div className="cv-heading-row"><span className="cv-label">Curriculum vitae</span><div className="cv-actions">
+        <ExternalLink href={config.source.url}>LinkedIn</ExternalLink>
+        {config.download && <a className="button primary cv-download" href={assetUrl(config.download.src)} download={config.download.filename} type="application/pdf" aria-label="Download CV (PDF)"><Download size={16} aria-hidden="true"/>Download CV</a>}
+      </div></div>
       <h3>{config.name}<span>.</span></h3>
       <p className="cv-headline">{config.headline}</p>
       <p className="cv-location"><MapPin size={14} aria-hidden="true"/>{config.location}</p>

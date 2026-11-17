@@ -4,7 +4,9 @@
   .cv-detail { padding: 38px 46px 28px; }
   .cv-window.is-expanded .cv-detail { max-width: 940px; margin-inline: auto; }
   .cv-header { padding-bottom: 30px; }
-  .cv-heading-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
+  .cv-heading-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px 16px; margin-bottom: 22px; }
+  .cv-actions { display: flex; align-items: center; gap: 20px; }
+  .cv-download { white-space: nowrap; }
   .cv-label { font: 10px var(--mono); text-transform: uppercase; letter-spacing: 1.4px; color: #646d80; }
   .cv-heading-row .external-link { font-size: 11px; color: var(--blue); min-height: 44px; }
   .cv-header h3 { font-size: clamp(34px,5vw,48px); line-height: 1.1; letter-spacing: -2px; font-weight: 650; margin: 0 0 12px; }.cv-header h3 > span { color: var(--blue); }
@@ -35,6 +37,7 @@
   @media (max-width: 620px) {
     .cv-window, .cv-window.is-expanded { width: 100%; }
     .cv-detail { padding: 20px 24px 32px; }
+    .cv-heading-row .cv-label { display: none; }.cv-actions { width: 100%; justify-content: space-between; gap: 12px; }
     .cv-heading-row { margin-bottom: 15px; }.cv-header h3 { font-size: 37px; letter-spacing: -1.6px; }.cv-headline { font-size: 14px; }.cv-summary { font-size: 13px; }
     .cv-section { padding: 24px 0; }.cv-section h4 { margin-bottom: 22px; }
     .cv-entries > li, .cv-entries.is-compact > li { grid-template-columns: minmax(0,1fr); gap: 8px; padding-bottom: 26px; }

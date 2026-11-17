@@ -11,6 +11,7 @@ export interface CvConfig {
   headline: string
   location: string
   summary: string
+  download: { src: string; filename: string } | null
   source: { url: string; checkedAt: string }
   experience: CvEntry[]
   education: CvEntry[]
@@ -28,6 +29,7 @@ export interface CvConfig {
  */
 export const cvConfig: CvConfig = {
   name: 'Tim Hoffmann',
+  download: { src: 'documents/Tim-Hoffmann-CV.pdf', filename: 'Tim-Hoffmann-CV.pdf' },
   headline: 'Chief Product Officer · showcase & shopvibes',
   location: 'Munich, Germany',
   summary: 'I bring together product development, design and an entrepreneurial mindset. My path has taken me from UX and business development through my own machine-learning startup to AI products for e-commerce.',

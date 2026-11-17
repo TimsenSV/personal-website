@@ -189,3 +189,7 @@ Die echten Bildreihen wurden bei 1280 und 390 Pixeln im Browser geprüft: Einsti
 Die Projekt-Navigation sitzt als kompakte, feststehende Leiste direkt unter dem Fensterkopf. „All projects“ und die drei farblich zum Regal passenden Projektbände bilden eine Zeile; mobil bleibt der Zurück-Pfeil mit zugänglicher Beschriftung erhalten. Der Markenname backlane wird durchgängig kleingeschrieben.
 
 Beim Hover oder Tastaturfokus erscheinen hinter den Büchern gestaffelte Ebenen: shopvibes-Datenkarten, showcase-Fotoabzüge und backlane-Chat/Verbindungssymbole. Die echten Produktausschnitte nutzen kleine lokale JPEG-Vorschauen (je 640 Pixel breit); die beiden Fotoabzüge sind CSS-Ausschnitte aus der vorhandenen showcase-Bibliothek. Die Elemente sind rein dekorativ, fangen keine Klicks ab und werden auf Touch-Geräten, unter 621 Pixeln sowie bei reduzierter Bewegung ausgeblendet. Gestaltung: `src/book-artifacts.css`. Desktop-Hover und Tastaturfokus sowie die Projektnavigation bei 1280, 390 und 320 Pixeln wurden im Browser geprüft.
+
+## CV als PDF herunterladen
+
+Im CV-Pop-up bietet „Download CV“ die am 17.11.2026 bereitgestellte `Profile.pdf` unverändert als `Tim-Hoffmann-CV.pdf` an. Die Datei liegt unter `public/documents/`; Pfad und Downloadname sind in `src/content/cv.ts` unter `download` konfiguriert. Bei `download: null` wird der Link ausgeblendet. Der Download nutzt die eigene Website und berücksichtigt deren Basispfad für GitHub Pages. Desktop und 320-Pixel-Mobilansicht sind geprüft; die tatsächlich heruntergeladene Datei ist bytegleich zum Original.
