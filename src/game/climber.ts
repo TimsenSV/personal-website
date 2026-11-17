@@ -1,5 +1,5 @@
-export type Side = 'left' | 'right'
-export type HoldKind = 'normal' | 'jug' | 'crimp'
+export type Side = 'left' | 'center' | 'right'
+export type HoldKind = 'normal' | 'jug' | 'crimp' | 'loose'
 export type ClimbHold = { side: Side; kind: HoldKind }
 export type ClimbStatus = 'ready' | 'playing' | 'paused' | 'fallen'
 export type TimingZone = { center: number; width: number; change: 'steady' | 'wider' | 'narrower' }
@@ -7,7 +7,8 @@ export type ClimbState = {
   seed: number; status: ClimbStatus; step: number; height: number; side: Side | null
   kind: HoldKind; elapsed: number; budget: number; cooldown: number
   combo: number; maxCombo: number; saves: number; feedback: string; event: number
-  lastMove: 'start' | 'clean' | 'catch' | 'slip'; reason: 'time' | 'wrong' | 'early' | null
+  lastMove: 'start' | 'clean' | 'catch' | 'slip'; reason: 'time' | 'wrong' | 'early' | 'broken' | null
+  advancedFrom: number | null
   zone: TimingZone
 }
 
@@ -16,6 +17,9 @@ export const ZONE_INITIAL_WIDTH = .3
 export const ZONE_MIN_WIDTH = .2
 export const ZONE_MAX_WIDTH = .42
 export const MIN_REACH = .14
+export const ADVANCED_HEIGHT = 70
+export const THREE_LANE_SECTION_LENGTH = 4
+export const NORMAL_SECTION_LENGTH = 8
 export const BEST_KEY = 'tim:endless-climber:best:v1'
 
 export function zoneBounds(zone: TimingZone) { return { start: zone.center - zone.width / 2, end: zone.center + zone.width / 2 } }
@@ -43,7 +47,20 @@ function randomAt(seed: number, row: number) {
   return ((n ^ (n >>> 15)) >>> 0) / 4294967296
 }
 
-export function routeRow(seed: number, row: number): ClimbHold[] {
+export function isThreeLaneRow(row: number, advancedFrom: number | null) {
+  return advancedFrom !== null && row >= advancedFrom && (row - advancedFrom) % (THREE_LANE_SECTION_LENGTH + NORMAL_SECTION_LENGTH) < THREE_LANE_SECTION_LENGTH
+}
+
+export function routeRow(seed: number, row: number, advancedFrom: number | null = null): ClimbHold[] {
+  if (isThreeLaneRow(row, advancedFrom)) {
+    const sides: Side[] = ['left', 'center', 'right']
+    const loose = Math.floor(randomAt(seed + 43, row) * sides.length)
+    return sides.map((side, index) => ({
+      side,
+      // Exactly one trap, with two reachable alternatives. Rest rows retain a jug.
+      kind: index === loose ? 'loose' : row % 6 === 5 && index === (loose + 1) % 3 ? 'jug' : randomAt(seed + 71 + index, row) < .25 ? 'crimp' : 'normal',
+    }))
+  }
   const opening: Side[] = ['left', 'right', 'left', 'left', 'right', 'right']
   if (row <= 6) return [{ side: opening[Math.max(0, row - 1)], kind: row === 5 ? 'jug' : 'normal' }]
   const value = randomAt(seed, row)
@@ -60,7 +77,7 @@ export function holdTime(step: number, kind: HoldKind) {
 }
 
 export function createClimb(seed = 1): ClimbState {
-  return { seed, status: 'ready', step: 0, height: 0, side: null, kind: 'jug', elapsed: 0, budget: 3200, cooldown: 0, combo: 0, maxCombo: 0, saves: 1, feedback: 'Your next hold is waiting.', event: 0, lastMove: 'start', reason: null, zone: { center: .45, width: ZONE_INITIAL_WIDTH, change: 'steady' } }
+  return { seed, status: 'ready', step: 0, height: 0, side: null, kind: 'jug', elapsed: 0, budget: 3200, cooldown: 0, combo: 0, maxCombo: 0, saves: 1, feedback: 'Your next hold is waiting.', event: 0, lastMove: 'start', reason: null, advancedFrom: null, zone: { center: .45, width: ZONE_INITIAL_WIDTH, change: 'steady' } }
 }
 
 export function startClimb(seed: number): ClimbState { return { ...createClimb(seed), status: 'playing' } }
@@ -82,19 +99,28 @@ export function tickClimb(state: ClimbState, milliseconds: number): ClimbState {
 
 export function reachClimb(state: ClimbState, side: Side): ClimbState {
   if (state.status !== 'playing' || state.cooldown > 0) return state
-  const target = routeRow(state.seed, state.step + 1).find(hold => hold.side === side)
+  const target = routeRow(state.seed, state.step + 1, state.advancedFrom).find(hold => hold.side === side)
   if (!target) return miss(state, 'wrong')
   const progress = state.elapsed / state.budget
   if (progress < MIN_REACH) return miss(state, 'early')
+  if (target.kind === 'loose') return {
+    ...state, side, status: 'fallen', reason: 'broken', saves: 0, combo: 0,
+    feedback: 'That hold had other plans. Cracked means crash.', event: state.event + 1,
+  }
   const clean = isInTimingZone(progress, state.zone)
   const combo = clean ? state.combo + 1 : 0
   const gain = target.kind === 'crimp' ? 2.8 : target.kind === 'jug' ? 1.6 : 2
+  const height = Math.round((state.height + gain) * 10) / 10
+  const introducing = state.advancedFrom === null && height >= ADVANCED_HEIGHT
+  const advancedFrom = introducing ? state.step + 2 : state.advancedFrom
+  const enteringSection = isThreeLaneRow(state.step + 2, advancedFrom) && !isThreeLaneRow(state.step + 1, advancedFrom)
   return {
     ...state, step: state.step + 1, side, kind: target.kind,
-    height: Math.round((state.height + gain) * 10) / 10,
-    elapsed: 0, budget: holdTime(state.step + 1, target.kind), cooldown: 160,
+    height, advancedFrom,
+    // Give each three-lane section a readable entrance, especially the first one.
+    elapsed: 0, budget: Math.max(introducing ? 3200 : enteringSection ? 2400 : 0, holdTime(state.step + 1, target.kind)), cooldown: 160,
     combo, maxCombo: Math.max(combo, state.maxCombo), zone: adaptZone(state, clean, true),
-    feedback: clean ? combo >= 3 ? `${combo} in a row. In the flow!` : 'Clean!' : progress > zoneBounds(state.zone).end ? 'Close, but hanging on.' : 'Got a grip.',
+    feedback: introducing ? '70 m. A new twist in the route.' : clean ? combo >= 3 ? `${combo} in a row. In the flow!` : 'Clean!' : progress > zoneBounds(state.zone).end ? 'Close, but hanging on.' : 'Got a grip.',
     lastMove: clean ? 'clean' : 'catch', event: state.event + 1,
   }
 }

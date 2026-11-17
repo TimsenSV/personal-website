@@ -19,7 +19,7 @@
   .climb-best strong { display: block; font: 600 15px 'DM Sans Variable',sans-serif; color: #30374c; letter-spacing: 0; margin-top: 4px; font-variant-numeric: tabular-nums; }
   .climb-pause { width: 44px; height: 44px; display: grid; place-items: center; background: #f3f5fa; color: #4a536b; border: 1px solid #e5e9f2; border-radius: 12px; }
   .climb-pause:disabled { opacity: .35; cursor: default; }
-  .climb-stage { position: relative; height: min(62dvh,calc(100dvh - 280px),560px); min-height: 340px; overflow: hidden; isolation: isolate; background: #eef2fd; transition: background 1s; touch-action: manipulation; }
+  .climb-stage { position: relative; height: min(62dvh,calc(100dvh - 220px),560px); min-height: 340px; overflow: hidden; isolation: isolate; background: #eef2fd; transition: background 1s; touch-action: manipulation; }
   .climb-stage:focus { outline: none; }
   .climb-stage:focus-visible { box-shadow: inset 0 0 0 2px #5b6fa0; }
   .climb-stage[data-world='1'] { background: #f9f0e6; }
@@ -29,7 +29,13 @@
   .climb-hold { fill: #3657ef; filter: drop-shadow(0 4px 0 #21387518); }
   .climb-hold.hold-jug { fill: #7d52d7; }.climb-hold.hold-crimp { fill: #ef7444; }
   .climb-hold-ridge { fill: none; stroke: #ffffff80; stroke-width: 4; stroke-linecap: round; }
-  .climb-crack { fill: none; stroke: #a34221; stroke-width: 1.5; }
+  .climb-hold.hold-loose { fill: #ce5968; }
+  .loose-crack { fill: none; stroke: #fff6f4; stroke-width: 3px; stroke-linejoin: bevel; }
+  .is-broken .loose-half-left { animation: climb-break-left .65s .12s ease-in both; }
+  .is-broken .loose-half-right { animation: climb-break-right .65s .12s ease-in both; }
+  .is-broken .loose-crack, .is-broken .climb-hold-ridge { opacity: 0; }
+  @keyframes climb-break-left { to { transform: translate(-26px,130px) rotate(-50deg); opacity: 0; } }
+  @keyframes climb-break-right { to { transform: translate(34px,160px) rotate(65deg); opacity: 0; } }
   .climb-next-ring { stroke: #364e8c; stroke-width: 1.4; stroke-dasharray: 3 4; fill: #ffffff40; }
   .climb-next-arrow { fill: #273e7b; font: 600 22px 'DM Sans Variable',sans-serif; text-anchor: middle; }
   .climb-record-line path { stroke: #9466d7; stroke-dasharray: 5 5; opacity: .6; }.climb-record-line rect { fill: #fbf8ff; }.climb-record-line text { fill: #7449ab; font: 7px var(--mono); letter-spacing: .2px; }
@@ -39,6 +45,8 @@
   .climb-tim-action.is-reaching { animation: climb-hop .25s cubic-bezier(.15,.55,.3,1); }
   .climb-tim-action.is-slipping { animation: climb-slip .48s ease-out; }
   .climb-tim-action.is-falling { animation: climb-fall .65s cubic-bezier(.5,0,.85,.55) both; }
+  .climb-tim-action.is-breaking { animation: climb-break-fall .8s ease-in both; }
+  @keyframes climb-break-fall { 0% { transform: none; } 25% { transform: translateY(-90px) rotate(-5deg); } 100% { transform: translate(18px,300px) rotate(32deg); opacity: 0; } }
   .climb-tim-legs { transform-origin: 20px 33px; }.is-reaching .climb-tim-legs { animation: climb-kick .25s ease-out; }
   .climb-shivering { animation: climb-shiver .15s steps(2) infinite; }
   .climb-chalk { animation: climb-chalk .45s ease-out both; transform-origin: 40px 0; }
@@ -52,12 +60,15 @@
   @keyframes climb-crumbs { from { opacity: 1; translate: 0 0; } to { opacity: 0; translate: 0 30px; } }
   .climb-live-info { position: absolute; inset: 16px 20px auto; display: flex; align-items: center; justify-content: space-between; pointer-events: none; gap: 10px; }
   .climb-combo { font: 8px var(--mono); letter-spacing: .7px; color: #667391; }.climb-combo b { font: 750 22px 'DM Sans Variable',sans-serif; margin-right: 4px; color: #3657ef; }.climb-combo.in-flow { color: #6440b0; }.climb-combo.in-flow b { color: #7448d4; }
+  .climb-route-tip { text-align: right; font-size: 10px; color: #8b3947; line-height: 1.4; }.climb-route-tip small { display: block; font: 9px var(--mono); color: #596980; margin-top: 3px; }
   .climb-feedback { position: absolute; z-index: 2; left: 50%; top: 52px; transform: translateX(-50%); text-align: center; white-space: nowrap; padding: 7px 11px; border: 1px solid #ffffffb8; border-radius: 9px; background: #ffffffda; color: #3657c3; box-shadow: 0 2px 10px #162f6b08; font-size: 12px; font-weight: 650; pointer-events: none; animation: climb-feedback .8s ease-out both; }
   .climb-feedback.is-warning { color: #a94c24; }.climb-feedback small { display: block; font-size: 8px; font-weight: 500; margin-top: 3px; color: #7b46b7; }
   .climb-feedback small.zone-narrower { color: #aa4c28; }
   @keyframes climb-feedback { 0% { opacity: 0; translate: 0 5px; scale: .9; } 15%,65% { opacity: 1; translate: 0 0; scale: 1; } 100% { opacity: 0; translate: 0 -8px; } }
   .climb-inputs { position: absolute; inset: 0; display: flex; z-index: 3; }
   .climb-input { width: 50%; height: 100%; position: relative; background: transparent; color: #40547f; touch-action: manipulation; -webkit-tap-highlight-color: transparent; user-select: none; }
+  .climb-inputs.has-center .climb-input { width: calc(100% / 3); }
+  .input-center > span { left: 50%; translate: -50% 0; }
   .climb-input > span { position: absolute; bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 9px 17px; min-height: 48px; border: 1px solid #d2dbed; background: #ffffffdf; border-radius: 13px; box-shadow: 0 3px 0 #223c7020; transition: background .12s, transform .12s; }
   .climb-input > span > span { font: 9px var(--mono); letter-spacing: .5px; }.input-left > span { left: 20px; }.input-right > span { right: 20px; }
   .climb-input:active > span { background: #dfe8ff; transform: translateY(2px); box-shadow: none; }
@@ -80,25 +91,26 @@
   .climb-secondary { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 11px auto 0; min-height: 44px; padding: 8px 14px; font-size: 11px; color: #5a6780; background: transparent; }
   .climb-legend { display: flex; justify-content: center; gap: 15px; margin-top: 25px; color: #59647b; font-size: 8px; }
   .climb-legend > span { display: flex; align-items: center; gap: 5px; }.climb-legend i { width: 9px; height: 7px; border-radius: 4px; }.legend-normal { background: #3657ef; }.legend-jug { background: #7d52d7; }.legend-crimp { background: #ef7444; }
+  .legend-loose { background: #ce5968; clip-path: polygon(0 0,45% 0,55% 45%,40% 70%,50% 100%,0 100%,0 0,65% 0,75% 45%,60% 70%,70% 100%,100% 100%,100% 0); }
   .climb-run-stats { display: flex; justify-content: center; gap: 26px; font-size: 10px; color: #596980; margin: 0 0 24px; }.climb-run-stats strong { display: block; font-size: 23px; color: #344565; margin-bottom: 2px; }
   .climb-local-note { display: block; font-size: 9px; color: #6a758a; margin-top: 20px; }
-  .climb-rhythm { padding: 14px 22px 19px; border-top: 1px solid #e0e6f0; }
-  .climb-rhythm-label { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 10px; color: #53617b; margin-bottom: 11px; }.climb-rhythm-label > span:last-child { font: 8px var(--mono); letter-spacing: .3px; color: #77839a; }
-  .climb-rhythm.is-perfect .climb-rhythm-label > span:first-child { color: #3657ef; font-weight: 650; }
-  .climb-timing-track { position: relative; height: 14px; border-radius: 6px; background: #e9edf5; }
-  .climb-perfect-zone { position: absolute; height: 100%; top: 0; background: #c2cdfb; border-left: 2px solid #3657ef; border-right: 2px solid #3657ef; transition: left 80ms ease-out, width 80ms ease-out; }
-  .climb-perfect-zone.zone-narrower { background: #f5cbb9; border-color: #bd663e; }
-  .is-perfect .climb-perfect-zone { background: #8fa4fb; }
-  .climb-timing-cursor { position: absolute; top: -4px; left: clamp(0px,calc(var(--progress) * 100%),calc(100% - 4px)); width: 4px; height: 22px; background: #243862; border-radius: 2px; box-shadow: 0 0 0 2px #fff; }
+  .climb-timing-arc { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+  .climb-arc-backing { stroke: #fffffff2; stroke-width: 18px; stroke-linecap: round; }
+  .climb-arc-track { stroke: #cbd4e8; stroke-width: 10px; stroke-linecap: round; }
+  .climb-arc-zone { stroke: #637ffd; stroke-width: 10px; stroke-linecap: butt; }
+  .climb-arc-cursor { fill: #263c6b; stroke: #fff; stroke-width: 2.5px; }
+  .climb-timing-arc.is-perfect .climb-arc-zone { stroke: #3155ff; stroke-width: 14px; }
+  .climb-timing-arc.is-perfect .climb-arc-cursor { fill: #3155ff; }
+  .climb-timing-arc.is-late .climb-arc-cursor { fill: #c34e24; }
   @media (max-width:620px) {
     html:has(.game-window[open]) { scrollbar-gutter: auto; }
     .game-window { width: 100vw; max-width: none; height: 100dvh; max-height: 100dvh; border-radius: 0; margin: 0; }
     .game-window .window-body { flex: 1; display: flex; }.climb-game { display: flex; flex-direction: column; width: 100%; }
     .climb-hud { padding: 12px 16px; gap: 12px; flex-shrink: 0; }.climb-stage { flex: 1; height: auto; min-height: 340px; }
     .climb-best { gap: 5px; }.climb-best span { font-size: 0; letter-spacing: 0; }.climb-best strong { font-size: 12px; margin-top: 0; white-space: nowrap; }.climb-height > strong { font-size: 27px; }.climb-lives { margin-left: auto; }.climb-pause { flex-shrink: 0; width: 40px; }
-    .climb-rhythm { flex-shrink: 0; padding-bottom: max(21px,env(safe-area-inset-bottom)); }.climb-overlay { padding: 16px; }.climb-overlay h3 { font-size: 52px; }.overlay-ready h3 { font-size: 46px; }
+    .climb-overlay { padding: 16px; }.climb-overlay h3 { font-size: 52px; }.overlay-ready h3 { font-size: 46px; }
     .overlay-paused h3 { font-size: clamp(34px,10vw,50px); letter-spacing: -1.6px; }
-    .climb-input > span { bottom: 14px; }.input-left > span { left: 16px; }.input-right > span { right: 16px; }
+    .climb-input > span { bottom: max(14px,env(safe-area-inset-bottom)); }.input-left > span { left: 16px; }.input-right > span { right: 16px; }
   }
   @media (max-height:730px) {
     .climb-overlay h3 { font-size: 39px; }.climb-kicker { margin-bottom: 9px; }.climb-overlay p { margin: 10px 0 13px; font-size: 12px; }.climb-how { gap: 5px; margin-bottom: 17px; }.climb-legend { margin-top: 20px; }.climb-overlay-card .chalk-climber { top: 0; width: 48px; height: 65px; }.climb-stage { min-height: 340px; }

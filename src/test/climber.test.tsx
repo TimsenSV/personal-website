@@ -1,12 +1,31 @@
 import { act, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { BoulderGame } from '../components/BoulderGame'
-import { BEST_KEY } from '../game/climber'
+import { ADVANCED_HEIGHT, BEST_KEY, isThreeLaneRow, reachClimb, routeRow, startClimb, tickClimb, type ClimbState, type Side } from '../game/climber'
 
 const advance = (ms: number) => act(() => { vi.advanceTimersByTime(ms) })
 const start = () => fireEvent.click(screen.getByRole('button', { name: 'Start climbing' }))
 const board = () => screen.getByRole('group', { name: /Grip Happens/ })
 const key = (value: string, repeat = false) => fireEvent.keyDown(board(), { key: value, repeat })
+const keyFor = { left: 'ArrowLeft', center: 'ArrowUp', right: 'ArrowRight' }
+const controlFor = { left: 'Reach left', center: 'Reach middle', right: 'Reach right' }
+function move(game: ClimbState, side?: Side, input?: string | 'tap') {
+  const target = side ?? routeRow(game.seed, game.step + 1, game.advancedFrom).find(hold => hold.kind !== 'loose')!.side
+  advance(game.budget * .5)
+  if (input === 'tap') fireEvent.click(screen.getByRole('button', { name: controlFor[target] }))
+  else key(input ?? keyFor[target])
+  return reachClimb(tickClimb(game, game.budget * .5), target)
+}
+function reachAdvanced() {
+  vi.spyOn(Math, 'random').mockReturnValue(93 / 0x7fffffff)
+  render(<BoulderGame/>); start()
+  let game = startClimb(93)
+  while (game.height < ADVANCED_HEIGHT) {
+    expect(screen.queryByRole('button', { name: 'Reach middle' })).not.toBeInTheDocument()
+    game = move(game)
+  }
+  return game
+}
 
 beforeEach(() => { vi.useFakeTimers(); localStorage.clear() })
 afterEach(() => { vi.useRealTimers(); localStorage.clear() })
@@ -27,15 +46,80 @@ describe('endless climber controls', () => {
   it('renders the same adaptive timing boundaries used by the game', () => {
     const { container } = render(<BoulderGame/>)
     start()
-    const zone = container.querySelector<HTMLElement>('.climb-perfect-zone')!
-    const initialLeft = zone.style.left
-    const initialWidth = parseFloat(zone.style.width)
+    const zone = container.querySelector<SVGPathElement>('.climb-arc-zone')!
+    const initialOffset = zone.getAttribute('stroke-dashoffset')
+    const width = () => parseFloat(zone.getAttribute('stroke-dasharray')!)
+    const initialWidth = width()
+    expect(initialWidth).toBeCloseTo(30)
+    expect(Number(initialOffset)).toBeCloseTo(-30)
     advance(1200); key('ArrowLeft')
-    expect(parseFloat(zone.style.width)).toBeGreaterThan(initialWidth)
-    expect(zone.style.left).not.toBe(initialLeft)
-    const wider = parseFloat(zone.style.width)
+    expect(width()).toBeGreaterThan(initialWidth)
+    expect(zone.getAttribute('stroke-dashoffset')).not.toBe(initialOffset)
+    const wider = width()
     advance(350); key('ArrowRight')
-    expect(parseFloat(zone.style.width)).toBeLessThan(wider)
+    expect(width()).toBeLessThan(wider)
+  })
+  it('keeps the timing cue next to Tim, highlights the blue zone and freezes on pause', () => {
+    const { container } = render(<BoulderGame/>)
+    start()
+    const arc = container.querySelector('.climb-timing-arc')!
+    const position = arc.querySelector<SVGGElement>('.climb-tim-position')!
+    const cursor = arc.querySelector('circle')!
+    expect(arc.querySelector('text')).toBeNull()
+    expect(position.style.transform).toBe('translate(220px, 373px)')
+    advance(1200)
+    expect(arc).toHaveClass('is-perfect')
+    key('ArrowLeft')
+    expect(position.style.transform).toBe('translate(145px, 373px)')
+    expect(arc).not.toHaveClass('is-perfect')
+    advance(850)
+    key('p')
+    const pausedX = cursor.getAttribute('cx')
+    advance(5000)
+    expect(cursor.getAttribute('cx')).toBe(pausedX)
+    fireEvent.click(screen.getByRole('button', { name: 'Keep climbing' }))
+    key('ArrowRight')
+    expect(position.style.transform).toBe('translate(295px, 373px)')
+  })
+  it('unlocks the middle at 70 metres, supports Up/W/touch and ends a run on a cracked hold', () => {
+    let game = reachAdvanced()
+    expect(screen.getByRole('button', { name: 'Reach middle' })).toBeEnabled()
+    expect(screen.getByRole('status')).toHaveTextContent('Arrow Up or W for the middle')
+    expect(screen.getByRole('status')).toHaveTextContent('cracked hold')
+    for (const input of ['ArrowUp', 'w', 'tap']) {
+      while (!routeRow(game.seed, game.step + 1, game.advancedFrom).some(hold => hold.side === 'center' && hold.kind !== 'loose')) game = move(game)
+      game = move(game, 'center', input)
+      expect(board()).toHaveFocus()
+      expect(screen.getByRole('button', { name: 'Pause game' })).toBeEnabled()
+      expect(screen.getByRole('status')).toHaveTextContent('2 of 2 lives')
+    }
+    while (!isThreeLaneRow(game.step + 1, game.advancedFrom)) game = move(game)
+    const trap = routeRow(game.seed, game.step + 1, game.advancedFrom).find(hold => hold.kind === 'loose')!
+    move(game, trap.side, 'tap')
+    expect(screen.getByRole('button', { name: 'Chalk up again' })).toHaveFocus()
+    expect(screen.getByRole('status')).toHaveTextContent('Cracked means crash')
+    expect(screen.getByRole('img', { name: '0 of 2 lives' })).toBeVisible()
+    expect(Number(localStorage.getItem(BEST_KEY))).toBe(game.height)
+    key('Enter')
+    expect(screen.queryByRole('button', { name: 'Reach middle' })).not.toBeInTheDocument()
+    expect(screen.getByRole('status')).toHaveTextContent('Next hold: left')
+  })
+  it('only shows the middle control during the short three-lane sections', () => {
+    let game = reachAdvanced()
+    for (let index = 0; index < 4; index++) {
+      expect(screen.getByRole('button', { name: 'Reach middle' })).toBeEnabled()
+      game = move(game)
+    }
+    expect(screen.queryByRole('button', { name: 'Reach middle' })).not.toBeInTheDocument()
+    const height = game.height
+    key('ArrowUp'); key('w')
+    expect(screen.getByRole('status')).toHaveTextContent('2 of 2 lives')
+    expect(Number(localStorage.getItem(BEST_KEY))).toBe(height)
+    for (let index = 0; index < 8; index++) {
+      expect(screen.queryByRole('button', { name: 'Reach middle' })).not.toBeInTheDocument()
+      game = move(game)
+    }
+    expect(screen.getByRole('button', { name: 'Reach middle' })).toBeEnabled()
   })
   it('waits to start, accepts arrow keys and ignores held keys', () => {
     render(<BoulderGame/>)

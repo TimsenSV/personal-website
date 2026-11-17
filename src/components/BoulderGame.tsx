@@ -1,9 +1,9 @@
-import { memo, useEffect, useReducer, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react'
-import { ArrowLeft, ArrowRight, Hand, Pause, Play, RotateCcw, Trophy } from 'lucide-react'
+import { memo, useEffect, useReducer, useRef, useState, type KeyboardEvent } from 'react'
+import { ArrowLeft, ArrowRight, ArrowUp, Hand, Pause, Play, RotateCcw, Trophy } from 'lucide-react'
 import { ChalkClimber } from './ChalkClimber'
 import { ClimbingTim } from './ClimbingTim'
 import { holds } from '../game/boulder'
-import { climbReducer, createClimb, formatHeight, CLIMB_NAME, isInTimingZone, readBest, routeRow, saveBest, zoneBounds, type ClimbState, type HoldKind, type Side } from '../game/climber'
+import { climbReducer, createClimb, formatHeight, CLIMB_NAME, isInTimingZone, isThreeLaneRow, readBest, routeRow, saveBest, zoneBounds, type ClimbState, type HoldKind, type Side, type TimingZone } from '../game/climber'
 
 export function BoulderPreview() {
   return <svg className="boulder-preview" viewBox="0 0 300 280" fill="none" aria-hidden="true">
@@ -19,38 +19,69 @@ export function BoulderPreview() {
   </svg>
 }
 
-const holdNames: Record<HoldKind, string> = { normal: 'regular hold', jug: 'jug hold', crimp: 'crumbly hold' }
-const laneX = (side: Side | null) => side === 'left' ? 145 : side === 'right' ? 295 : 220
+const holdNames: Record<HoldKind, string> = { normal: 'regular hold', jug: 'jug hold', crimp: 'small hold', loose: 'cracked hold — breaks if grabbed' }
+const sideNames: Record<Side, string> = { left: 'left', center: 'middle', right: 'right' }
+const laneX = (side: Side | null, threeLanes = false) => side === 'left' ? threeLanes ? 110 : 145 : side === 'right' ? threeLanes ? 330 : 295 : 220
+const climberY = 373
+
+function ClimbTimingArc({ progress, zone, side, threeLanes }: { progress: number; zone: TimingZone; side: Side | null; threeLanes: boolean }) {
+  const { start } = zoneBounds(zone)
+  const ready = isInTimingZone(progress, zone)
+  const angle = Math.PI * progress
+  const radius = 58
+  const arc = `M ${-radius} 0 A ${radius} ${radius} 0 0 1 ${radius} 0`
+
+  // Use the wall's coordinate system and the same position transition as Tim.
+  // Only this lightweight layer updates with time; the scenery stays memoized.
+  return <svg className={`climb-timing-arc ${ready ? 'is-perfect' : ''} ${progress > .8 ? 'is-late' : ''}`} viewBox="0 0 440 560" fill="none" aria-hidden="true">
+    <g className="climb-tim-position" style={{ transform: `translate(${laneX(side, threeLanes)}px, ${climberY}px)` }}>
+      <g transform="translate(0 6)">
+        <path className="climb-arc-backing" d={arc}/>
+        <path className="climb-arc-track" d={arc}/>
+        <path className={`climb-arc-zone zone-${zone.change}`} d={arc} pathLength="100" strokeDasharray={`${zone.width * 100} 100`} strokeDashoffset={-start * 100}/>
+        <circle className="climb-arc-cursor" cx={-radius * Math.cos(angle)} cy={-radius * Math.sin(angle)} r="5.5"/>
+      </g>
+    </g>
+  </svg>
+}
 
 function HoldShape({ kind }: { kind: HoldKind }) {
+  if (kind === 'loose') return <g className="climb-hold hold-loose">
+    <path className="loose-half loose-half-left" d="M-27-1L-18-15-3-13 2-5-7 2-1 7-5 15-20 12Z"/>
+    <path className="loose-half loose-half-right" d="M3-14L20-12 28 2 18 15 0 13 5 6-1 1 8-5Z"/>
+    <path className="loose-crack" d="M0-13L5-5-4 1 2 7-2 14"/>
+    <path className="climb-hold-ridge" d="M-19-5L-11-8M13-6L19-4"/>
+  </g>
   return <g className={`climb-hold hold-${kind}`}>
-    {kind === 'jug' ? <><path d="M-28-3Q-26-20 0-17Q29-17 28 2Q24 18-2 15Q-30 15-28-3Z"/><path className="climb-hold-ridge" d="M-17-3Q0-15 18-2"/></> : kind === 'crimp' ? <><path d="M-20-4L-12-11 7-9 20-4 16 9-13 8Z"/><path className="climb-hold-ridge" d="M-12-2L-3-4 3 0 12-2"/><path className="climb-crack" d="M0-8L-4-1 2 3-1 9"/></> : <><path d="M-22 1Q-25-14-3-14Q19-16 23-1Q23 15 0 13Q-20 14-22 1Z"/><path className="climb-hold-ridge" d="M-13-3Q0-11 13-3"/></>}
+    {kind === 'jug' ? <><path d="M-28-3Q-26-20 0-17Q29-17 28 2Q24 18-2 15Q-30 15-28-3Z"/><path className="climb-hold-ridge" d="M-17-3Q0-15 18-2"/></> : kind === 'crimp' ? <><path d="M-20-4L-12-11 7-9 20-4 16 9-13 8Z"/><path className="climb-hold-ridge" d="M-12-2L-3-4 3 0 12-2"/></> : <><path d="M-22 1Q-25-14-3-14Q19-16 23-1Q23 15 0 13Q-20 14-22 1Z"/><path className="climb-hold-ridge" d="M-13-3Q0-11 13-3"/></>}
     <circle r="2" cy="4" fill="#18223c" opacity=".25"/>
   </g>
 }
 
-const ClimbWall = memo(function ClimbWall({ seed, step, side, kind, status, event, lastMove, tired, record, height }: Pick<ClimbState, 'seed' | 'step' | 'side' | 'kind' | 'status' | 'event' | 'lastMove' | 'height'> & { tired: boolean; record: number }) {
+const ClimbWall = memo(function ClimbWall({ seed, step, side, kind, status, event, lastMove, tired, record, height, advancedFrom, reason }: Pick<ClimbState, 'seed' | 'step' | 'side' | 'kind' | 'status' | 'event' | 'lastMove' | 'height' | 'advancedFrom' | 'reason'> & { tired: boolean; record: number }) {
   const rows = Array.from({ length: 7 }, (_, i) => step + i - 2).filter(index => index >= 0)
   const recordY = 375 - (record - height) * 50
+  const broken = reason === 'broken'
+  const currentX = laneX(side, broken || isThreeLaneRow(step, advancedFrom))
   return <svg className="climb-wall" viewBox="0 0 440 560" fill="none" aria-hidden="true">
     <defs><pattern id="climb-bolts" width="40" height="40" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="1.1" fill="currentColor" opacity=".2"/></pattern></defs>
     <rect width="440" height="560" fill="url(#climb-bolts)"/>
     <path d="M53 0L16 140 70 280 38 440M402 0L425 175 375 300 417 465" stroke="currentColor" opacity=".08"/>
     {rows.map(index => <g key={`${seed}-${index}`} className="climb-wall-row" style={{ transform: `translateY(${375 - (index - step) * 100}px)` }}>
-      {index === 0 ? <g transform="translate(220 0)"><HoldShape kind="jug"/></g> : routeRow(seed, index).map(hold => <g key={hold.side} transform={`translate(${laneX(hold.side)} 0)`} opacity={index < step || (index === step && hold.side !== side) ? .22 : index > step + 1 ? .52 : 1}>
-        {index === step + 1 && <><circle className="climb-next-ring" r="34"/><text className="climb-next-arrow" x={hold.side === 'left' ? -51 : 51} y="5">{hold.side === 'left' ? '←' : '→'}</text></>}
+      {index === 0 ? <g transform="translate(220 0)"><HoldShape kind="jug"/></g> : routeRow(seed, index, advancedFrom).map(hold => <g key={hold.side} className={broken && index === step + 1 && hold.side === side ? 'is-broken' : undefined} transform={`translate(${laneX(hold.side, isThreeLaneRow(index, advancedFrom))} 0)`} opacity={index < step || (index === step && hold.side !== side) ? .22 : index > step + 1 ? .52 : 1}>
+        {index === step + 1 && <><circle className="climb-next-ring" r="34"/><text className="climb-next-arrow" x={hold.side === 'left' ? -51 : hold.side === 'right' ? 51 : 0} y={hold.side === 'center' ? -45 : 5}>{hold.side === 'left' ? '←' : hold.side === 'right' ? '→' : '↑'}</text></>}
         <HoldShape kind={hold.kind}/>
       </g>)}
     </g>)}
     {record > 0 && recordY > 15 && recordY < 520 && <g className="climb-record-line" style={{ transform: `translateY(${recordY}px)` }}><path d="M16 0H424"/><rect x="10" y="-22" width="113" height="20" rx="5"/><text x="17" y="-8">PERSONAL BEST · {formatHeight(record)} m</text></g>}
     {step < 3 && <g className="climb-mat" style={{ transform: `translateY(${510 + step * 100}px)` }}><rect x="65" width="310" height="36" rx="8" fill="#3254ed"/><path d="M220 0V36M72 9H368" stroke="#6480ff" strokeWidth="2"/><text x="220" y="25">NO SHOES ON THE MAT. OOPS.</text></g>}
-    <g className="climb-tim-position" style={{ transform: `translate(${laneX(side) - 40}px, 373px)` }}>
-      <g key={`${event}-${status}`} className={`climb-tim-action ${status === 'fallen' ? 'is-falling' : lastMove === 'slip' ? 'is-slipping' : step > 0 ? 'is-reaching' : ''}`}>
+    <g className="climb-tim-position" style={{ transform: `translate(${currentX - 40}px, ${climberY}px)` }}>
+      <g key={`${event}-${status}`} className={`climb-tim-action ${status === 'fallen' ? broken ? 'is-falling is-breaking' : 'is-falling' : lastMove === 'slip' ? 'is-slipping' : step > 0 ? 'is-reaching' : ''}`}>
         <g className={tired ? 'climb-shivering' : ''}><g transform="scale(2)"><ClimbingTim pose={lastMove === 'slip' ? 'slip' : tired ? 'reach' : 'hang'}/></g></g>
         {step > 0 && status !== 'fallen' && <g className="climb-chalk" fill="#fff" stroke="#c6d1e7" strokeWidth=".5"><rect x="3" y="-5" width="6" height="6"/><rect x="61" y="-8" width="7" height="7"/><rect x="-6" y="9" width="4" height="4"/><rect x="74" y="6" width="4" height="4"/></g>}
       </g>
     </g>
-    {kind === 'crimp' && status === 'playing' && <g key={event} className="climb-crumbs" fill="#e87344" style={{ transform: `translate(${laneX(side)}px,375px)` }}><rect x="-21" y="8" width="3" height="4"/><rect x="18" y="10" width="4" height="3"/></g>}
+    {kind === 'crimp' && status === 'playing' && <g key={event} className="climb-crumbs" fill="#e87344" style={{ transform: `translate(${currentX}px,375px)` }}><rect x="-21" y="8" width="3" height="4"/><rect x="18" y="10" width="4" height="3"/></g>}
   </svg>
 })
 
@@ -62,10 +93,9 @@ export function BoulderGame() {
   const primaryRef = useRef<HTMLButtonElement>(null)
   const gameRef = useRef<HTMLDivElement>(null)
   const progress = Math.min(1, game.elapsed / game.budget)
-  const next = routeRow(game.seed, game.step + 1)
-  const direction = next.length > 1 ? 'left or right' : next[0].side === 'left' ? 'left' : 'right'
-  const zone = zoneBounds(game.zone)
-  const isPerfect = isInTimingZone(progress, game.zone)
+  const next = routeRow(game.seed, game.step + 1, game.advancedFrom)
+  const threeLanes = isThreeLaneRow(game.step + 1, game.advancedFrom)
+  const direction = next.map(hold => sideNames[hold.side]).join(' or ')
   const lives = game.status === 'fallen' ? 0 : game.saves + 1
   const active = game.status === 'playing'
   const newRecord = game.height > record && game.height > 0
@@ -108,15 +138,21 @@ export function BoulderGame() {
     dispatch({ type: 'resume' })
     boardRef.current?.focus({ preventScroll: true })
   }
+  function reach(side: Side) {
+    dispatch({ type: 'reach', side })
+    // The middle button disappears at a section boundary; keep keyboard control.
+    boardRef.current?.focus({ preventScroll: true })
+  }
   function keyDown(event: KeyboardEvent) {
     if (event.altKey || event.ctrlKey || event.metaKey) return
     const key = event.key.toLowerCase()
     if ((game.status === 'ready' || game.status === 'fallen') && (key === 'enter' || key === ' ')) {
       event.preventDefault()
       if (!event.repeat) start()
-    } else if (active && ['arrowleft', 'arrowright', 'a', 'd'].includes(key)) {
+    } else if (active && ['arrowleft', 'arrowright', 'arrowup', 'a', 'd', 'w'].includes(key)) {
       event.preventDefault()
-      if (!event.repeat) dispatch({ type: 'reach', side: key === 'arrowleft' || key === 'a' ? 'left' : 'right' })
+      const side = key === 'arrowleft' || key === 'a' ? 'left' : key === 'arrowright' || key === 'd' ? 'right' : 'center'
+      if (!event.repeat && (side !== 'center' || threeLanes)) dispatch({ type: 'reach', side })
     } else if (active && (key === 'p' || key === ' ' || key === 'tab')) {
       event.preventDefault()
       if (!event.repeat) dispatch({ type: 'pause' })
@@ -136,21 +172,24 @@ export function BoulderGame() {
       <button className="climb-pause" onClick={() => dispatch({ type: 'pause' })} disabled={!active} aria-label="Pause game"><Pause size={18}/></button>
     </header>
     <div className="climb-stage" data-world={Math.floor(game.height / 30) % 3} ref={boardRef} tabIndex={0} role="group" aria-label={`${CLIMB_NAME}: Climbing wall`} aria-describedby="climb-next">
-      <ClimbWall seed={game.seed} step={game.step} side={game.side} kind={game.kind} status={game.status} event={game.event} lastMove={game.lastMove} tired={active && progress > .78} record={record} height={game.height}/>
+      <ClimbWall seed={game.seed} step={game.step} side={game.side} kind={game.kind} status={game.status} event={game.event} lastMove={game.lastMove} tired={active && progress > .78} record={record} height={game.height} advancedFrom={game.advancedFrom} reason={game.reason}/>
+      {(active || game.status === 'paused') && <ClimbTimingArc progress={progress} zone={game.zone} side={game.side} threeLanes={isThreeLaneRow(game.step, game.advancedFrom)}/>}
       <div className="climb-live-info" aria-hidden="true">
         <span className={`climb-combo ${game.combo >= 3 ? 'in-flow' : ''}`}>{game.combo > 1 ? <><b>{game.combo}×</b> FLOW</> : 'JUST ONE MORE HOLD.'}</span>
+        {threeLanes && <span className="climb-route-tip">Cracked holds break.<small>↑ / W for the middle</small></span>}
       </div>
       {active && <div key={game.event} className={`climb-feedback ${game.lastMove === 'slip' ? 'is-warning' : ''}`} aria-hidden="true">{game.step === 0 && game.lastMove === 'start' ? 'Start on the left.' : game.feedback}{game.zone.change !== 'steady' && <small className={`zone-${game.zone.change}`}>{game.zone.change === 'wider' ? 'More room +' : 'Tighter window −'}</small>}{newRecord && game.step > 1 && <small>New personal best ↗</small>}</div>}
-      <div className="climb-inputs" inert={!active}>
-        <button className="climb-input input-left" aria-label="Reach left" aria-keyshortcuts="ArrowLeft A" disabled={!active} onClick={() => dispatch({ type: 'reach', side: 'left' })}><span><ArrowLeft size={22}/><span>LEFT</span></span></button>
-        <button className="climb-input input-right" aria-label="Reach right" aria-keyshortcuts="ArrowRight D" disabled={!active} onClick={() => dispatch({ type: 'reach', side: 'right' })}><span><span>RIGHT</span><ArrowRight size={22}/></span></button>
+      <div className={`climb-inputs ${threeLanes ? 'has-center' : ''}`} inert={!active}>
+        <button className="climb-input input-left" aria-label="Reach left" aria-keyshortcuts="ArrowLeft A" disabled={!active} onClick={() => reach('left')}><span><ArrowLeft size={22}/><span>LEFT</span></span></button>
+        {threeLanes && <button className="climb-input input-center" aria-label="Reach middle" aria-keyshortcuts="ArrowUp W" disabled={!active} onClick={() => reach('center')}><span><ArrowUp size={22}/><span>MID</span></span></button>}
+        <button className="climb-input input-right" aria-label="Reach right" aria-keyshortcuts="ArrowRight D" disabled={!active} onClick={() => reach('right')}><span><span>RIGHT</span><ArrowRight size={22}/></span></button>
       </div>
       {game.status !== 'playing' && <div className={`climb-overlay overlay-${game.status}`}>
         <div className="climb-overlay-card">
           {game.status === 'ready' ? <>
             <div aria-hidden="true" inert><ChalkClimber compact cue={1}/></div><span className="climb-kicker">ENDLESS CLIMBER</span><h3 lang="en" aria-label={CLIMB_NAME}>Grip<br/><em>Happens.</em></h3>
             <p>How high can you go<br/>before your arms give out?</p>
-            <div className="climb-how"><span><kbd>←</kbd><kbd>→</kbd> or tap left / right</span><span>Hold briefly, then reach for the circled hold.</span><span>Clean hit? More room. Off target? Less.</span></div>
+            <div className="climb-how"><span><kbd>←</kbd><kbd>→</kbd> or tap left / right</span><span>Reach when the dot above Tim hits blue.</span><span>After 70 m, watch for cracked holds in three-lane sections.</span></div>
             <button ref={primaryRef} data-game-start className="climb-primary" onClick={start} aria-keyshortcuts="Enter Space"><Play size={17} fill="currentColor"/> Start climbing</button><span className="climb-start-shortcut">Enter or Space</span>
           </> : game.status === 'paused' ? <>
             <span className="climb-kicker">TAKE A BREATHER</span><h3>Shake<br/><em>it out.</em></h3><p>Your run will be right here.</p>
@@ -162,14 +201,10 @@ export function BoulderGame() {
             <button ref={primaryRef} className="climb-primary" onClick={start} aria-keyshortcuts="Enter Space"><RotateCcw size={17}/> Chalk up again</button>
             <span className="climb-local-note">Your personal best stays in this browser.</span>
           </>}
-          {game.status !== 'fallen' && <div className="climb-legend"><span><i className="legend-normal"/>Normal</span><span><i className="legend-jug"/>More time</span><span><i className="legend-crimp"/>Move fast</span></div>}
+          {game.status !== 'fallen' && <div className="climb-legend"><span><i className="legend-normal"/>Normal</span><span><i className="legend-jug"/>More time</span><span><i className="legend-crimp"/>Move fast</span>{threeLanes && <span><i className="legend-loose"/>Breaks</span>}</div>}
         </div>
       </div>}
     </div>
-    <div className={`climb-rhythm ${isPerfect && active ? 'is-perfect' : ''}`}>
-      <div className="climb-rhythm-label"><span>{!active ? 'Your rhythm' : progress < zone.start ? 'Hold on …' : isPerfect ? 'Reach now!' : progress > .8 ? 'Hang in there, Tim.' : 'Still holding.'}</span><span>{active ? game.kind === 'jug' ? 'JUG HOLD' : game.kind === 'crimp' ? 'CRUMBLY' : 'REGULAR HOLD' : '← → / A D · P Pause'}</span></div>
-      <div className="climb-timing-track" aria-hidden="true"><span className={`climb-perfect-zone zone-${game.zone.change}`} style={{ left: `${zone.start * 100}%`, width: `${game.zone.width * 100}%` }}/><span className="climb-timing-cursor" style={{ '--progress': progress } as CSSProperties}/></div>
-    </div>
-    <span id="climb-next" className="sr-only" role="status" aria-live="polite" aria-atomic="true">{game.status === 'fallen' ? `${formatHeight(game.height)} metres. ${game.feedback}` : game.status === 'paused' ? 'Game paused.' : `Next hold: ${direction}. ${next.map(hold => holdNames[hold.kind]).join(' or ')}. ${game.feedback} ${lives} of 2 lives.`}</span>
+    <span id="climb-next" className="sr-only" role="status" aria-live="polite" aria-atomic="true">{game.status === 'fallen' ? `${formatHeight(game.height)} metres. ${game.feedback}` : game.status === 'paused' ? 'Game paused.' : `Next hold: ${direction}. ${next.map(hold => `${sideNames[hold.side]}: ${holdNames[hold.kind]}`).join('; ')}. ${threeLanes ? 'Arrow Up or W for the middle. ' : ''}${game.feedback} ${lives} of 2 lives.`}</span>
   </div>
 }
