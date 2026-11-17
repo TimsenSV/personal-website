@@ -40,7 +40,7 @@ Die typisierte Datei **`src/content/site.ts`** enthält die persönlichen Canvas
 
 Für Bilder Dateien unter `public/images/` ablegen und z. B. `{ src: 'images/portrait.jpg', alt: '…' }` eintragen. Relative Pfade funktionieren auch in einem GitHub-Pages-Unterverzeichnis.
 
-Der Lebenslauf wurde am 17.11.2026 aus dem vom Nutzer verlinkten LinkedIn-Profil von Tim Hoffmann übernommen. Er enthält alle 14 beruflichen Stationen, vier Ausbildungsstationen, zehn Zertifikate, sechs Projekte, zwei Engagements, zwei Auszeichnungen, 16 Kenntnisse und drei Sprachen. Beschreibungen sind auf Englisch verdichtet; Rollen und Zeiträume stammen aus dem Profil. LinkedIn nennt beim Brandathon 2016 unterschiedliche Monate, daher steht bei der Auszeichnung nur das Jahr. Die Daten werden lokal gepflegt, ohne Laufzeitabruf oder Scraping; der Quellenlink und Stand bleiben im CV sichtbar. Nicht belegte Angaben, insbesondere eine Backlane-Rolle samt Zeitraum, wurden nicht ergänzt. Das Repository `personal-website` bezeichnet dieses tatsächlich angelegte lokale Projekt. Es hat noch keinen öffentlichen Link.
+Der Lebenslauf wurde am 17.11.2026 aus dem vom Nutzer verlinkten LinkedIn-Profil von Tim Hoffmann übernommen. Er enthält alle 14 beruflichen Stationen, vier Ausbildungsstationen, zehn Zertifikate, sechs Projekte, zwei Engagements, zwei Auszeichnungen, 16 Kenntnisse und drei Sprachen. Beschreibungen sind auf Englisch verdichtet; Rollen und Zeiträume stammen aus dem Profil. LinkedIn nennt beim Brandathon 2016 unterschiedliche Monate, daher steht bei der Auszeichnung nur das Jahr. Die Daten werden lokal gepflegt, ohne Laufzeitabruf oder Scraping; der Quellenlink und Stand bleiben im CV sichtbar. Nicht belegte Angaben, insbesondere eine Backlane-Rolle samt Zeitraum, wurden nicht ergänzt. Das Projekt liegt im privaten GitHub-Repository [TimsenSV/personal-website](https://github.com/TimsenSV/personal-website). Die Website ist noch nicht veröffentlicht. Der Repository-Link bleibt in der öffentlichen Canvas unkonfiguriert, solange das Repository privat ist.
 
 Die Produktdarstellungen sind eigenständige schematische Illustrationen, keine Screenshots oder Belege für tatsächliche Produktfunktionen. Das Backlane-Signet stammt aus dem bereits vorhandenen Markenasset `backlane/backlane_logo/backlane-signet.svg`. Die inhaltliche Klammer Information → Darstellung → Handlung ist keine Unternehmenschronologie oder technische Abhängigkeitskette.
 
@@ -89,11 +89,11 @@ src/widgets.css          Individuelle Widget-Objekte, Pop-outs und Hover-Verhalt
 
 Der Build liegt in `dist/`. Vite verwendet relative Asset-Pfade; sowohl eine eigene Domain als auch `username.github.io/repository/` sind möglich. Es gibt keine clientseitigen Pfadrouten, die besondere Serverregeln verlangen.
 
-1. Ein GitHub-Repository anlegen und das lokale Repository damit verbinden.
+1. Die gewünschte Sichtbarkeit und GitHub-Pages-Verfügbarkeit des privaten Repositorys festlegen.
 2. Unter **Settings → Pages → Source** die Option **GitHub Actions** wählen.
 3. Den vorbereiteten Workflow **Publish portfolio to GitHub Pages** manuell ausführen.
 
-Der Workflow prüft den Code vor der Veröffentlichung. Er wird absichtlich nur manuell ausgelöst; diese Umsetzung veröffentlicht noch nichts. Nach dem ersten Push gegebenenfalls den gewünschten Standardbranch festlegen (lokal aktuell `codex/setup`).
+Der Workflow prüft den Code vor der Veröffentlichung. Er wird absichtlich nur manuell ausgelöst; diese Umsetzung veröffentlicht noch nichts. Lokaler Arbeitsbranch und aktueller GitHub-Standardbranch sind `codex/setup`; `origin` verweist auf `TimsenSV/personal-website`.
 
 ## Technische Referenzen
 
