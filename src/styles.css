@@ -267,7 +267,9 @@
   .selected-repositories > article { display: flex; gap: 17px; border-top: 1px solid var(--line); padding: 20px 0; }.selected-repositories > article > svg { color: var(--blue); }
   .selected-repositories h5 { font-size: 17px; }.selected-repositories p { font-size: 13px; color: var(--muted); margin-top: 5px; }
   .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }.tag-row span { font-size: 10px; background: #f1f4fb; color: var(--muted); padding: 5px 8px; border-radius: 4px; }
-  .spotify-embed { border: 0; border-radius: 12px; background: #f2f4f7; margin: 25px 0 10px; display: block; }.standard-detail > .button { margin-top: 20px; }
+  .music-detail { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; padding: 24px; }
+  .spotify-embed { width: 100%; height: clamp(352px, calc(100dvh - 240px), 560px); border: 0; border-radius: 12px; background: #f2f4f7; display: block; }
+  .standard-detail > .button { margin-top: 20px; }
   .running-detail > figure { margin-top: 25px; background: #f8f9fc; padding: 25px; border-radius: 12px; }.running-detail .route-drawing { max-height: 220px; }.running-detail figcaption { padding-bottom: 0; text-align: center; }
 
   .boulder-game { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 40px; padding: 38px 40px; }

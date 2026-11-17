@@ -1,8 +1,8 @@
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import App from '../App'
-import { MusicWidget } from '../components/Widgets'
+import { MusicDetail } from '../components/Widgets'
 import { siteConfig } from '../content/site'
 
 describe('widget quick looks', () => {
@@ -33,15 +33,16 @@ describe('widget quick looks', () => {
     expect(document.body.style.overflow).toBe('')
   })
 
-  it('keeps just one preview open and dismisses on an outside click', async () => {
+  it('dismisses a thought preview on an outside click and when opening the playlist', async () => {
     const user = userEvent.setup()
     render(<App/>)
     await user.click(screen.getByRole('button', { name: 'Open current thought' }))
-    await user.click(screen.getByRole('button', { name: 'Open playlist preview' }))
-    expect(screen.getAllByRole('dialog')).toHaveLength(1)
-    expect(screen.getByRole('dialog', { name: 'A side of me' })).toBeVisible()
     await user.click(screen.getByRole('heading', { name: 'Tim.' }))
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Open current thought' }))
+    await user.click(screen.getByRole('button', { name: 'Open playlist' }))
+    expect(screen.getAllByRole('dialog')).toHaveLength(1)
+    expect(screen.getByRole('dialog', { name: 'On repeat / Spotify' })).toBeVisible()
   })
 
   it('opens the repository detail from the header and returns focus there', async () => {
@@ -55,24 +56,30 @@ describe('widget quick looks', () => {
     expect(trigger).toHaveFocus()
   })
 
-  it('shows an honest playlist placeholder without a player or fake play action', async () => {
-    render(<MusicWidget config={{ ...siteConfig.spotify, url: null, cover: null }} onOpen={() => {}}/>)
-    await userEvent.click(screen.getByRole('button', { name: 'Open playlist preview' }))
-    const preview = screen.getByRole('dialog', { name: 'A side of me' })
-    expect(preview).toHaveTextContent('cover is a placeholder')
-    expect(within(preview).queryByRole('button', { name: 'Open playlist' })).not.toBeInTheDocument()
+  it('shows an honest playlist placeholder without a player or fake play action', () => {
+    render(<MusicDetail config={{ ...siteConfig.spotify, url: null, cover: null }}/>)
+    expect(screen.getByText('Playlist coming soon. Until then, a little quiet.')).toBeVisible()
+    expect(screen.queryByRole('link', { name: /Open on Spotify/ })).not.toBeInTheDocument()
     expect(document.querySelector('iframe')).not.toBeInTheDocument()
   })
 
-  it('only opens the configured playlist when the visitor chooses to', async () => {
-    const onOpen = vi.fn()
-    render(<MusicWidget config={{ ...siteConfig.spotify, url: 'https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M' }} onOpen={onOpen}/>)
-    await userEvent.click(screen.getByRole('button', { name: 'Open playlist preview' }))
-    expect(onOpen).not.toHaveBeenCalled()
+  it('opens the playlist window directly by click or keyboard and restores focus', async () => {
+    const user = userEvent.setup()
+    render(<App/>)
+    const trigger = screen.getByRole('button', { name: 'Open playlist' })
     expect(document.querySelector('iframe')).not.toBeInTheDocument()
-    await userEvent.click(screen.getByRole('button', { name: 'Open playlist' }))
-    expect(onOpen).toHaveBeenCalledOnce()
+    await user.click(trigger)
+    const detail = screen.getByRole('dialog', { name: 'On repeat / Spotify' })
+    expect(screen.getAllByRole('dialog')).toHaveLength(1)
+    expect(within(detail).getByTitle(`Spotify playlist: ${siteConfig.spotify.title}`)).toBeVisible()
+    expect(within(detail).getByRole('link', { name: /Open on Spotify/ })).toHaveAttribute('href', siteConfig.spotify.url)
+    fireEvent(detail, new Event('cancel', { cancelable: true }))
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Open playlist preview' })).toHaveFocus()
+    expect(trigger).toHaveFocus()
+    expect(document.querySelector('iframe')).not.toBeInTheDocument()
+    await user.keyboard('{Enter}')
+    expect(screen.getByRole('dialog', { name: 'On repeat / Spotify' })).toBeVisible()
+    await user.click(screen.getByRole('button', { name: 'Close window' }))
+    expect(trigger).toHaveFocus()
   })
 })
