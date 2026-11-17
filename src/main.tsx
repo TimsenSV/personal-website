@@ -11,6 +11,8 @@ import './intro-card.css'
 import './cv.css'
 import './dock.css'
 import './climber.css'
+import './work-shelf.css'
+import './canvas-tilt.css'
 import App from './App'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(<React.StrictMode><App/></React.StrictMode>)

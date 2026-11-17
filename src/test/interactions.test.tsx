@@ -6,12 +6,26 @@ import { Dock } from '../components/Dock'
 import { siteConfig } from '../content/site'
 
 describe('canvas interactions', () => {
+  it('opens Work as a project app, supports drilling in and returns to the dock', async () => {
+    render(<App/>)
+    const trigger = screen.getByRole('button', { name: 'Work' })
+    await userEvent.click(trigger)
+    const overview = screen.getByRole('dialog', { name: 'My work' })
+    for (const name of ['shopvibes', 'showcase', 'Backlane']) expect(within(overview).getByRole('button', { name: `${name}: open details` })).toBeVisible()
+    await userEvent.click(within(overview).getByRole('button', { name: 'shopvibes: open details' }))
+    expect(screen.getByRole('dialog', { name: 'My work / shopvibes' })).toBeVisible()
+    await userEvent.click(screen.getByRole('button', { name: 'All projects' }))
+    expect(screen.getByRole('dialog', { name: 'My work' })).toBeVisible()
+    fireEvent(overview, new Event('cancel', { cancelable: true }))
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(trigger).toHaveFocus()
+  })
   it('shows all three products and hides unconfigured external dock actions', () => {
     render(<App/>)
     for (const name of ['shopvibes', 'showcase', 'Backlane']) expect(screen.getByRole('button', { name: `${name}: open details` })).toBeVisible()
     const dock = screen.getByRole('navigation', { name: 'Quick navigation' })
-    expect(within(dock).getAllByRole('link')).toHaveLength(4)
-    expect(within(dock).getByRole('link', { name: 'Work' })).toHaveAttribute('href', '#work')
+    expect(within(dock).getAllByRole('link')).toHaveLength(3)
+    expect(within(dock).getByRole('button', { name: 'Work' })).toBeVisible()
     expect(within(dock).getByRole('link', { name: /LinkedIn/ })).toHaveAttribute('href', 'https://www.linkedin.com/in/timsenhoffmann/')
     expect(within(dock).queryByRole('link', { name: /Email/ })).not.toBeInTheDocument()
     expect(screen.getByRole('link', { name: /Run with me on Strava/ })).toHaveAttribute('href', 'https://www.strava.com/athletes/137493657')
@@ -86,7 +100,7 @@ describe('canvas interactions', () => {
     expect(screen.getByRole('button', { name: 'Open CV' })).toHaveFocus()
   })
   it('gives configured external actions valid and distinct destinations', () => {
-    render(<Dock username="octocat" profile={{ ...siteConfig.profile, linkedinUrl: 'https://www.linkedin.com/in/example/', email: 'me@example.com' }} onPlay={() => {}}/>)
+    render(<Dock username="octocat" profile={{ ...siteConfig.profile, linkedinUrl: 'https://www.linkedin.com/in/example/', email: 'me@example.com' }} onPlay={() => {}} onWork={() => {}}/>)
     expect(screen.getByRole('link', { name: /GitHub/ })).toHaveAttribute('href', 'https://github.com/octocat')
     expect(screen.getByRole('link', { name: /LinkedIn/ })).toHaveAttribute('target', '_blank')
     expect(screen.getByRole('link', { name: /Email/ })).toHaveAttribute('href', 'mailto:me@example.com')

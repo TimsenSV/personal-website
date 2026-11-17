@@ -1,0 +1,8 @@
+@layer widgets {
+  @media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
+    .bento-grid > .card { transition: transform .48s cubic-bezier(.2,1.35,.35,1); }
+    .bento-grid > .card[data-tilt-active] { transform: perspective(1200px) rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg)) translateY(-1px); }
+    .bento-grid > .card[data-tilt-reset] { transform: none; transition: none; }
+    .bento-grid > .card:has([role='dialog']) { transform: none; transition: none; }
+  }
+}

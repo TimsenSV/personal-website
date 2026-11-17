@@ -1,5 +1,6 @@
 export type ProductId = 'shopvibes' | 'showcase' | 'backlane'
 export type ImageAsset = { src: string; alt: string }
+export type ProductScreenshot = ImageAsset & { caption?: string; width?: number; height?: number }
 export type ProfilePhoto = ImageAsset & { caption?: string; placeholder?: boolean; position?: string; zoom?: number; monochrome?: boolean }
 
 export type Product = {
@@ -8,11 +9,14 @@ export type Product = {
   category: string
   headline: string
   summary: string
+  shortDescription: string
+  role: string | null
   problem: string
   approach: string
   contribution: string | null
   decision: string | null
   image: ImageAsset | null
+  screenshots: ProductScreenshot[]
   url: string | null
 }
 
@@ -103,6 +107,7 @@ export const siteConfig: PortfolioConfig = {
       id: 'shopvibes', name: 'shopvibes', category: 'Information',
       headline: 'Better data. More possibilities.',
       summary: 'Using AI to structure, maintain and prepare product data for sales channels.',
+      shortDescription: 'AI for product data', role: 'Chief Product Officer', screenshots: [],
       problem: 'Product information lives in different places, comes in different formats and needs to meet different channel requirements. Working with it quickly turns into manual work.',
       approach: 'shopvibes uses AI to structure and maintain product data, making it useful wherever products are sold.',
       contribution: null, decision: null, image: null, url: null,
@@ -111,6 +116,7 @@ export const siteConfig: PortfolioConfig = {
       id: 'showcase', name: 'showcase', category: 'Presentation',
       headline: 'One product. A new context.',
       summary: 'AI-powered product photography and visual storytelling for furniture and home & living.',
+      shortDescription: 'AI product photography', role: 'Co-founder & CPO', screenshots: [],
       problem: 'Isolating a product is one thing. Showing how it feels in a room is another. With furniture, context makes a difference.',
       approach: 'showcase uses AI for product photography and visual storytelling, with a focus on furniture and home & living.',
       contribution: null, decision: null, image: null, url: null,
@@ -119,6 +125,7 @@ export const siteConfig: PortfolioConfig = {
       id: 'backlane', name: 'Backlane', category: 'Action',
       headline: 'Less switching. More doing.',
       summary: 'Connecting marketplaces to AI assistants so workflows can happen through conversation.',
+      shortDescription: 'Marketplaces, meet AI', role: null, screenshots: [],
       problem: 'Marketplace work is spread across different tools and repetitive tasks. There are often too many clicks between a question and getting it done.',
       approach: 'Backlane connects marketplaces to AI assistants like ChatGPT and Claude, letting you run workflows through your assistant.',
       contribution: null, decision: null, image: null, url: null,

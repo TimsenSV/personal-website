@@ -42,7 +42,7 @@ function DockItem({ entry, index, pointerX, focusIndex, enabled }: { entry: Dock
   </m.div>
 }
 
-export function Dock({ profile, username, onPlay }: { profile: PortfolioConfig['profile']; username: string | null; onPlay: () => void }) {
+export function Dock({ profile, username, onPlay, onWork }: { profile: PortfolioConfig['profile']; username: string | null; onPlay: () => void; onWork: () => void }) {
   const enabled = useSyncExternalStore(subscribe, canMagnify, () => false)
   const pointerX = useMotionValue(Infinity)
   const focusIndex = useMotionValue(-1)
@@ -59,7 +59,7 @@ export function Dock({ profile, username, onPlay }: { profile: PortfolioConfig['
   ].filter((item) => item.href).map((item): DockEntry => ({ ...item, href: item.href!, external: item.label !== 'Email', accessibleLabel: `${item.label} ${item.label === 'Email' ? '(opens your email app)' : '(opens in a new tab)'}` }))
   const entries: DockEntry[] = [
     { label: 'Overview', href: '#overview', Icon: LayoutGrid, color: 'overview', current: true },
-    { label: 'Work', href: '#work', Icon: Layers3, color: 'work' },
+    { label: 'Work', onClick: onWork, Icon: Layers3, color: 'work' },
     { label: CLIMB_NAME, accessibleLabel: `Play ${CLIMB_NAME}`, onClick: onPlay, Icon: Gamepad2, color: 'play' },
     ...external,
   ]

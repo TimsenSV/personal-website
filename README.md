@@ -6,7 +6,7 @@ Persönliche Bento-Canvas mit den drei Produkten shopvibes, showcase und Backlan
 
 React + TypeScript + Vite, mit Motion für die Dock-Vergrößerung. Statische Website, ohne Backend, CMS, Zugangsdaten oder externe Schriftanbieter. Die Schriften werden lokal ausgeliefert.
 
-Die Gestaltung verwendet neutrale weiße Flächen, fast schwarze serifenlose Typografie, feine graue Konturen und kräftige blaue sowie orange Akzente. Die Widgets sind als eigenständige Objekte gestaltet: eine echte GitHub-Heatmap mit ausrollenden Pull Requests, ein Plattencover mit Vinyl, gestaffelte Produktansichten, eine Boulderwand mit Pixel-Figur und einen Pixel-Runner mit Strava-Link. Referenzen für Farbe und Klarheit: [ana.sh](https://ana.sh) und [chanhdai.com](https://chanhdai.com).
+Die Gestaltung verwendet neutrale weiße Flächen, fast schwarze serifenlose Typografie, feine graue Konturen und kräftige blaue sowie orange Akzente. Die Widgets sind als eigenständige Objekte gestaltet: eine echte GitHub-Heatmap mit ausrollenden Pull Requests, ein Plattencover mit Vinyl, drei individuell gestaltete Projektbände auf einem Produktregal, eine Boulderwand mit Pixel-Figur und einen Pixel-Runner mit Strava-Link. Referenzen für Farbe und Klarheit: [ana.sh](https://ana.sh) und [chanhdai.com](https://chanhdai.com).
 
 ## Lokal starten
 
@@ -50,8 +50,10 @@ Die Produktdarstellungen sind eigenständige schematische Illustrationen, keine 
 - Das Dock nutzt eine abstandsabhängige Vergrößerung mit Motion-Federn: Das Icon unter der Maus wächst von 50 auf bis zu 78 Pixel, seine Nachbarn abgestuft mit. Die Leiste wird breiter, behält ihre Höhe und lässt die Icons nach oben wachsen. Tastaturfokus unterstützt dieselbe Hervorhebung; Tooltips und Fokusrahmen folgen dem Icon. Auf kleinen Bildschirmen bleiben alle Ziele 44 Pixel groß, bei Touch und reduzierter Bewegung bleibt die Vergrößerung aus. Kräftiges Blau, Violett und Orange verbinden das Dock mit den Widgets. Einstellungen: `src/lib/dock.ts`, `src/components/Dock.tsx`, `src/dock.css`.
 - Die größeren Profilfotos liegen als Polaroid-Stapel in der Einstiegskachel. Klick oder die seitlichen Pfeile blättern weiter; horizontales Ziehen folgt dem Zeiger und wechselt ab einer Schwelle das Foto. Kurze Gesten federn zurück, vertikales Scrollen und Pinch-Zoom bleiben auf Mobilgeräten möglich. Linke/rechte Pfeiltasten funktionieren bei Fokus in der Galerie. Es gibt kein Autoplay. Bei reduzierter Bewegung wechselt das Bild sofort. Leere und einzelne Galerien sowie fehlgeschlagene Bilder haben passende Zustände.
 - Gedanken und Playlist haben kleine, nichtmodale Pop-outs. Sie öffnen per Klick, Touch oder Tastatur, schließen per Escape, Klick daneben oder beim Verlassen mit Tab. Ein weiterführendes Detailfenster stellt den Fokus anschließend am ursprünglichen Widget wieder her.
+- Die Canvas-Kacheln folgen dem Mauszeiger mit maximal 2,4 Grad Neigung. Die Bewegung wird pro Bild gebündelt, erzeugt keine React-Neudarstellung pro Zeigerbewegung und wird bei Touch, Ziehen, geöffneten Dialogen sowie reduzierter Bewegung deaktiviert. Vor Klicks und Tastaturaktionen wird die Neigung synchron zurückgesetzt, damit Fototransitionen und Pop-outs ihre richtige Ausgangsposition behalten.
 - Hover-Effekte bewegen gezielt die Objekte innerhalb der Widgets; Tastaturfokus bietet dieselben Hinweise. Die PR-Warteschlange läuft nur, solange sie geöffnet und der Browser-Tab sichtbar ist. `prefers-reduced-motion` unterbindet die Bewegung.
 - Über den kompakten CV-Button in der aufgeräumten Ich-Kachel öffnet sich ein Lebenslauf-Fenster. Die aktuellen Rollen und Ausbildung sind direkt sichtbar; frühere Stationen, Zertifikate, Projekte, Engagement und Auszeichnungen lassen sich per Maus oder Tastatur aufklappen. Die Canvas selbst bleibt frei von einer chronologischen Timeline.
+- „Work“ im Dock öffnet eine eigene Projektübersicht mit allen drei gestalteten Bänden, kurzen Produktbeschreibungen und den belegten Rollen. Ein Band öffnet seine Details im selben Fenster; „All projects“ führt zur Übersicht zurück. Beim Schließen kehrt der Fokus zum Dock bzw. zum ursprünglichen Band zurück. Die Projektbände auf der Canvas lassen sich weiterhin direkt öffnen.
 - Produkt- und CV-Fenster nutzen native HTML-Dialoge mit Escape, Fokusbindung und Rückkehr zum Auslöser. Auf Mobilgeräten werden sie bildschirmfüllend.
 - Die kleine Pixel-Figur chalkt bei Hover einmal die Hände, klopft sie ab und erzeugt eine kurze Kreidewolke. Klick, Touch und Tastaturfokus lösen die Szene ebenfalls aus. Unter reduzierter Bewegung bleibt die Figur ruhig. Es ist eine frei gestaltete Figur, kein Porträt; die Palette liegt unter `profile.pixelAvatar`.
 - „Grip Happens“ ersetzt das frühere Routenrätsel. Pfeiltasten oder A/D sowie die beiden antippbaren Wandhälften steuern Pixel-Tim. Der umkreiste nächste Griff gibt die Richtung vor. Der Zeitzeiger startet nach jedem Zug neu; in der markierten Zone entstehen Combos. Die Trefferzone wandert zwischen Griffen leicht, bleibt während eines Zugs aber fest. Saubere Treffer verbreitern sie, unsaubere Treffer und Fehlgriffe verkleinern sie; die Breite bleibt zwischen 20 und 42 Prozent. Zu frühes Greifen, eine falsche Richtung oder ablaufender Halt kosten zunächst die einmalige Rettung, danach endet der Run. Zwei große Handsymbole zeigen die verbleibenden Leben, das letzte wird orange hervorgehoben. Normale Griffe, große Ruhegriffe und bröselige Griffe haben unterschiedliche Zeitbudgets. Ab dem zehnten Zug bieten regelmäßige Verzweigungen die Wahl zwischen mehr Höhe und mehr Zeit. Die Schwierigkeit steigt begrenzt; Ruhegriffe bleiben erhalten. Die nächsten Griffe werden aus einem Seed vorab erzeugt und stimmen mit der spielbaren Route überein.
@@ -96,6 +98,7 @@ Der Workflow prüft den Code vor der Veröffentlichung. Er wird absichtlich nur 
 ## Technische Referenzen
 
 - [Magic UI: Dock-Referenz](https://magicui.design/docs/components/dock) · eigenes angepasstes Dock, ohne Tailwind oder weitere UI-Komponenten
+- [Ana Howard: öffentliches Referenzprojekt](https://github.com/AnaArsonist/anahoward.me) · älterer Stand mit Motion-Hover-Effekten; die zeigerabhängige Canvas-Neigung ist eigenständig umgesetzt
 - [Motion: Spring-Animationen](https://motion.dev/docs/react-use-spring)
 - [Vite: GitHub Pages](https://vite.dev/guide/static-deploy.html#github-pages)
 - [GitHub: öffentliche Events](https://docs.github.com/en/rest/activity/events#list-public-events-for-a-user)
@@ -103,7 +106,7 @@ Der Workflow prüft den Code vor der Veröffentlichung. Er wird absichtlich nur 
 
 ## Geprüfter Stand · 17. November 2026
 
-- Produktionsbuild, TypeScript und ESLint erfolgreich; 64 automatisierte Tests für Spielregeln, Tastaturbedienung, Dialoge, Pop-outs, externe Links, Kalenderdaten und GitHub-Zustände.
+- Produktionsbuild, TypeScript und ESLint erfolgreich; 71 automatisierte Tests für Spielregeln, Tastaturbedienung, Dialoge, Pop-outs, externe Links, Kalenderdaten und GitHub-Zustände.
 - Browserprüfung bei 1440 × 1000, 768 × 1024, 390 × 844 und 320 × 740 Pixeln; kein horizontaler Seitenüberlauf.
 - Dock-Navigation, alle drei Produktansichten, Fenstervergrößerung, Escape, Tab/Shift-Tab und Rückkehr zum Auslöser geprüft.
 - Endless Climber im Browser mit Pfeiltasten und mobilen Steuerflächen gespielt; Combos, Ruhegriffe und Verzweigungen geprüft. Spielregeln, begrenzte Schwierigkeit, 249 aufeinanderfolgende Züge je Test-Seed, Rettung, Verlust, Neustart, Pause und Speicherung sind automatisiert geprüft.
@@ -140,3 +143,27 @@ Die Galerie wurde auf Desktop und Mobilgröße mit echten Maus-Ziehgesten im Bro
 Generierungs-Prompt:
 
 Use case: photorealistic-natural. Asset type: one temporary sample portrait photo for a personal website polaroid carousel prototype, clearly a fictional model, not a portrait of the real user. Primary request: a relaxed candid editorial portrait of a fictional adult man with short brown-blond hair, wearing a simple cobalt blue overshirt and white T-shirt. Waist-up framing, centered, face in upper middle with generous breathing space around head. Natural warm daylight, soft pale neutral background, authentic analog 35mm film feeling with fine grain, friendly understated expression. Square photograph, high quality natural skin texture, contemporary personal editorial aesthetic. No lettering, no frame, no collage, no logos, no watermarks. The website supplies the polaroid frame and placeholder label separately.
+
+## Projektbilder und Produktregal
+
+Das Produktregal zeigt shopvibes, showcase und Backlane als drei eigene Bände. Hover oder Tastaturfokus zieht den jeweiligen Band leicht heraus. Auf kleinen Bildschirmen stehen die Bände untereinander, mit Produktname und Kurzbeschreibung daneben. Gestaltung: `src/components/ProjectBook.tsx` und `src/work-shelf.css`.
+
+Mehrere Screenshots lassen sich je Produkt unter `products[].screenshots` in `src/content/site.ts` hinterlegen. Dateien beispielsweise unter `public/images/projects/` ablegen:
+
+```ts
+screenshots: [
+  {
+    src: 'images/projects/shopvibes-overview.png',
+    alt: 'Product data overview in shopvibes',
+    caption: 'A single place for product information.',
+    width: 1600,
+    height: 1000,
+  },
+]
+```
+
+Das ist ein Konfigurationsbeispiel, kein bereits vorhandenes Asset. Pro Screenshot sind `src` und ein sinnvoller `alt`-Text erforderlich; Bildmaße und Bildunterschrift sind optional. Bilder werden vollständig dargestellt, nicht beschnitten. Vorschaubilder, Vor-/Zurück-Schaltflächen und Pfeiltasten wechseln das aktive Bild. Ein Klick öffnet eine größere Galerie; Escape schließt nur diese und führt zurück ins Projekt. Fehlgeschlagene Bilder zeigen einen ruhigen Fehlerzustand. Ohne Bilder bleibt die ausdrücklich gekennzeichnete Produktillustration erhalten. Das bisherige einzelne `image` wird ebenfalls weiter unterstützt.
+
+Die neue Galerie wurde mit ausdrücklich markierten lokalen Testmotiven auf Desktop und Mobilgröße geprüft. Es wurden keine Produktscreenshots erfunden. Automatisiert geprüft sind Bildwechsel, Umlauf, leere/einzelne Galerien, Bildfehler, verschachtelte Dialoge und Fokus-Rückkehr. Die Canvas-Neigung wurde auf ihre Grenzen, Abschaltung für Touch/reduzierte Bewegung/offene Dialoge und Zurücksetzen vor Interaktionen geprüft.
+
+Produktregal und Work-App wurden bei 1280, 680, 390 und 320 Pixeln CSS-Breite geprüft: keine seitlichen Überläufe. Die App öffnet vom Dock, wechselt zwischen Übersicht und Detail und gibt beim Schließen den Fokus zurück. Herausziehen der Bände, bestehende Polaroid-Galerie und Gedanken-Pop-out wurden im Browser kontrolliert. Die Screenshot-Galerie wurde mit lokalen Testmotiven bei Desktop- und Mobilgröße geöffnet, durchgeblättert und per Escape in das weiterhin offene Projekt zurückgeführt.
