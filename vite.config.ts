@@ -11,7 +11,8 @@ export default defineConfig({
     name: 'portfolio-metadata',
     transformIndexHtml: (html) => html
       .replaceAll('__SITE_TITLE__', escapeAttribute(siteConfig.seo.title))
-      .replaceAll('__SITE_DESCRIPTION__', escapeAttribute(siteConfig.seo.description)),
+      .replaceAll('__SITE_DESCRIPTION__', escapeAttribute(siteConfig.seo.description))
+      .replaceAll('__SITE_URL__', escapeAttribute(siteConfig.seo.url)),
   }],
   server: { port: 5173, strictPort: true },
   test: {

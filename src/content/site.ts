@@ -42,7 +42,7 @@ export type PortfolioConfig = {
   spotify: { title: string; note: string | null; url: string | null; cover: ImageAsset | null }
   running: { title: string; note: string; stravaUrl: string | null; routeName: string | null; goal: string | null }
   products: Product[]
-  seo: { title: string; description: string }
+  seo: { title: string; description: string; url: string }
 }
 
 // All personal content lives here. null means deliberately not yet supplied.
@@ -191,6 +191,7 @@ export const siteConfig: PortfolioConfig = {
     },
   ],
   seo: {
+    url: 'https://timsen.me/',
     title: 'Tim — Products, perspectives & a little movement',
     description: 'A look into my world of product development, UX, AI and e-commerce. Featuring shopvibes, showcase, backlane, music and movement.',
   },
