@@ -33,8 +33,9 @@ export function PixelRunner() {
     <path d="M14 33h14v6h-5v-3h-4v3h-5z" fill="var(--pixel-trousers)"/>
     <g className="runner-body">
       <g className="runner-back-arm">
-        <path d="M27 25h4v3h2v-2h-3v-3h4v2h2v8h-6v-2h-3z" fill="var(--pixel-skin)"/>
-        <path d="M31 31h5v2h-5z" fill="#a26552" opacity=".22"/>
+        <g className="runner-arms-frame arms-forward"><path d="M27 25h4v3h2v-2h-3v-3h4v2h2v8h-6v-2h-3z" fill="var(--pixel-skin)"/>
+        <path d="M31 31h5v2h-5z" fill="#a26552" opacity=".22"/></g>
+        <path className="runner-arms-frame arms-back" d="M27 25h4v3h3v3h3v-2h3v5h-6v-2h-4v-2h-3z" fill="#ce9877"/>
       </g>
       <path d="M14 21h13v2h4v6h-4v7H14v-7h-4v-6h4z" fill="var(--pixel-shirt)"/>
       <path d="M15 23h2v10h-2zM11 24h3v2h-3z" fill="#a1b9ff"/>
@@ -42,8 +43,12 @@ export function PixelRunner() {
       <path d="M18 20h6v3h-6z" fill="var(--pixel-skin)"/>
       <PixelTimHead/>
       <g className="runner-front-arm">
-        <path d="M10 27h4v5h6v-4h4v7H11v-2h-1z" fill="var(--pixel-skin)"/>
-        <path d="M20 30h4v2h-4z" fill="#20273a"/><path d="M21 30h2v1h-2z" fill="#a1b9ff"/>
+        <g className="runner-arms-frame arms-forward"><path d="M10 27h4v5h6v-4h4v7H11v-2h-1z" fill="var(--pixel-skin)"/>
+        <path d="M20 30h4v2h-4z" fill="#20273a"/><path d="M21 30h2v1h-2z" fill="#a1b9ff"/></g>
+        <g className="runner-arms-frame arms-back">
+          <path d="M10 26h4v4h-2v3H8v2H2v-5h3v2h2v-3h3z" fill="var(--pixel-skin)"/>
+          <path d="M5 30h2v4H5z" fill="#26324a"/>
+        </g>
       </g>
     </g>
   </svg>

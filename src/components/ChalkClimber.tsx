@@ -42,8 +42,8 @@ export function ChalkClimber({ cue = 0, compact = false }: { cue?: number; compa
           <g className="pixel-hand-right"><path d="M22 24h4v4h-4z" fill="var(--pixel-skin)"/><path d="M22 24h3v2h-3z" fill="#fff"/></g>
         </g>
         <g className="pixel-pose-clap" fill="var(--pixel-skin)">
-          <path d="M10 27h4v3h2v-4h4v3h-2v4h-5v-1h-3zM28 27h3v5h-3v1h-4v-4h-1v-3h4v4h1z"/>
-          <path d="M16 25h4v2h-4zM23 25h4v2h-4z" fill="#fff"/>
+          <path d="M10 27h4v3h2v-2h2v-3h4v4h-3v3h-3v2h-4v-2h-2zM28 27h3v5h-3v2h-4v-3h-2v-6h3v4h3z"/>
+          <path d="M18 25h4v2h-4zM22 25h3v2h-3z" fill="#fff"/>
         </g>
         <g className="pixel-pose-cough" fill="var(--pixel-skin)">
           <path d="M10 27h4v4h6v3h-7v-2h-3zM28 27h3v-4h-3v-3h-3v-2h-3v4h3v4h3z"/>

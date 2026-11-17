@@ -105,11 +105,12 @@ describe('energy bar and Dyno-Boost', () => {
     advance(game.budget * game.zone.center)
     fireEvent.click(screen.getByRole('button', { name: `Reach ${bar.side}` }))
     expect(screen.getByRole('status')).toHaveTextContent('Dyno-Boost')
-    expect(container.querySelector('.pose-boost')).not.toBeNull()
+    expect(container.querySelector('.pose-load')).not.toBeNull()
     expect(container.querySelector('.climb-timing-arc')).toBeNull()
     const counter = container.querySelector('.climb-height strong')!
     const initial = parseFloat(counter.textContent!)
     advance(400)
+    expect(container.querySelector('.pose-boost')).not.toBeNull()
     expect(parseFloat(counter.textContent!)).toBeGreaterThan(initial)
     fireEvent(window, new Event('blur'))
     const paused = counter.textContent
