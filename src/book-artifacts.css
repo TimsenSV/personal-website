@@ -34,13 +34,28 @@
   .project-volume:focus-visible .book-artifact { opacity: 1; transform: var(--artifact-out); }
   .project-volume:focus-visible .book-artifact:nth-child(2) { transition-delay: 45ms; }
   .project-volume:focus-visible .book-artifact:nth-child(3) { transition-delay: 90ms; }
+  .project-volume[data-scroll-active] { z-index: 3; }
+  .project-volume[data-scroll-active] .volume-object { transform: perspective(900px) translateY(-9px) rotateY(-4deg) rotateZ(-1deg); filter: drop-shadow(5px 10px 6px #24365a2b); }
+  .project-volume[data-scroll-active] .book-artifact { opacity: 1; transform: var(--artifact-out); }
+  .project-volume[data-scroll-active] .book-artifact:nth-child(2) { transition-delay: 45ms; }
+  .project-volume[data-scroll-active] .book-artifact:nth-child(3) { transition-delay: 90ms; }
   @media (hover: hover) and (pointer: fine) {
     .project-volume:hover { z-index: 3; }
     .project-volume:hover .book-artifact { opacity: 1; transform: var(--artifact-out); }
     .project-volume:hover .book-artifact:nth-child(2) { transition-delay: 45ms; }
     .project-volume:hover .book-artifact:nth-child(3) { transition-delay: 90ms; }
   }
-  @media (max-width:620px), (hover: none), (prefers-reduced-motion:reduce) {
+  @media (max-width:620px) {
+    .artifact-preview { left: 5%; top: 0; width: 72%; --artifact-out: perspective(600px) translate3d(-12%,-45%,0) rotate(-12deg); }
+    .artifact-data { top: 0; right: 5%; width: 45%; padding: 8px 7px; --artifact-out: perspective(600px) translate3d(22%,-45%,0) rotate(15deg); }
+    .artifact-data > span { margin-bottom: 6px; }.artifact-data > span > svg { width: 12px; height: 12px; }.artifact-data > i { height: 3px; margin-top: 3px; }
+    .artifact-photo { width: 62%; padding: 4px 4px 12px; --artifact-out: perspective(600px) translate3d(-12%,-30%,0) rotate(-14deg); }
+    .artifact-photo-second { top: 0; left: auto; right: 5%; --artifact-out: perspective(600px) translate3d(18%,-30%,0) rotate(15deg); }
+    .artifact-token { width: 30px; height: 30px; border-radius: 9px; --artifact-out: perspective(600px) translate3d(55%,12%,0) rotate(13deg); }.artifact-token > svg { width: 17px; height: 17px; }
+    .artifact-chat { top: 0; right: 5%; width: 59%; height: 37px; gap: 4px; border-radius: 10px 10px 10px 3px; --artifact-out: perspective(600px) translate3d(18%,-65%,0) rotate(13deg); }
+    .artifact-chat > span { width: 5px; height: 5px; }.artifact-chat > i { width: 19px; height: 19px; border-width: 2px; }
+  }
+  @media (prefers-reduced-motion:reduce) {
     .book-artifacts { display: none; }
     .book-artifact { transition: none; }
   }

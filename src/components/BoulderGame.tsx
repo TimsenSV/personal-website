@@ -2,6 +2,7 @@ import { memo, useEffect, useReducer, useRef, useState, type KeyboardEvent } fro
 import { ArrowLeft, ArrowRight, ArrowUp, Hand, Pause, Play, RotateCcw, Trophy } from 'lucide-react'
 import { ChalkClimber } from './ChalkClimber'
 import { ClimbingTim } from './ClimbingTim'
+import { ClimbBackdrop } from './ClimbBackdrop'
 import { holds } from '../game/boulder'
 import { climbReducer, createClimb, formatHeight, CLIMB_NAME, isInTimingZone, isThreeLaneRow, readBest, routeRow, saveBest, zoneBounds, type ClimbState, type HoldKind, type Side, type TimingZone } from '../game/climber'
 
@@ -172,6 +173,7 @@ export function BoulderGame() {
       <button className="climb-pause" onClick={() => dispatch({ type: 'pause' })} disabled={!active} aria-label="Pause game"><Pause size={18}/></button>
     </header>
     <div className="climb-stage" data-world={Math.floor(game.height / 30) % 3} ref={boardRef} tabIndex={0} role="group" aria-label={`${CLIMB_NAME}: Climbing wall`} aria-describedby="climb-next">
+      <ClimbBackdrop key={game.seed} step={game.step}/>
       <ClimbWall seed={game.seed} step={game.step} side={game.side} kind={game.kind} status={game.status} event={game.event} lastMove={game.lastMove} tired={active && progress > .78} record={record} height={game.height} advancedFrom={game.advancedFrom} reason={game.reason}/>
       {(active || game.status === 'paused') && <ClimbTimingArc progress={progress} zone={game.zone} side={game.side} threeLanes={isThreeLaneRow(game.step, game.advancedFrom)}/>}
       <div className="climb-live-info" aria-hidden="true">

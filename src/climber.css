@@ -21,10 +21,16 @@
   .climb-pause:disabled { opacity: .35; cursor: default; }
   .climb-stage { position: relative; height: min(62dvh,calc(100dvh - 220px),560px); min-height: 340px; overflow: hidden; isolation: isolate; background: #eef2fd; transition: background 1s; touch-action: manipulation; }
   .climb-stage:focus { outline: none; }
-  .climb-stage:focus-visible { box-shadow: inset 0 0 0 2px #5b6fa0; }
+  .climb-stage:focus-visible::after { content: ''; position: absolute; inset: 0; z-index: 4; border: 2px solid #5b6fa0; pointer-events: none; }
   .climb-stage[data-world='1'] { background: #f9f0e6; }
   .climb-stage[data-world='2'] { background: #f1edfb; }
-  .climb-wall { display: block; width: 100%; height: 100%; color: #7d8cad; }
+  .climb-stage { --rock-far: #dde4f4; --rock-face: #d3dced; --rock-near: #b9c8e1; --rock-light: #e6edfa; }
+  .climb-stage[data-world='1'] { --rock-far: #efe0cf; --rock-face: #e6d5bf; --rock-near: #cdb89e; --rock-light: #f7ead8; }
+  .climb-stage[data-world='2'] { --rock-far: #e4ddf2; --rock-face: #dad1eb; --rock-near: #c1b3d8; --rock-light: #f0e9fb; }
+  .climb-backdrop { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+  .climb-clouds { fill: #fff; opacity: .72; }.climb-distant-rock { fill: var(--rock-far); }.climb-distant-rock .rock-face { fill: var(--rock-face); }.climb-near-rock { fill: var(--rock-near); }.climb-near-rock .rock-light { fill: var(--rock-light); }
+  .climb-parallax-tile { transition: transform .85s cubic-bezier(.2,.65,.25,1); }
+  .climb-wall { position: relative; display: block; width: 100%; height: 100%; color: #7d8cad; }
   .climb-wall-row, .climb-record-line, .climb-mat { transition: transform .23s cubic-bezier(.22,.68,.2,1); }
   .climb-hold { fill: #3657ef; filter: drop-shadow(0 4px 0 #21387518); }
   .climb-hold.hold-jug { fill: #7d52d7; }.climb-hold.hold-crimp { fill: #ef7444; }

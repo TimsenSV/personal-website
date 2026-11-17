@@ -3,6 +3,7 @@ import type { Product } from '../content/site'
 import { assetUrl } from '../lib/links'
 import { BacklaneMark } from './Icons'
 import { ProductBrand } from './ProductBrand'
+import { useScrollPreview } from '../hooks/useScrollPreview'
 
 function CoverArt({ id }: { id: Product['id'] }) {
   if (id === 'shopvibes') return <svg viewBox="0 0 180 170" fill="none" aria-hidden="true">
@@ -43,7 +44,8 @@ function BookArtifacts({ id }: { id: Product['id'] }) {
 }
 
 export function ProjectBook({ product, onOpen }: { product: Product; onOpen: () => void }) {
-  return <button className={`project-volume volume-${product.id}`} onClick={onOpen} aria-label={`${product.name}: open details`}>
+  const previewRef = useScrollPreview()
+  return <button ref={previewRef} className={`project-volume volume-${product.id}`} onClick={onOpen} aria-label={`${product.name}: open details`}>
     <span className="volume-scene" aria-hidden="true">
       <BookArtifacts id={product.id}/>
       <span className="volume-object"><span className="volume-pages"/><span className="volume-cover"><span className="volume-title"><ProductBrand product={product}/></span><span className="volume-art"><CoverArt id={product.id}/></span><span className="volume-mark">t<span>.</span></span></span></span>
