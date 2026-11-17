@@ -5,15 +5,15 @@
   .chalk-climber { position: relative; width: 120px; padding: 0 0 7px; background: none; border-radius: 10px; color: #30394f; }
   .pixel-climber { width: 120px; height: 156px; display: block; overflow: visible; image-rendering: pixelated; }
   .climber-name { display: inline-block; font: 10px/1.45 var(--mono); letter-spacing: .3px; background: #fff; padding: 5px 9px; border: 1px solid #dce3f3; border-radius: 4px; box-shadow: 2px 2px 0 #dce3f3; }
-  .pixel-pose-rub, .pixel-pose-clap, .pixel-pose-cough, .pixel-cough-face, .pixel-cough-puff, .chalk-puff, .pixel-chalk-spark { opacity: 0; }
+  .pixel-pose-dip, .pixel-pose-rub, .pixel-pose-clap, .pixel-pose-cough, .pixel-cough-face, .pixel-cough-puff, .chalk-puff, .pixel-chalk-spark { opacity: 0; }
   /* Chalk, clap, two coughs, recover. One sequence per entry or tap. */
   :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) { --chalk-duration: 3.3s; }
   :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) .pixel-pose-idle { animation: chalk-idle var(--chalk-duration) steps(1,end) both; }
   :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) .pixel-pose-rub { animation: chalk-rub var(--chalk-duration) steps(1,end) both; }
   :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) .pixel-pose-clap { animation: chalk-clap var(--chalk-duration) steps(1,end) both; }
   :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) .pixel-pose-cough, :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) .pixel-cough-face { animation: chalk-cough-pose var(--chalk-duration) steps(1,end) both; }
-  :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) .pixel-hand-left { animation: chalk-hand-left .2s steps(1,end) .15s 5; }
-  :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) .pixel-hand-right { animation: chalk-hand-right .2s steps(1,end) .15s 5; }
+  :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) .pixel-hand-left { animation: chalk-hand-left .2s steps(1,end) calc(var(--chalk-duration) * .18) 4; }
+  :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) .pixel-hand-right { animation: chalk-hand-right .2s steps(1,end) calc(var(--chalk-duration) * .18) 4; }
   :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) .pixel-body { animation: chalk-brace var(--chalk-duration) steps(1,end) both; }
   :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) .pixel-upper-body { transform-origin: 20px 35px; animation: chalk-cough-bend var(--chalk-duration) steps(1,end) both; }
   :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) .puff-left { animation: chalk-puff-left var(--chalk-duration) steps(5,end) both; }
@@ -23,18 +23,21 @@
   :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) .pixel-cough-puff { animation: chalk-cough-puff var(--chalk-duration) steps(1,end) both; }
   .boulder-card[data-scroll-active] .pixel-climber { --chalk-duration: 5.5s; }
   .boulder-card[data-scroll-active] .pixel-climber [class] { animation-iteration-count: infinite; }
+  :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) .pixel-pose-dip { animation: chalk-dip var(--chalk-duration) steps(1,end) both; }
+  .boulder-card[data-scroll-active] .pixel-climber .pixel-pose-dip { animation-iteration-count: infinite; }
+  @keyframes chalk-dip { 0%,4%,19%,100% { opacity: 0; } 5% { opacity: 1; } }
   @keyframes chalk-idle { 0%, 4% { opacity: 1; } 5%, 88% { opacity: 0; } 89%, 100% { opacity: 1; } }
-  @keyframes chalk-rub { 0%, 4% { opacity: 0; } 5%, 33% { opacity: 1; } 34%, 100% { opacity: 0; } }
-  @keyframes chalk-clap { 0%, 33% { opacity: 0; } 34%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+  @keyframes chalk-rub { 0%, 18% { opacity: 0; } 19%, 39% { opacity: 1; } 40%, 100% { opacity: 0; } }
+  @keyframes chalk-clap { 0%, 39% { opacity: 0; } 40%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
   @keyframes chalk-cough-pose { 0%, 49% { opacity: 0; } 50%, 88% { opacity: 1; } 89%, 100% { opacity: 0; } }
   @keyframes chalk-hand-left { 0%, 100% { transform: translate(0,0); } 50% { transform: translate(1px,-1px); } }
   @keyframes chalk-hand-right { 0%, 100% { transform: translate(0,0); } 50% { transform: translate(-1px,1px); } }
   @keyframes chalk-brace { 0%, 4% { transform: translateY(0); } 5%, 33% { transform: translateY(1px); } 34%, 100% { transform: translateY(0); } }
   @keyframes chalk-cough-bend { 0%, 49%, 89%, 100% { transform: translate(0,0) rotate(0); } 50%, 61%, 68%, 80%, 88% { transform: translate(1px,0) rotate(4deg); } 54%, 58%, 72%, 77% { transform: translate(2px,1px) rotate(11deg); } }
-  @keyframes chalk-puff-left { 0%, 28% { opacity: 0; transform: translate(0,2px); } 33% { opacity: 1; } 54%, 100% { opacity: 0; transform: translate(-8px,-7px); } }
-  @keyframes chalk-puff-right { 0%, 28% { opacity: 0; transform: translate(0,2px); } 33% { opacity: 1; } 54%, 100% { opacity: 0; transform: translate(8px,-6px); } }
-  @keyframes chalk-puff-up { 0%, 28% { opacity: 0; transform: translateY(4px); } 33% { opacity: 1; } 55%, 100% { opacity: 0; transform: translateY(-7px); } }
-  @keyframes chalk-spark { 0%, 35% { opacity: 0; } 36%, 42% { opacity: 1; } 43%, 100% { opacity: 0; } }
+  @keyframes chalk-puff-left { 0%, 39% { opacity: 0; transform: translate(0,2px); } 42% { opacity: 1; } 62%, 100% { opacity: 0; transform: translate(-8px,-7px); } }
+  @keyframes chalk-puff-right { 0%, 39% { opacity: 0; transform: translate(0,2px); } 42% { opacity: 1; } 62%, 100% { opacity: 0; transform: translate(8px,-6px); } }
+  @keyframes chalk-puff-up { 0%, 39% { opacity: 0; transform: translateY(4px); } 42% { opacity: 1; } 62%, 100% { opacity: 0; transform: translateY(-7px); } }
+  @keyframes chalk-spark { 0%, 40% { opacity: 0; } 41%, 45% { opacity: 1; } 46%, 100% { opacity: 0; } }
   @keyframes chalk-cough-puff { 0%, 53%, 64%, 71%, 83%, 100% { opacity: 0; transform: translate(0,0); } 54%, 72% { opacity: 1; transform: translate(0,0); } 59%, 78% { opacity: .65; transform: translate(4px,-2px); } }
 
   .game-heading { position: relative; }
@@ -57,6 +60,6 @@
   }
   @media (prefers-reduced-motion: reduce) {
     .pixel-climber *, .pixel-climber *::before, .pixel-climber *::after { animation: none !important; }
-    .pixel-pose-idle { opacity: 1; }.pixel-pose-rub, .pixel-pose-clap, .pixel-pose-cough, .pixel-cough-face, .pixel-cough-puff, .chalk-puff, .pixel-chalk-spark { opacity: 0; }
+    .pixel-pose-idle { opacity: 1; }.pixel-pose-dip, .pixel-pose-rub, .pixel-pose-clap, .pixel-pose-cough, .pixel-cough-face, .pixel-cough-puff, .chalk-puff, .pixel-chalk-spark { opacity: 0; }
   }
 }

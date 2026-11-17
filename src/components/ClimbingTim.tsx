@@ -3,8 +3,8 @@ import { siteConfig } from '../content/site'
 import type { ClimbingPose } from '../game/climbMotion'
 import { PixelTimHead } from './PixelTimHead'
 
-type Point = readonly [number, number]
-type JointPair = readonly [Point, Point]
+import { limbPath, type JointPair, type Point } from './pixelLimb'
+
 type Drawing = {
   body: Point
   frontArm: JointPair; backArm: JointPair
@@ -22,23 +22,6 @@ const poses: Record<ClimbingPose, Drawing> = {
   boost: { body: [-2,-2], frontArm: [[30,15],[35,4]], backArm: [[4,23],[0,17]], frontLeg: [[34,30],[31,39]], backLeg: [[10,39],[2,35]] },
   fall:  { body: [0,0], frontArm: [[36,21],[39,15]], backArm: [[4,18],[2,12]], frontLeg: [[32,37],[36,45]], backLeg: [[9,39],[3,35]] },
   hero:  { body: [0,0], frontArm: [[34,21],[32,12]], backArm: [[7,29],[15,31]], frontLeg: [[27,40],[30,47]], backLeg: [[15,40],[12,47]] },
-}
-
-// Stamp each jointed limb on whole pixels so diagonal arms and legs share
-// the same edges and pixel size as the face.
-function limbPath(root: Point, [joint, tip]: JointPair, width: number) {
-  const pixels: string[] = []
-  function segment(a: Point, b: Point) {
-    const steps = Math.max(1, Math.abs(a[0] - b[0]), Math.abs(a[1] - b[1]))
-    for (let i = 0; i <= steps; i++) {
-      const x = Math.round(a[0] + (b[0] - a[0]) * i / steps) - 2
-      const y = Math.round(a[1] + (b[1] - a[1]) * i / steps) - 2
-      pixels.push(`M${x} ${y}h${width}v${width}h-${width}z`)
-    }
-  }
-  segment(root, joint)
-  segment(joint, tip)
-  return pixels.join('')
 }
 
 function Arm({ root, joints, front }: { root: Point; joints: JointPair; front?: boolean }) {
