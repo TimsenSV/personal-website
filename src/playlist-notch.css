@@ -1,0 +1,42 @@
+@layer widgets {
+  .playlist-shell { display: contents; }
+  .has-music-notch { padding-top: max(68px, calc(env(safe-area-inset-top) + 58px)); }
+  .playlist-window { width: min(600px, calc(100% - 48px)); }
+  .window.playlist-notch {
+    --player-width: min(372px, calc(100vw - 24px));
+    position: fixed; z-index: 45; inset: max(8px, env(safe-area-inset-top)) 0 auto;
+    display: flex; margin: 0 auto; width: 150px; max-width: calc(100% - 24px);
+    height: auto; max-height: calc(100dvh - 24px - env(safe-area-inset-top));
+    background: #191a1d; color: white; border: 1px solid #35363a;
+    border-radius: 23px; box-shadow: 0 3px 12px #17192326;
+    animation: none; transition: width .19s ease-out, border-radius .19s ease-out;
+  }
+  .window.playlist-notch.is-open { width: var(--player-width); border-radius: 23px 23px 17px 17px; }
+  .notch-bar, .notch-actions { display: flex; align-items: center; }
+  .notch-bar { min-height: 44px; flex-shrink: 0; }
+  .notch-handle, .notch-actions button {
+    background: transparent; color: inherit; height: 44px; display: flex; align-items: center;
+  }
+  .notch-handle { flex: 1; min-width: 0; gap: 8px; padding: 0 10px 0 7px; text-align: left; }
+  .notch-handle img { flex: none; border-radius: 50%; object-fit: cover; }
+  .notch-handle span { font-size: 13px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .notch-spotify { flex: none; width: 15px; height: 15px; color: #78e5a0; --spotify-line: #191a1d; }
+  .notch-chevron { flex: none; margin-left: auto; color: #c4c5ca; }
+  .playlist-notch.is-open .notch-chevron { transform: rotate(180deg); }
+  .notch-actions { padding-right: 3px; }
+  .notch-actions button { justify-content: center; width: 44px; border-radius: 18px; }
+  .notch-actions button:hover { background: #33353a; }
+  .playlist-notch button:focus-visible { outline: 2px solid #bed0ff; outline-offset: -3px; }
+  .playlist-notch .window-body {
+    width: calc(var(--player-width) - 2px); max-height: 0; visibility: hidden;
+    overflow: hidden; padding: 0; transition: max-height .19s ease-out;
+  }
+  .playlist-notch.is-open .window-body { visibility: visible; max-height: 210px; overflow-y: auto; }
+  .playlist-notch .music-detail { padding: 0 5px 5px; gap: 0; }
+  .playlist-notch .spotify-embed { height: 152px; background: #212225; }
+  .playlist-notch .music-detail-actions { display: none; }
+  @media (max-width: 620px) { .playlist-window { width: 100%; } }
+  @media (prefers-reduced-motion: reduce) {
+    .window.playlist-notch, .playlist-notch .window-body { transition: none; }
+  }
+}

@@ -41,6 +41,15 @@ describe('legal information and Spotify permission', () => {
     expect(screen.getByRole('button', { name: 'Allow Spotify' })).toBeVisible()
     expect(document.querySelector('iframe')).not.toBeInTheDocument()
     expect(localStorage.getItem(SPOTIFY_CONSENT_KEY)).toBeNull()
+    await userEvent.click(screen.getByRole('button', { name: 'Close window' }))
+    expect(screen.queryByRole('button', { name: 'Playlist controls' })).not.toBeInTheDocument()
+  })
+
+  it('waits for a playlist visit even with a previously saved permission', () => {
+    localStorage.setItem(SPOTIFY_CONSENT_KEY, JSON.stringify({ version: 1, grantedAt: Date.now() }))
+    render(<App/>)
+    expect(document.querySelector('iframe')).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Playlist controls' })).not.toBeInTheDocument()
   })
 
   it('can withdraw in Privacy and requires permission again on the next playlist visit', async () => {
@@ -53,6 +62,8 @@ describe('legal information and Spotify permission', () => {
     await user.click(screen.getByRole('button', { name: 'Impressum & Privacy' }))
     await user.click(screen.getByRole('button', { name: 'Privacy / Datenschutz' }))
     await user.click(screen.getByRole('button', { name: 'Withdraw Spotify permission' }))
+    expect(document.querySelector('iframe')).not.toBeInTheDocument()
+    expect(screen.queryByRole('region', { name: 'Spotify mini player' })).not.toBeInTheDocument()
     expect(within(screen.getByRole('dialog')).getByRole('status')).toHaveTextContent('Spotify player is disabled')
     expect(localStorage.getItem(SPOTIFY_CONSENT_KEY)).toBeNull()
     await user.click(screen.getByRole('button', { name: 'Close window' }))

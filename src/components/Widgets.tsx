@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { ArrowUpRight, AudioLines, Code2, FileUser, Footprints, GitBranch, Github, ImagePlus, Play } from 'lucide-react'
 import type { PortfolioConfig } from '../content/site'
 import { assetUrl, externalUrl, githubProfile, spotifyPlaylist } from '../lib/links'
@@ -40,12 +40,12 @@ export function GithubDetail({ config }: { config: PortfolioConfig['github'] }) 
   </div>
 }
 
-export function MusicWidget({ config, onOpen }: { config: PortfolioConfig['spotify']; onOpen: () => void }) {
+export function MusicWidget({ config, onOpen }: { config: PortfolioConfig['spotify']; onOpen: (trigger: HTMLButtonElement) => void }) {
   const previewRef = useScrollPreview()
   const playlist = spotifyPlaylist(config.url)
   const [failedCover, setFailedCover] = useState<string | null>(null)
   return <section className="card music-card" aria-labelledby="music-title">
-    <div className="record-artwork"><button ref={previewRef} type="button" className="record-object" aria-label="Open playlist" aria-haspopup="dialog" onClick={onOpen}>
+    <div className="record-artwork"><button ref={previewRef} type="button" className="record-object" aria-label="Open playlist" aria-haspopup="dialog" onClick={event => onOpen(event.currentTarget)}>
       <span className="vinyl-disc" aria-hidden="true"><span><AudioLines size={20}/></span></span>
       <span className="record-sleeve">{config.cover && failedCover !== config.cover.src ? <img src={assetUrl(config.cover.src)} alt={config.cover.alt} width="160" height="160" loading="lazy" onError={() => setFailedCover(config.cover?.src ?? null)}/> : <span className="album-art" aria-hidden="true"><span className="album-art-title">A SIDE<br/>OF ME<span>01</span></span><span className="album-star">✳</span><span className="album-art-bottom">MUSIC IS A GOOD PLACE.</span></span>}</span>
       <span className="record-sticker" aria-hidden="true">{playlist ? 'LISTEN IN ↗' : 'PLAYLIST SOON'}</span>
@@ -59,10 +59,16 @@ export function MusicDetail({ config, onPrivacy }: { config: PortfolioConfig['sp
   const playlist = spotifyPlaylist(config.url)
   const { allowed, allow, revoke } = useSpotifyConsent()
   const consentButton = useRef<HTMLButtonElement>(null)
+  const focusAfterChange = useRef(false)
+  useLayoutEffect(() => {
+    if (!focusAfterChange.current) return
+    focusAfterChange.current = false
+    consentButton.current?.focus({ preventScroll: true })
+  }, [allowed])
   const changePermission = (next: boolean) => {
+    focusAfterChange.current = true
     if (next) allow()
     else revoke()
-    requestAnimationFrame(() => consentButton.current?.focus())
   }
   return <div className="music-detail">{playlist ? <>
     {allowed ? <iframe className="spotify-embed" src={playlist.embed} title={`Spotify playlist: ${config.title}`} width="100%" height="520" allow="encrypted-media; fullscreen; picture-in-picture" loading="lazy" referrerPolicy="no-referrer"/> : <section className="spotify-permission" aria-labelledby="spotify-permission-title">

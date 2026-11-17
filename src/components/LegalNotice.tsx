@@ -48,6 +48,7 @@ export function LegalNotice({ config, initialSection = 'imprint' }: { config: Le
 
       <section><h4>Spotify — only with your permission</h4>
         <p>The player connects to Spotify AB, Regeringsgatan 19, 111 53 Stockholm, Sweden, only after you select “Allow Spotify”. Spotify receives your IP address, browser and playback data and may use cookies or similar technologies. Activity may be associated with your Spotify account if you are signed in.</p>
+        <p>Closing the playlist window keeps the player on this page so playback can continue. Open the mini player and choose “Stop and close player” to end the session.</p>
         <p>Loading the player relies on your consent under Article 6(1)(a) GDPR and Section 25(1) TDDDG. Spotify may process data outside the EU/EEA and describes Standard Contractual Clauses and other applicable safeguards. Its retention periods depend on the data and purpose.</p>
         <ExternalLink href="https://www.spotify.com/de/legal/privacy-policy/">Spotify privacy policy</ExternalLink>
         <div className="privacy-preference">

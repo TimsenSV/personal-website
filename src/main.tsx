@@ -15,6 +15,7 @@ import './work-shelf.css'
 import './book-artifacts.css'
 import './canvas-tilt.css'
 import './legal.css'
+import './playlist-notch.css'
 import App from './App'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(<React.StrictMode><App/></React.StrictMode>)
