@@ -21,6 +21,8 @@
   .photo-current:disabled { cursor: default; }
   .photo-carousel button:focus:not(:focus-visible), .photo-lightbox-close:focus:not(:focus-visible) { outline: none; }
   .photo-carousel button:focus-visible { outline: 2px solid #535763; outline-offset: 4px; }
+  .photo-carousel .photo-current:focus { outline: none; }
+  .photo-current:focus-visible .polaroid-caption { text-decoration: underline; text-underline-offset: 3px; }
   .photo-carousel:focus-within .photo-back-1 { transform: translate(12px,3px) rotate(11deg) scale(.97); }
   .photo-carousel:focus-within .photo-back-2 { transform: translate(-8px,2px) rotate(-13deg) scale(.95); }
   .is-dragging .photo-current { cursor: grabbing; transition: none; box-shadow: 0 14px 25px #17234426; }
