@@ -1,10 +1,12 @@
 import { memo, useEffect, useReducer, useRef, useState, type KeyboardEvent } from 'react'
 import { ArrowLeft, ArrowRight, ArrowUp, Hand, Pause, Play, RotateCcw, Trophy } from 'lucide-react'
-import { ChalkClimber } from './ChalkClimber'
+import { ClimbPoster } from './ClimbPoster'
+import { EnergyBar, PixelType } from './PixelType'
+import { useReducedMotion } from '../hooks/useReducedMotion'
 import { ClimbingTim } from './ClimbingTim'
 import { ClimbBackdrop } from './ClimbBackdrop'
 import { holds } from '../game/boulder'
-import { climbReducer, createClimb, formatHeight, CLIMB_NAME, isInTimingZone, isThreeLaneRow, readBest, routeRow, saveBest, zoneBounds, type ClimbState, type HoldKind, type Side, type TimingZone } from '../game/climber'
+import { boostProgress, BOOST_ROWS, climbReducer, createClimb, formatHeight, CLIMB_NAME, isInTimingZone, isThreeLaneRow, readBest, routeRow, saveBest, zoneBounds, type ClimbState, type HoldKind, type Side, type TimingZone } from '../game/climber'
 
 export function BoulderPreview() {
   return <svg className="boulder-preview" viewBox="0 0 300 280" fill="none" aria-hidden="true">
@@ -59,26 +61,29 @@ function HoldShape({ kind }: { kind: HoldKind }) {
   </g>
 }
 
-const ClimbWall = memo(function ClimbWall({ seed, step, side, kind, status, event, lastMove, tired, record, height, advancedFrom, reason }: Pick<ClimbState, 'seed' | 'step' | 'side' | 'kind' | 'status' | 'event' | 'lastMove' | 'height' | 'advancedFrom' | 'reason'> & { tired: boolean; record: number }) {
-  const rows = Array.from({ length: 7 }, (_, i) => step + i - 2).filter(index => index >= 0)
+const ClimbWall = memo(function ClimbWall({ seed, step, side, kind, status, event, lastMove, tired, record, height, advancedFrom, reason, boost, flight, cameraStep }: Pick<ClimbState, 'seed' | 'step' | 'side' | 'kind' | 'status' | 'event' | 'lastMove' | 'height' | 'advancedFrom' | 'reason' | 'boost'> & { tired: boolean; record: number; flight: number; cameraStep: number }) {
+  const rows = Array.from({ length: 7 }, (_, i) => Math.floor(cameraStep) + i - 2).filter(index => index >= 0)
   const recordY = 375 - (record - height) * 50
   const broken = reason === 'broken'
-  const currentX = laneX(side, broken || isThreeLaneRow(step, advancedFrom))
+  const startX = laneX(side, broken || isThreeLaneRow(step, advancedFrom))
+  const currentX = boost ? startX + (laneX(boost.side, isThreeLaneRow(boost.step, advancedFrom)) - startX) * flight : startX
+  const nextRow = boost ? boost.step : step + 1
   return <svg className="climb-wall" viewBox="0 0 440 560" fill="none" aria-hidden="true">
     <defs><pattern id="climb-bolts" width="40" height="40" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="1.1" fill="currentColor" opacity=".2"/></pattern></defs>
     <rect width="440" height="560" fill="url(#climb-bolts)"/>
     <path d="M53 0L16 140 70 280 38 440M402 0L425 175 375 300 417 465" stroke="currentColor" opacity=".08"/>
-    {rows.map(index => <g key={`${seed}-${index}`} className="climb-wall-row" style={{ transform: `translateY(${375 - (index - step) * 100}px)` }}>
+    {rows.map(index => <g key={`${seed}-${index}`} className="climb-wall-row" style={{ transform: `translateY(${375 - (index - cameraStep) * 100}px)` }}>
       {index === 0 ? <g transform="translate(220 0)"><HoldShape kind="jug"/></g> : routeRow(seed, index, advancedFrom).map(hold => <g key={hold.side} className={broken && index === step + 1 && hold.side === side ? 'is-broken' : undefined} transform={`translate(${laneX(hold.side, isThreeLaneRow(index, advancedFrom))} 0)`} opacity={index < step || (index === step && hold.side !== side) ? .22 : index > step + 1 ? .52 : 1}>
-        {index === step + 1 && <><circle className="climb-next-ring" r="34"/><text className="climb-next-arrow" x={hold.side === 'left' ? -51 : hold.side === 'right' ? 51 : 0} y={hold.side === 'center' ? -45 : 5}>{hold.side === 'left' ? '←' : hold.side === 'right' ? '→' : '↑'}</text></>}
-        <HoldShape kind={hold.kind}/>
+        {index === nextRow && (!boost || hold.side === boost.side) && <><circle className="climb-next-ring" r="34"/><text className="climb-next-arrow" x={hold.side === 'left' ? -51 : hold.side === 'right' ? 51 : 0} y={hold.side === 'center' ? hold.powerup ? -61 : -45 : 5}>{hold.side === 'left' ? '←' : hold.side === 'right' ? '→' : '↑'}</text></>}
+        <HoldShape kind={hold.kind}/>{hold.powerup && index > step && <EnergyBar/>}
       </g>)}
     </g>)}
     {record > 0 && recordY > 15 && recordY < 520 && <g className="climb-record-line" style={{ transform: `translateY(${recordY}px)` }}><path d="M16 0H424"/><rect x="10" y="-22" width="113" height="20" rx="5"/><text x="17" y="-8">PERSONAL BEST · {formatHeight(record)} m</text></g>}
-    {step < 3 && <g className="climb-mat" style={{ transform: `translateY(${510 + step * 100}px)` }}><rect x="65" width="310" height="36" rx="8" fill="#3254ed"/><path d="M220 0V36M72 9H368" stroke="#6480ff" strokeWidth="2"/><text x="220" y="25">NO SHOES ON THE MAT. OOPS.</text></g>}
+    {step < 3 && <g className="climb-mat" style={{ transform: `translateY(${510 + cameraStep * 100}px)` }}><rect x="65" width="310" height="36" rx="8" fill="#3254ed"/><path d="M220 0V36M72 9H368" stroke="#6480ff" strokeWidth="2"/><text x="220" y="25">NO SHOES ON THE MAT. OOPS.</text></g>}
     <g className="climb-tim-position" style={{ transform: `translate(${currentX - 40}px, ${climberY}px)` }}>
-      <g key={`${event}-${status}`} className={`climb-tim-action ${status === 'fallen' ? broken ? 'is-falling is-breaking' : 'is-falling' : lastMove === 'slip' ? 'is-slipping' : step > 0 ? 'is-reaching' : ''}`}>
-        <g className={tired ? 'climb-shivering' : ''}><g transform="scale(2)"><ClimbingTim pose={lastMove === 'slip' ? 'slip' : tired ? 'reach' : 'hang'}/></g></g>
+      <g key={`${event}-${status === 'fallen'}`} className={`climb-tim-action ${boost ? 'is-boosting' : status === 'fallen' ? broken ? 'is-falling is-breaking' : 'is-falling' : lastMove === 'slip' ? 'is-slipping' : step > 0 ? 'is-reaching' : ''}`} style={boost ? { transform: `translateY(${-Math.sin(flight * Math.PI) * 78}px) rotate(${-Math.sin(flight * Math.PI) * 10}deg)` } : undefined}>
+        {boost && <g className="climb-boost-trail" fill="#ffb545"><path d="M13 85h5v48h-5zM37 92h7v67h-7zM64 82h5v45h-5z"/><path d="M25 111h4v20h-4zM53 129h4v22h-4z" fill="#ff784e"/></g>}
+        <g className={tired ? 'climb-shivering' : ''}><g transform="scale(2)"><ClimbingTim pose={boost ? 'boost' : lastMove === 'slip' ? 'slip' : tired ? 'reach' : 'hang'}/></g></g>
         {step > 0 && status !== 'fallen' && <g className="climb-chalk" fill="#fff" stroke="#c6d1e7" strokeWidth=".5"><rect x="3" y="-5" width="6" height="6"/><rect x="61" y="-8" width="7" height="7"/><rect x="-6" y="9" width="4" height="4"/><rect x="74" y="6" width="4" height="4"/></g>}
       </g>
     </g>
@@ -87,8 +92,12 @@ const ClimbWall = memo(function ClimbWall({ seed, step, side, kind, status, even
 })
 
 export function BoulderGame() {
+  const reducedMotion = useReducedMotion()
   const [game, dispatch] = useReducer(climbReducer, undefined, () => createClimb())
   const [record, setRecord] = useState(readBest)
+  const flight = game.boost ? boostProgress(game.boost) : 0
+  const displayHeight = game.boost ? game.height + (game.boost.height - game.height) * flight : game.height
+  const cameraStep = game.step + (reducedMotion ? 0 : BOOST_ROWS * flight)
   const best = Math.max(record, game.height)
   const boardRef = useRef<HTMLDivElement>(null)
   const primaryRef = useRef<HTMLButtonElement>(null)
@@ -98,6 +107,7 @@ export function BoulderGame() {
   const threeLanes = isThreeLaneRow(game.step + 1, game.advancedFrom)
   const direction = next.map(hold => sideNames[hold.side]).join(' or ')
   const lives = game.status === 'fallen' ? 0 : game.saves + 1
+  const canReach = game.status === 'playing' && !game.boost
   const active = game.status === 'playing'
   const newRecord = game.height > record && game.height > 0
 
@@ -160,53 +170,53 @@ export function BoulderGame() {
     }
   }
 
-  return <div ref={gameRef} className={`climb-game is-${game.status}`} onKeyDown={keyDown} onBlur={event => {
+  return <div ref={gameRef} className={`climb-game is-${game.status} ${game.boost ? 'has-boost' : ''}`} onKeyDown={keyDown} onBlur={event => {
     if (active && event.relatedTarget && !event.currentTarget.contains(event.relatedTarget)) dispatch({ type: 'pause' })
   }}>
-    <header className="climb-hud">
-      <div className="climb-height"><span>HEIGHT</span><strong>{formatHeight(game.height)}<small> m</small></strong></div>
+    {game.status !== 'ready' && <header className="climb-hud">
+      <div className="climb-altitude"><div className="climb-height"><span>{game.boost ? 'BOOST ↑' : 'HEIGHT'}</span><strong>{formatHeight(displayHeight)}<small> m</small></strong></div><div className="climb-best"><Trophy size={12}/><span>BEST <strong>{formatHeight(best)} m</strong></span></div></div>
       <div className={`climb-lives ${lives === 1 ? 'last-life' : ''}`} role="img" aria-label={`${lives} of 2 lives`}>
-        <span className="climb-lives-label">LIVES <strong>{lives}/2</strong></span>
         <span className="climb-life-icons" aria-hidden="true">{[0, 1].map(index => <span key={`${index}-${index < lives}`} className={`climb-life ${index < lives ? 'is-full' : 'is-empty'}`}><Hand size={25} strokeWidth={1.8}/></span>)}</span>
       </div>
-      <div className="climb-best"><Trophy size={14}/><span>PERSONAL BEST<strong>{formatHeight(best)} m</strong></span></div>
       <button className="climb-pause" onClick={() => dispatch({ type: 'pause' })} disabled={!active} aria-label="Pause game"><Pause size={18}/></button>
-    </header>
+    </header>}
     <div className="climb-stage" data-world={Math.floor(game.height / 30) % 3} ref={boardRef} tabIndex={0} role="group" aria-label={`${CLIMB_NAME}: Climbing wall`} aria-describedby="climb-next">
-      <ClimbBackdrop key={game.seed} step={game.step}/>
-      <ClimbWall seed={game.seed} step={game.step} side={game.side} kind={game.kind} status={game.status} event={game.event} lastMove={game.lastMove} tired={active && progress > .78} record={record} height={game.height} advancedFrom={game.advancedFrom} reason={game.reason}/>
-      {(active || game.status === 'paused') && <ClimbTimingArc progress={progress} zone={game.zone} side={game.side} threeLanes={isThreeLaneRow(game.step, game.advancedFrom)}/>}
+      {game.status !== 'ready' && <>
+      <ClimbBackdrop key={game.seed} step={cameraStep}/>
+      <ClimbWall seed={game.seed} step={game.step} side={game.side} kind={game.kind} status={game.status} event={game.event} lastMove={game.lastMove} tired={active && progress > .78} record={record} height={displayHeight} advancedFrom={game.advancedFrom} reason={game.reason} boost={game.boost} flight={reducedMotion ? 0 : flight} cameraStep={cameraStep}/>
+      {!game.boost && (active || game.status === 'paused') && <ClimbTimingArc progress={progress} zone={game.zone} side={game.side} threeLanes={isThreeLaneRow(game.step, game.advancedFrom)}/>}
       <div className="climb-live-info" aria-hidden="true">
         <span className={`climb-combo ${game.combo >= 3 ? 'in-flow' : ''}`}>{game.combo > 1 ? <><b>{game.combo}×</b> FLOW</> : 'JUST ONE MORE HOLD.'}</span>
-        {threeLanes && <span className="climb-route-tip">Cracked holds break.<small>↑ / W for the middle</small></span>}
+        {next.some(hold => hold.powerup) && !game.boost && <span className="climb-energy-tip">Energy bar!<small>Clean hit → Dyno-Boost</small></span>}
+        {threeLanes && !next.some(hold => hold.powerup) && <span className="climb-route-tip">Cracked holds break.<small>↑ / W for the middle</small></span>}
       </div>
-      {active && <div key={game.event} className={`climb-feedback ${game.lastMove === 'slip' ? 'is-warning' : ''}`} aria-hidden="true">{game.step === 0 && game.lastMove === 'start' ? 'Start on the left.' : game.feedback}{game.zone.change !== 'steady' && <small className={`zone-${game.zone.change}`}>{game.zone.change === 'wider' ? 'More room +' : 'Tighter window −'}</small>}{newRecord && game.step > 1 && <small>New personal best ↗</small>}</div>}
-      <div className={`climb-inputs ${threeLanes ? 'has-center' : ''}`} inert={!active}>
-        <button className="climb-input input-left" aria-label="Reach left" aria-keyshortcuts="ArrowLeft A" disabled={!active} onClick={() => reach('left')}><span><ArrowLeft size={22}/><span>LEFT</span></span></button>
-        {threeLanes && <button className="climb-input input-center" aria-label="Reach middle" aria-keyshortcuts="ArrowUp W" disabled={!active} onClick={() => reach('center')}><span><ArrowUp size={22}/><span>MID</span></span></button>}
-        <button className="climb-input input-right" aria-label="Reach right" aria-keyshortcuts="ArrowRight D" disabled={!active} onClick={() => reach('right')}><span><span>RIGHT</span><ArrowRight size={22}/></span></button>
+      {active && !game.boost && <div key={game.event} className={`climb-feedback ${game.step === 0 ? 'is-start' : ''} ${game.lastMove === 'slip' ? 'is-warning' : ''}`} aria-hidden="true">{game.step === 0 && game.lastMove === 'start' ? '← / → or tap. Reach when the dot hits blue.' : game.feedback}{game.zone.change !== 'steady' && <small className={`zone-${game.zone.change}`}>{game.zone.change === 'wider' ? 'More room +' : 'Tighter window −'}</small>}{newRecord && game.step > 1 && <small>New personal best ↗</small>}</div>}
+      {game.boost && <div className="climb-boost-banner" key={game.event} aria-hidden="true"><PixelType text="DYNO-BOOST"/><span>+{formatHeight(game.boost.height - game.height)} m</span></div>}
+      <div className={`climb-inputs ${threeLanes ? 'has-center' : ''}`} inert={!canReach}>
+        <button className="climb-input input-left" aria-label="Reach left" aria-keyshortcuts="ArrowLeft A" disabled={!canReach} onClick={() => reach('left')}><span><ArrowLeft size={22}/><span>LEFT</span></span></button>
+        {threeLanes && <button className="climb-input input-center" aria-label="Reach middle" aria-keyshortcuts="ArrowUp W" disabled={!canReach} onClick={() => reach('center')}><span><ArrowUp size={22}/><span>MID</span></span></button>}
+        <button className="climb-input input-right" aria-label="Reach right" aria-keyshortcuts="ArrowRight D" disabled={!canReach} onClick={() => reach('right')}><span><span>RIGHT</span><ArrowRight size={22}/></span></button>
       </div>
+      </>}
       {game.status !== 'playing' && <div className={`climb-overlay overlay-${game.status}`}>
         <div className="climb-overlay-card">
           {game.status === 'ready' ? <>
-            <div aria-hidden="true" inert><ChalkClimber compact cue={1}/></div><span className="climb-kicker">ENDLESS CLIMBER</span><h3 lang="en" aria-label={CLIMB_NAME}>Grip<br/><em>Happens.</em></h3>
-            <p>How high can you go<br/>before your arms give out?</p>
-            <div className="climb-how"><span><kbd>←</kbd><kbd>→</kbd> or tap left / right</span><span>Reach when the dot above Tim hits blue.</span><span>After 70 m, watch for cracked holds in three-lane sections.</span></div>
-            <button ref={primaryRef} data-game-start className="climb-primary" onClick={start} aria-keyshortcuts="Enter Space"><Play size={17} fill="currentColor"/> Start climbing</button><span className="climb-start-shortcut">Enter or Space</span>
+            <ClimbPoster/>
+            <button ref={primaryRef} data-game-start className="climb-primary" onClick={start} aria-keyshortcuts="Enter Space"><Play size={17} fill="currentColor"/> Start climbing</button>
           </> : game.status === 'paused' ? <>
             <span className="climb-kicker">TAKE A BREATHER</span><h3>Shake<br/><em>it out.</em></h3><p>Your run will be right here.</p>
             <button ref={primaryRef} className="climb-primary" onClick={resume}><Play size={17} fill="currentColor"/> Keep climbing</button>
             <button className="climb-secondary" onClick={start}><RotateCcw size={14}/> Start over</button>
           </> : <>
             <span className="climb-kicker">{newRecord ? 'NEW PERSONAL BEST' : 'THE MAT HAS YOUR BACK'}</span><h3>{formatHeight(game.height)}<em> m.</em></h3><p>{game.feedback}</p>
-            <div className="climb-run-stats"><span><strong>{game.step}</strong> holds</span><span><strong>{game.maxCombo}×</strong> best combo</span></div>
+            <div className="climb-run-stats"><span><strong>{game.grips}</strong> holds</span><span><strong>{game.maxCombo}×</strong> best combo</span></div>
             <button ref={primaryRef} className="climb-primary" onClick={start} aria-keyshortcuts="Enter Space"><RotateCcw size={17}/> Chalk up again</button>
             <span className="climb-local-note">Your personal best stays in this browser.</span>
           </>}
-          {game.status !== 'fallen' && <div className="climb-legend"><span><i className="legend-normal"/>Normal</span><span><i className="legend-jug"/>More time</span><span><i className="legend-crimp"/>Move fast</span>{threeLanes && <span><i className="legend-loose"/>Breaks</span>}</div>}
+          {game.status === 'paused' && <div className="climb-legend"><span><i className="legend-normal"/>Normal</span><span><i className="legend-jug"/>More time</span><span><i className="legend-crimp"/>Move fast</span>{threeLanes && <span><i className="legend-loose"/>Breaks</span>}</div>}
         </div>
       </div>}
     </div>
-    <span id="climb-next" className="sr-only" role="status" aria-live="polite" aria-atomic="true">{game.status === 'fallen' ? `${formatHeight(game.height)} metres. ${game.feedback}` : game.status === 'paused' ? 'Game paused.' : `Next hold: ${direction}. ${next.map(hold => `${sideNames[hold.side]}: ${holdNames[hold.kind]}`).join('; ')}. ${threeLanes ? 'Arrow Up or W for the middle. ' : ''}${game.feedback} ${lives} of 2 lives.`}</span>
+    <span id="climb-next" className="sr-only" role="status" aria-live="polite" aria-atomic="true">{game.status === 'ready' ? 'Press Enter or Space to start climbing.' : game.status === 'paused' ? 'Game paused.' : game.boost ? 'Dyno-Boost! Skipping three holds. Timing resumes after landing.' : game.status === 'fallen' ? `${formatHeight(game.height)} metres. ${game.feedback}` : `Next hold: ${direction}. ${next.map(hold => `${sideNames[hold.side]}: ${holdNames[hold.kind]}${hold.powerup ? ', energy bar — clean hit for Dyno-Boost' : ''}`).join('; ')}. ${threeLanes ? 'Arrow Up or W for the middle. ' : ''}${game.feedback} ${lives} of 2 lives.`}</span>
   </div>
 }

@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react'
 
-/** Reveal the book artwork as touch users scroll through the reading area. */
-export function useScrollPreview() {
-  const ref = useRef<HTMLButtonElement>(null)
+/** Touch previews follow the reading area; character loops run only while visible. */
+export function useScrollPreview<T extends HTMLElement = HTMLButtonElement>(area: 'reading' | 'viewport' = 'reading') {
+  const ref = useRef<T>(null)
   useEffect(() => {
     const element = ref.current
     if (!element || !window.matchMedia || !window.IntersectionObserver) return
@@ -14,17 +14,19 @@ export function useScrollPreview() {
       const current = ++generation
       observer?.disconnect()
       element!.removeAttribute('data-scroll-active')
-      if (!touch.matches || reduced.matches) return
+      if (!touch.matches || reduced.matches || document.hidden) return
+      const threshold = area === 'viewport' ? .2 : .55
       observer = new IntersectionObserver(([entry]) => {
         if (current !== generation) return
-        element!.toggleAttribute('data-scroll-active', entry.isIntersecting && entry.intersectionRatio >= .55)
-      }, { rootMargin: `${-window.innerHeight * .3}px 0px ${-window.innerHeight * .4}px 0px`, threshold: [.55] })
+        element!.toggleAttribute('data-scroll-active', entry.isIntersecting && entry.intersectionRatio >= threshold)
+      }, { rootMargin: area === 'viewport' ? '0px' : `${-window.innerHeight * .3}px 0px ${-window.innerHeight * .4}px 0px`, threshold: [threshold] })
       observer.observe(element!)
     }
     observe()
     touch.addEventListener('change', observe)
     reduced.addEventListener('change', observe)
     window.addEventListener('resize', observe)
+    document.addEventListener('visibilitychange', observe)
     return () => {
       generation++
       observer?.disconnect()
@@ -32,7 +34,8 @@ export function useScrollPreview() {
       touch.removeEventListener('change', observe)
       reduced.removeEventListener('change', observe)
       window.removeEventListener('resize', observe)
+      document.removeEventListener('visibilitychange', observe)
     }
-  }, [])
+  }, [area])
   return ref
 }

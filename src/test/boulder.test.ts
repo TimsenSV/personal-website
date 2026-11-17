@@ -1,7 +1,10 @@
 import { describe, expect, it, afterEach, vi } from 'vitest'
-import { ADVANCED_HEIGHT, BEST_KEY, createClimb, holdTime, MIN_REACH, pauseClimb, isInTimingZone, isThreeLaneRow, zoneBounds, ZONE_INITIAL_WIDTH, ZONE_MIN_WIDTH, ZONE_MAX_WIDTH, reachClimb, readBest, resumeClimb, routeRow, saveBest, startClimb, tickClimb, type ClimbState, type Side } from '../game/climber'
+import { ADVANCED_HEIGHT, BEST_KEY, BOOST_DURATION, createClimb, holdTime, MIN_REACH, pauseClimb, isInTimingZone, isThreeLaneRow, zoneBounds, ZONE_INITIAL_WIDTH, ZONE_MIN_WIDTH, ZONE_MAX_WIDTH, reachClimb, readBest, resumeClimb, routeRow, saveBest, startClimb, tickClimb, type ClimbState, type Side } from '../game/climber'
 
-const grip = (state: ClimbState, progress = state.zone.center, side: Side = routeRow(state.seed, state.step + 1, state.advancedFrom).find(hold => hold.kind !== 'loose')!.side) => reachClimb(tickClimb(state, state.budget * progress), side)
+const grip = (state: ClimbState, progress = state.zone.center, side: Side = routeRow(state.seed, state.step + 1, state.advancedFrom).find(hold => hold.kind !== 'loose')!.side) => {
+  const next = reachClimb(tickClimb(state, state.budget * progress), side)
+  return next.boost ? tickClimb(next, BOOST_DURATION) : next
+}
 afterEach(() => { localStorage.clear(); vi.restoreAllMocks() })
 
 describe('endless climbing rules', () => {
@@ -70,7 +73,7 @@ describe('endless climbing rules', () => {
           expect(choices.filter(item => item.kind !== 'loose')).toHaveLength(2)
           if (row % 6 === 5) expect(choices.some(item => item.kind === 'jug')).toBe(true)
         } else expect(choices.every(item => item.side !== 'center' && item.kind !== 'loose')).toBe(true)
-        game = grip(game)
+        game = grip(game, .95)
         expect(game.status).toBe('playing')
       }
       expect(game.step).toBe(249)
@@ -81,7 +84,7 @@ describe('endless climbing rules', () => {
   it('introduces the three-lane route only after 70 metres without changing past holds', () => {
     let game = startClimb(71)
     let previous = game
-    while (game.height < ADVANCED_HEIGHT) { previous = game; game = grip(game) }
+    while (game.height < ADVANCED_HEIGHT) { previous = game; game = grip(game, .95) }
     expect(previous.advancedFrom).toBeNull()
     expect(game.height).toBeGreaterThanOrEqual(70)
     expect(game.advancedFrom).toBe(game.step + 1)
@@ -92,7 +95,7 @@ describe('endless climbing rules', () => {
   })
   it('breaks a loose hold immediately, awards no height and leaves safe alternatives playable', () => {
     let game = startClimb(93)
-    while (game.height < ADVANCED_HEIGHT) game = grip(game)
+    while (game.height < ADVANCED_HEIGHT) game = grip(game, .95)
     const choices = routeRow(game.seed, game.step + 1, game.advancedFrom)
     const trap = choices.find(hold => hold.kind === 'loose')!
     const fallen = grip(game, game.zone.center, trap.side)
@@ -105,7 +108,7 @@ describe('endless climbing rules', () => {
   })
   it('alternates four three-lane choices with eight normal choices and gives re-entry time', () => {
     let game = startClimb(14)
-    while (game.height < ADVANCED_HEIGHT) game = grip(game)
+    while (game.height < ADVANCED_HEIGHT) game = grip(game, .95)
     for (let section = 0; section < 3; section++) {
       expect(game.budget).toBeGreaterThanOrEqual(2400)
       for (let choice = 0; choice < 12; choice++) {
@@ -117,7 +120,7 @@ describe('endless climbing rules', () => {
           expect(holds.length).toBeLessThanOrEqual(2)
           expect(holds.every(hold => hold.side !== 'center' && hold.kind !== 'loose')).toBe(true)
         }
-        game = grip(game)
+        game = grip(game, .95)
         expect(game.status).toBe('playing')
       }
     }

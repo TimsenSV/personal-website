@@ -12,6 +12,7 @@ import { GitHubHeatmap } from './GitHubHeatmap'
 import { PixelRunner } from './PixelRunner'
 import { PhotoCarousel } from './PhotoCarousel'
 import { CLIMB_NAME } from '../game/climber'
+import { useScrollPreview } from '../hooks/useScrollPreview'
 
 export function IntroWidget({ profile, onOpenCv }: { profile: PortfolioConfig['profile']; onOpenCv: () => void }) {
   return <section className="card intro-card" aria-labelledby="intro-title">
@@ -40,10 +41,11 @@ export function GithubDetail({ config }: { config: PortfolioConfig['github'] }) 
 }
 
 export function MusicWidget({ config, onOpen }: { config: PortfolioConfig['spotify']; onOpen: () => void }) {
+  const previewRef = useScrollPreview()
   const playlist = spotifyPlaylist(config.url)
   const [failedCover, setFailedCover] = useState<string | null>(null)
   return <section className="card music-card" aria-labelledby="music-title">
-    <div className="record-artwork"><button type="button" className="record-object" aria-label="Open playlist" aria-haspopup="dialog" onClick={onOpen}>
+    <div className="record-artwork"><button ref={previewRef} type="button" className="record-object" aria-label="Open playlist" aria-haspopup="dialog" onClick={onOpen}>
       <span className="vinyl-disc" aria-hidden="true"><span><AudioLines size={20}/></span></span>
       <span className="record-sleeve">{config.cover && failedCover !== config.cover.src ? <img src={assetUrl(config.cover.src)} alt={config.cover.alt} width="160" height="160" loading="lazy" onError={() => setFailedCover(config.cover?.src ?? null)}/> : <span className="album-art" aria-hidden="true"><span className="album-art-title">A SIDE<br/>OF ME<span>01</span></span><span className="album-star">✳</span><span className="album-art-bottom">MUSIC IS A GOOD PLACE.</span></span>}</span>
       <span className="record-sticker" aria-hidden="true">{playlist ? 'LISTEN IN ↗' : 'PLAYLIST SOON'}</span>
@@ -76,8 +78,9 @@ export function MusicDetail({ config, onPrivacy }: { config: PortfolioConfig['sp
 }
 
 export function RunningWidget({ config, onOpen }: { config: PortfolioConfig['running']; onOpen: () => void }) {
+  const previewRef = useScrollPreview<HTMLElement>('viewport')
   const scene = <span className="runner-scene" aria-hidden="true"><span className="runner-track"/><span className="runner-speed"><i/><i/><i/></span><PixelRunner/></span>
-  return <section className="card running-card runner-card" aria-labelledby="running-title">
+  return <section ref={previewRef} className="card running-card runner-card" aria-labelledby="running-title">
     <div className="runner-heading"><h2 id="running-title" lang="en">{config.title}</h2><button className="round-link" onClick={onOpen} aria-label="Running: open details"><ArrowUpRight size={18}/></button></div>
     {externalUrl(config.stravaUrl) ? <ExternalLink href={config.stravaUrl} className="strava-run-link">{scene}<span className="strava-follow"><StravaMark/>Run with me on Strava</span></ExternalLink> : <>{scene}<span className="small-note">Strava link coming soon.</span></>}
   </section>
@@ -88,6 +91,7 @@ export function RunningDetail({ config }: { config: PortfolioConfig['running'] }
 }
 
 export function BoulderWidget({ onOpen }: { onOpen: () => void }) {
+  const previewRef = useScrollPreview<HTMLElement>('viewport')
   const [chalkCue, setChalkCue] = useState(0)
-  return <section className="card boulder-card" aria-labelledby="boulder-title" onPointerEnter={(event) => { if (event.pointerType !== 'touch') setChalkCue(value => value + 1) }} onFocus={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setChalkCue(value => value + 1) }}><div className="boulder-heading"><h2 id="boulder-title" lang="en">{CLIMB_NAME}.</h2><span className="boulder-number" aria-hidden="true">∞</span></div><div className="boulder-scene"><button className="boulder-preview-button" onClick={onOpen} aria-label="Open and play the climbing game"><BoulderPreview/><span className="board-open-hint"><Play size={12} fill="currentColor"/> Start climbing</span></button><div className="boulder-avatar"><ChalkClimber cue={chalkCue}/></div></div><div className="boulder-bottom"><button className="round-link" onClick={onOpen} aria-label="Start climbing game"><ArrowUpRight size={18}/></button></div></section>
+  return <section ref={previewRef} className="card boulder-card" aria-labelledby="boulder-title" onPointerEnter={(event) => { if (event.pointerType !== 'touch') setChalkCue(value => value + 1) }} onFocus={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setChalkCue(value => value + 1) }}><div className="boulder-heading"><h2 id="boulder-title" lang="en">{CLIMB_NAME}.</h2><span className="boulder-number" aria-hidden="true">∞</span></div><div className="boulder-scene"><button className="boulder-preview-button" onClick={onOpen} aria-label="Open and play the climbing game"><BoulderPreview/><span className="board-open-hint"><Play size={12} fill="currentColor"/> Start climbing</span></button><div className="boulder-avatar"><ChalkClimber cue={chalkCue}/></div></div><div className="boulder-bottom"><button className="round-link" onClick={onOpen} aria-label="Start climbing game"><ArrowUpRight size={18}/></button></div></section>
 }

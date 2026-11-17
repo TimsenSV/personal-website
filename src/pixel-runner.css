@@ -23,7 +23,7 @@
   .runner-back-arm { animation: runner-back-swing .8s steps(1,end) infinite; }
   .runner-track { animation: runner-ground .8s linear infinite; }.runner-speed { animation: runner-speed .4s steps(2,end) infinite; }
   .runner-card .runner-body, .runner-card .runner-leg-frame, .runner-card .runner-front-arm, .runner-card .runner-back-arm, .runner-card .runner-track, .runner-card .runner-speed { animation-play-state: paused; }
-  .runner-card:focus-within .runner-scene * { animation-play-state: running; }
+  .runner-card[data-scroll-active] .runner-scene *, .runner-card:focus-within .runner-scene * { animation-play-state: running; }
   @media (hover: hover) and (pointer: fine) { .runner-card:hover .runner-scene * { animation-play-state: running; } }
   @keyframes runner-bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-1px); } }
   @keyframes runner-contact { 0% { opacity: 1; } 25%,100% { opacity: 0; } }

@@ -136,8 +136,8 @@
   .repo-folder:focus-visible .paper-readme, .folder-popout.is-open .paper-readme { transform: translate(14px,-20px) rotate(14deg); }
   .repo-folder:focus-visible .folder-front, .folder-popout.is-open .folder-front { transform: rotate(-3deg) rotateX(-15deg); box-shadow: inset 0 0 0 3px #ffffff13, 0 8px 14px #21469625; }
   .repo-folder:focus-visible .folder-hint { opacity: 1; transform: rotate(5deg); }
-  .record-object:focus-visible .vinyl-disc { transform: translateX(22px) rotate(35deg); }
-  .record-object:focus-visible .record-sleeve { transform: translate(-8px,-5px) rotate(-12deg); box-shadow: 0 12px 17px #1a2b6633; }
+  .record-object[data-scroll-active] .vinyl-disc, .record-object:focus-visible .vinyl-disc { transform: translateX(22px) rotate(35deg); }
+  .record-object[data-scroll-active] .record-sleeve, .record-object:focus-visible .record-sleeve { transform: translate(-8px,-5px) rotate(-12deg); box-shadow: 0 12px 17px #1a2b6633; }
   .boulder-preview-button:focus-visible .boulder-ticket { transform: translate(7px,-7px) rotate(14deg); }
   .boulder-preview-button:focus-visible .boulder-preview-route { opacity: .6; }
   .running-card:focus-within .route-pin { transform: translate(8px,-6px) rotate(-5deg); }

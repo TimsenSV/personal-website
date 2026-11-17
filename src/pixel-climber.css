@@ -7,20 +7,22 @@
   .climber-name { display: inline-block; font: 10px/1.45 var(--mono); letter-spacing: .3px; background: #fff; padding: 5px 9px; border: 1px solid #dce3f3; border-radius: 4px; box-shadow: 2px 2px 0 #dce3f3; }
   .pixel-pose-rub, .pixel-pose-clap, .pixel-pose-cough, .pixel-cough-face, .pixel-cough-puff, .chalk-puff, .pixel-chalk-spark { opacity: 0; }
   /* Chalk, clap, two coughs, recover. One sequence per entry or tap. */
-  .is-chalking { --chalk-duration: 3.3s; }
-  .is-chalking .pixel-pose-idle { animation: chalk-idle var(--chalk-duration) steps(1,end) both; }
-  .is-chalking .pixel-pose-rub { animation: chalk-rub var(--chalk-duration) steps(1,end) both; }
-  .is-chalking .pixel-pose-clap { animation: chalk-clap var(--chalk-duration) steps(1,end) both; }
-  .is-chalking .pixel-pose-cough, .is-chalking .pixel-cough-face { animation: chalk-cough-pose var(--chalk-duration) steps(1,end) both; }
-  .is-chalking .pixel-hand-left { animation: chalk-hand-left .2s steps(1,end) .15s 5; }
-  .is-chalking .pixel-hand-right { animation: chalk-hand-right .2s steps(1,end) .15s 5; }
-  .is-chalking .pixel-body { animation: chalk-brace var(--chalk-duration) steps(1,end) both; }
-  .is-chalking .pixel-upper-body { transform-origin: 20px 35px; animation: chalk-cough-bend var(--chalk-duration) steps(1,end) both; }
-  .is-chalking .puff-left { animation: chalk-puff-left var(--chalk-duration) steps(5,end) both; }
-  .is-chalking .puff-right { animation: chalk-puff-right var(--chalk-duration) steps(5,end) both; }
-  .is-chalking .puff-up { animation: chalk-puff-up var(--chalk-duration) steps(5,end) both; }
-  .is-chalking .pixel-chalk-spark { animation: chalk-spark var(--chalk-duration) steps(1,end) both; }
-  .is-chalking .pixel-cough-puff { animation: chalk-cough-puff var(--chalk-duration) steps(1,end) both; }
+  :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) { --chalk-duration: 3.3s; }
+  :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) .pixel-pose-idle { animation: chalk-idle var(--chalk-duration) steps(1,end) both; }
+  :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) .pixel-pose-rub { animation: chalk-rub var(--chalk-duration) steps(1,end) both; }
+  :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) .pixel-pose-clap { animation: chalk-clap var(--chalk-duration) steps(1,end) both; }
+  :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) .pixel-pose-cough, :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) .pixel-cough-face { animation: chalk-cough-pose var(--chalk-duration) steps(1,end) both; }
+  :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) .pixel-hand-left { animation: chalk-hand-left .2s steps(1,end) .15s 5; }
+  :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) .pixel-hand-right { animation: chalk-hand-right .2s steps(1,end) .15s 5; }
+  :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) .pixel-body { animation: chalk-brace var(--chalk-duration) steps(1,end) both; }
+  :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) .pixel-upper-body { transform-origin: 20px 35px; animation: chalk-cough-bend var(--chalk-duration) steps(1,end) both; }
+  :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) .puff-left { animation: chalk-puff-left var(--chalk-duration) steps(5,end) both; }
+  :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) .puff-right { animation: chalk-puff-right var(--chalk-duration) steps(5,end) both; }
+  :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) .puff-up { animation: chalk-puff-up var(--chalk-duration) steps(5,end) both; }
+  :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) .pixel-chalk-spark { animation: chalk-spark var(--chalk-duration) steps(1,end) both; }
+  :is(.is-chalking, .boulder-card[data-scroll-active] .pixel-climber) .pixel-cough-puff { animation: chalk-cough-puff var(--chalk-duration) steps(1,end) both; }
+  .boulder-card[data-scroll-active] .pixel-climber { --chalk-duration: 5.5s; }
+  .boulder-card[data-scroll-active] .pixel-climber [class] { animation-iteration-count: infinite; }
   @keyframes chalk-idle { 0%, 4% { opacity: 1; } 5%, 88% { opacity: 0; } 89%, 100% { opacity: 1; } }
   @keyframes chalk-rub { 0%, 4% { opacity: 0; } 5%, 33% { opacity: 1; } 34%, 100% { opacity: 0; } }
   @keyframes chalk-clap { 0%, 33% { opacity: 0; } 34%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }

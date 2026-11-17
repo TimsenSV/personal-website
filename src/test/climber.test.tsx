@@ -11,10 +11,10 @@ const keyFor = { left: 'ArrowLeft', center: 'ArrowUp', right: 'ArrowRight' }
 const controlFor = { left: 'Reach left', center: 'Reach middle', right: 'Reach right' }
 function move(game: ClimbState, side?: Side, input?: string | 'tap') {
   const target = side ?? routeRow(game.seed, game.step + 1, game.advancedFrom).find(hold => hold.kind !== 'loose')!.side
-  advance(game.budget * .5)
+  advance(game.budget * .95)
   if (input === 'tap') fireEvent.click(screen.getByRole('button', { name: controlFor[target] }))
   else key(input ?? keyFor[target])
-  return reachClimb(tickClimb(game, game.budget * .5), target)
+  return reachClimb(tickClimb(game, game.budget * .95), target)
 }
 function reachAdvanced() {
   vi.spyOn(Math, 'random').mockReturnValue(93 / 0x7fffffff)

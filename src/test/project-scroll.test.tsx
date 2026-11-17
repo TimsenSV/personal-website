@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ProjectBook } from '../components/ProjectBook'
 import { ClimbBackdrop } from '../components/ClimbBackdrop'
 import { siteConfig } from '../content/site'
+import { BoulderWidget, MusicWidget, RunningWidget } from '../components/Widgets'
 
 function media(matches: boolean) {
   const events = new EventTarget()
@@ -27,6 +28,33 @@ beforeEach(() => {
 })
 
 describe('scroll previews and optional game scenery', () => {
+  it('activates the vinyl in the reading area without opening a player', () => {
+    const open = vi.fn()
+    render(<MusicWidget config={siteConfig.spotify} onOpen={open}/>)
+    const record = screen.getByRole('button', { name: 'Open playlist' })
+    act(() => enter(true))
+    expect(record).toHaveAttribute('data-scroll-active')
+    expect(open).not.toHaveBeenCalled()
+    act(() => enter(false))
+    expect(record).not.toHaveAttribute('data-scroll-active')
+  })
+  it.each(['runner', 'climber'])('activates %s while visible and stops in hidden tabs', character => {
+    const { container } = render(character === 'runner' ? <RunningWidget config={siteConfig.running} onOpen={() => undefined}/> : <BoulderWidget onOpen={() => undefined}/>)
+    const card = container.querySelector('section')!
+    act(() => enter(true))
+    expect(card).toHaveAttribute('data-scroll-active')
+    const hidden = vi.spyOn(document, 'hidden', 'get').mockReturnValue(true)
+    act(() => document.dispatchEvent(new Event('visibilitychange')))
+    act(() => enter(true))
+    expect(card).not.toHaveAttribute('data-scroll-active')
+    hidden.mockRestore()
+    act(() => document.dispatchEvent(new Event('visibilitychange')))
+    act(() => enter(true))
+    expect(card).toHaveAttribute('data-scroll-active')
+    act(() => { reduced.matches = true; reduced.dispatchEvent(new Event('change')) })
+    act(() => enter(true))
+    expect(card).not.toHaveAttribute('data-scroll-active')
+  })
   it('reveals a mobile project in the reading area, resets on exit and cleans up', () => {
     const { unmount } = render(<ProjectBook product={siteConfig.products[0]} onOpen={() => undefined}/>)
     const book = screen.getByRole('button', { name: 'shopvibes: open details' })

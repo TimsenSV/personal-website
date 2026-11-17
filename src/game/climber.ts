@@ -1,18 +1,26 @@
 export type Side = 'left' | 'center' | 'right'
 export type HoldKind = 'normal' | 'jug' | 'crimp' | 'loose'
-export type ClimbHold = { side: Side; kind: HoldKind }
+export type ClimbHold = { side: Side; kind: HoldKind; powerup?: 'energy' }
+export type DynoBoost = { elapsed: number; step: number; height: number; side: Side; kind: HoldKind; advancedFrom: number | null }
 export type ClimbStatus = 'ready' | 'playing' | 'paused' | 'fallen'
 export type TimingZone = { center: number; width: number; change: 'steady' | 'wider' | 'narrower' }
 export type ClimbState = {
   seed: number; status: ClimbStatus; step: number; height: number; side: Side | null
   kind: HoldKind; elapsed: number; budget: number; cooldown: number
   combo: number; maxCombo: number; saves: number; feedback: string; event: number
-  lastMove: 'start' | 'clean' | 'catch' | 'slip'; reason: 'time' | 'wrong' | 'early' | 'broken' | null
+  lastMove: 'start' | 'clean' | 'catch' | 'slip' | 'boost'; reason: 'time' | 'wrong' | 'early' | 'broken' | null
+  boost: DynoBoost | null; grips: number
   advancedFrom: number | null
   zone: TimingZone
 }
 
 export const CLIMB_NAME = 'Grip Happens'
+export const BOOST_DURATION = 1100
+export const BOOST_ROWS = 3
+export const boostProgress = (boost: DynoBoost) => {
+  const t = Math.min(1, boost.elapsed / BOOST_DURATION)
+  return t * t * (3 - 2 * t)
+}
 export const ZONE_INITIAL_WIDTH = .3
 export const ZONE_MIN_WIDTH = .2
 export const ZONE_MAX_WIDTH = .42
@@ -51,7 +59,7 @@ export function isThreeLaneRow(row: number, advancedFrom: number | null) {
   return advancedFrom !== null && row >= advancedFrom && (row - advancedFrom) % (THREE_LANE_SECTION_LENGTH + NORMAL_SECTION_LENGTH) < THREE_LANE_SECTION_LENGTH
 }
 
-export function routeRow(seed: number, row: number, advancedFrom: number | null = null): ClimbHold[] {
+function rowHolds(seed: number, row: number, advancedFrom: number | null): ClimbHold[] {
   if (isThreeLaneRow(row, advancedFrom)) {
     const sides: Side[] = ['left', 'center', 'right']
     const loose = Math.floor(randomAt(seed + 43, row) * sides.length)
@@ -71,13 +79,37 @@ export function routeRow(seed: number, row: number, advancedFrom: number | null 
   return [{ side, kind }]
 }
 
+export function routeRow(seed: number, row: number, advancedFrom: number | null = null): ClimbHold[] {
+  const holds = rowHolds(seed, row, advancedFrom)
+  const block = Math.floor((row - 12) / 18)
+  const energyRow = 12 + block * 18 + Math.floor(randomAt(seed + 211, block) * 4)
+  if (row < 12 || row !== energyRow) return holds
+  const safe = holds.filter(hold => hold.kind !== 'loose')
+  const selected = safe[Math.floor(randomAt(seed + 223, row) * safe.length)]
+  return holds.map(hold => hold === selected ? { ...hold, powerup: 'energy' } : hold)
+}
+
+const holdGain = (kind: HoldKind) => kind === 'crimp' ? 2.8 : kind === 'jug' ? 1.6 : 2
+
+function planBoost(state: ClimbState): DynoBoost {
+  let { height, side, kind } = state
+  for (let row = state.step + 1; row <= state.step + BOOST_ROWS; row++) {
+    const safe = routeRow(state.seed, row, state.advancedFrom).filter(hold => hold.kind !== 'loose')
+    const landing = safe.find(hold => hold.side === side) ?? safe[0]
+    side = landing.side; kind = landing.kind; height += holdGain(kind)
+  }
+  const step = state.step + BOOST_ROWS
+  return { elapsed: 0, step, height: Math.round(height * 10) / 10, side: side!, kind,
+    advancedFrom: state.advancedFrom ?? (height >= ADVANCED_HEIGHT ? step + 1 : null) }
+}
+
 export function holdTime(step: number, kind: HoldKind) {
   const base = Math.max(1050, 2300 - step * 28)
   return Math.round(base * (kind === 'jug' ? 1.5 : kind === 'crimp' ? .68 : 1))
 }
 
 export function createClimb(seed = 1): ClimbState {
-  return { seed, status: 'ready', step: 0, height: 0, side: null, kind: 'jug', elapsed: 0, budget: 3200, cooldown: 0, combo: 0, maxCombo: 0, saves: 1, feedback: 'Your next hold is waiting.', event: 0, lastMove: 'start', reason: null, advancedFrom: null, zone: { center: .45, width: ZONE_INITIAL_WIDTH, change: 'steady' } }
+  return { seed, status: 'ready', step: 0, height: 0, side: null, kind: 'jug', elapsed: 0, budget: 3200, cooldown: 0, combo: 0, maxCombo: 0, saves: 1, feedback: 'Your next hold is waiting.', event: 0, lastMove: 'start', reason: null, advancedFrom: null, boost: null, grips: 0, zone: { center: .45, width: ZONE_INITIAL_WIDTH, change: 'steady' } }
 }
 
 export function startClimb(seed: number): ClimbState { return { ...createClimb(seed), status: 'playing' } }
@@ -92,13 +124,22 @@ function miss(state: ClimbState, reason: 'time' | 'wrong' | 'early'): ClimbState
 
 export function tickClimb(state: ClimbState, milliseconds: number): ClimbState {
   if (state.status !== 'playing' || !Number.isFinite(milliseconds) || milliseconds <= 0) return state
+  if (state.boost) {
+    const boost = { ...state.boost, elapsed: state.boost.elapsed + milliseconds }
+    if (boost.elapsed < BOOST_DURATION) return { ...state, boost }
+    // The flight never consumes the next hold's timing window, even on a long tick.
+    return { ...state, step: boost.step, height: boost.height, side: boost.side, kind: boost.kind,
+      advancedFrom: boost.advancedFrom, boost: null, elapsed: 0, cooldown: 160,
+      budget: Math.max(state.advancedFrom === null && boost.advancedFrom !== null ? 3200 : 2400, holdTime(boost.step, boost.kind)),
+      lastMove: 'boost', event: state.event + 1, feedback: `Stuck the landing. +${formatHeight(boost.height - state.height)} m!` }
+  }
   const elapsed = state.elapsed + milliseconds
   const next = { ...state, elapsed, cooldown: Math.max(0, state.cooldown - milliseconds) }
   return elapsed >= state.budget ? miss(next, 'time') : next
 }
 
 export function reachClimb(state: ClimbState, side: Side): ClimbState {
-  if (state.status !== 'playing' || state.cooldown > 0) return state
+  if (state.status !== 'playing' || state.cooldown > 0 || state.boost) return state
   const target = routeRow(state.seed, state.step + 1, state.advancedFrom).find(hold => hold.side === side)
   if (!target) return miss(state, 'wrong')
   const progress = state.elapsed / state.budget
@@ -109,12 +150,12 @@ export function reachClimb(state: ClimbState, side: Side): ClimbState {
   }
   const clean = isInTimingZone(progress, state.zone)
   const combo = clean ? state.combo + 1 : 0
-  const gain = target.kind === 'crimp' ? 2.8 : target.kind === 'jug' ? 1.6 : 2
+  const gain = holdGain(target.kind)
   const height = Math.round((state.height + gain) * 10) / 10
   const introducing = state.advancedFrom === null && height >= ADVANCED_HEIGHT
   const advancedFrom = introducing ? state.step + 2 : state.advancedFrom
   const enteringSection = isThreeLaneRow(state.step + 2, advancedFrom) && !isThreeLaneRow(state.step + 1, advancedFrom)
-  return {
+  const next: ClimbState = {
     ...state, step: state.step + 1, side, kind: target.kind,
     height, advancedFrom,
     // Give each three-lane section a readable entrance, especially the first one.
@@ -122,7 +163,14 @@ export function reachClimb(state: ClimbState, side: Side): ClimbState {
     combo, maxCombo: Math.max(combo, state.maxCombo), zone: adaptZone(state, clean, true),
     feedback: introducing ? '70 m. A new twist in the route.' : clean ? combo >= 3 ? `${combo} in a row. In the flow!` : 'Clean!' : progress > zoneBounds(state.zone).end ? 'Close, but hanging on.' : 'Got a grip.',
     lastMove: clean ? 'clean' : 'catch', event: state.event + 1,
+    grips: state.grips + 1,
   }
+  if (clean && target.powerup === 'energy') {
+    // Defer the first three-lane section until after landing if this pickup crosses 70 m.
+    const boost = planBoost({ ...next, advancedFrom: state.advancedFrom })
+    return { ...next, advancedFrom: state.advancedFrom, boost, feedback: 'Dyno-Boost! Three holds, one leap.' }
+  }
+  return next
 }
 
 export type ClimbAction = { type: 'start'; seed: number } | { type: 'tick'; delta: number } | { type: 'reach'; side: Side } | { type: 'pause' | 'resume' }
