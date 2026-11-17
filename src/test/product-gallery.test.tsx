@@ -10,6 +10,23 @@ const screenshots = [
 ]
 
 describe('project screenshots', () => {
+  it('browses a horizontal strip by keyboard and enlarges the chosen screenshot', async () => {
+    const user = userEvent.setup()
+    render(<Window title="Test project" onClose={() => {}}><ProductGallery name="Test product" screenshots={screenshots} layout="strip"/></Window>)
+    const first = screen.getByRole('button', { name: 'Enlarge screenshot: Test screenshot one' })
+    const second = screen.getByRole('button', { name: 'Enlarge screenshot: Test screenshot two' })
+    first.focus()
+    await user.keyboard('{ArrowRight}')
+    expect(second).toHaveFocus()
+    await user.keyboard('{Enter}')
+    const viewer = screen.getByRole('dialog', { name: 'Test product / Screenshots' })
+    expect(within(viewer).getByRole('status')).toHaveTextContent('2 / 2Second view')
+    await user.click(within(viewer).getByRole('button', { name: 'Next screenshot' }))
+    expect(within(viewer).getByRole('status')).toHaveTextContent('1 / 2First view')
+    fireEvent(viewer, new Event('cancel', { cancelable: true, bubbles: true }))
+    expect(second).toHaveFocus()
+    expect(screen.getByRole('dialog', { name: 'Test project' })).toBeVisible()
+  })
   it('supports thumbnails, arrows and wraparound without opening a viewer', async () => {
     const user = userEvent.setup()
     render(<ProductGallery name="Test product" screenshots={screenshots}/>)

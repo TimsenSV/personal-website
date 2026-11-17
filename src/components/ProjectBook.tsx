@@ -1,6 +1,7 @@
 import { ArrowUpRight } from 'lucide-react'
 import type { Product } from '../content/site'
 import { BacklaneMark } from './Icons'
+import { ProductBrand } from './ProductBrand'
 
 function CoverArt({ id }: { id: Product['id'] }) {
   if (id === 'shopvibes') return <svg viewBox="0 0 180 170" fill="none" aria-hidden="true">
@@ -20,7 +21,7 @@ function CoverArt({ id }: { id: Product['id'] }) {
 
 export function ProjectBook({ product, onOpen }: { product: Product; onOpen: () => void }) {
   return <button className={`project-volume volume-${product.id}`} onClick={onOpen} aria-label={`${product.name}: open details`}>
-    <span className="volume-object" aria-hidden="true"><span className="volume-pages"/><span className="volume-cover"><span className="volume-title">{product.name}</span><span className="volume-art"><CoverArt id={product.id}/></span><span className="volume-mark">t<span>.</span></span></span></span>
+    <span className="volume-object" aria-hidden="true"><span className="volume-pages"/><span className="volume-cover"><span className="volume-title"><ProductBrand product={product}/></span><span className="volume-art"><CoverArt id={product.id}/></span><span className="volume-mark">t<span>.</span></span></span></span>
     <span className="volume-caption"><strong>{product.name}</strong><span>{product.shortDescription}</span><ArrowUpRight size={16} aria-hidden="true"/></span>
   </button>
 }

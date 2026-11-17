@@ -35,14 +35,14 @@ Die typisierte Datei **`src/content/site.ts`** enthält die persönlichen Canvas
 | Kontakt | E-Mail-Adresse; LinkedIn ist im Dock hinterlegt |
 | GitHub | TimsenSV ist verbunden; Links zu ausgewählten öffentlichen Repositories können noch ergänzt werden |
 | Spotify | Playlist „Timsen“ mit Link und Originalcover ist hinterlegt; Begleittext optional anpassen |
-| Produkte | Eigener Beitrag, je eine konkrete Entscheidung, Produktlinks, optional echte Screenshots |
+| Produkte | Eigener Beitrag, je eine konkrete Entscheidung und ausgewählte App-Screenshots; Logos und Produktlinks sind hinterlegt |
 | Laufen | Strava und Halbmarathon-Ziel sind hinterlegt; Lieblingsstrecke optional |
 
 Für Bilder Dateien unter `public/images/` ablegen und z. B. `{ src: 'images/portrait.jpg', alt: '…' }` eintragen. Relative Pfade funktionieren auch in einem GitHub-Pages-Unterverzeichnis.
 
 Der Lebenslauf wurde am 17.11.2026 aus dem vom Nutzer verlinkten LinkedIn-Profil von Tim Hoffmann übernommen. Er enthält alle 14 beruflichen Stationen, vier Ausbildungsstationen, zehn Zertifikate, sechs Projekte, zwei Engagements, zwei Auszeichnungen, 16 Kenntnisse und drei Sprachen. Beschreibungen sind auf Englisch verdichtet; Rollen und Zeiträume stammen aus dem Profil. LinkedIn nennt beim Brandathon 2016 unterschiedliche Monate, daher steht bei der Auszeichnung nur das Jahr. Die Daten werden lokal gepflegt, ohne Laufzeitabruf oder Scraping; der Quellenlink und Stand bleiben im CV sichtbar. Nicht belegte Angaben, insbesondere eine Backlane-Rolle samt Zeitraum, wurden nicht ergänzt. Das Projekt liegt im privaten GitHub-Repository [TimsenSV/personal-website](https://github.com/TimsenSV/personal-website). Die Website ist noch nicht veröffentlicht. Der Repository-Link bleibt in der öffentlichen Canvas unkonfiguriert, solange das Repository privat ist.
 
-Die Produktdarstellungen sind eigenständige schematische Illustrationen, keine Screenshots oder Belege für tatsächliche Produktfunktionen. Das Backlane-Signet stammt aus dem bereits vorhandenen Markenasset `backlane/backlane_logo/backlane-signet.svg`. Die inhaltliche Klammer Information → Darstellung → Handlung ist keine Unternehmenschronologie oder technische Abhängigkeitskette.
+Die Illustrationen auf den Projektbänden sind eigenständig gestaltet, keine Screenshots. Die Work-App und Projektansichten verwenden echte Logos und zeigen nur ausdrücklich konfigurierte Produktbilder. Das Backlane-Signet stammt aus dem bereits vorhandenen Markenasset `backlane/backlane_logo/backlane-signet.svg`. Die inhaltliche Klammer Information → Darstellung → Handlung ist keine Unternehmenschronologie oder technische Abhängigkeitskette.
 
 ## Verhalten
 
@@ -53,7 +53,7 @@ Die Produktdarstellungen sind eigenständige schematische Illustrationen, keine 
 - Die Canvas-Kacheln folgen dem Mauszeiger mit maximal 2,4 Grad Neigung. Die Bewegung wird pro Bild gebündelt, erzeugt keine React-Neudarstellung pro Zeigerbewegung und wird bei Touch, Ziehen, geöffneten Dialogen sowie reduzierter Bewegung deaktiviert. Vor Klicks und Tastaturaktionen wird die Neigung synchron zurückgesetzt, damit Fototransitionen und Pop-outs ihre richtige Ausgangsposition behalten.
 - Hover-Effekte bewegen gezielt die Objekte innerhalb der Widgets; Tastaturfokus bietet dieselben Hinweise. Die PR-Warteschlange läuft nur, solange sie geöffnet und der Browser-Tab sichtbar ist. `prefers-reduced-motion` unterbindet die Bewegung.
 - Über den kompakten CV-Button in der aufgeräumten Ich-Kachel öffnet sich ein Lebenslauf-Fenster. Die aktuellen Rollen und Ausbildung sind direkt sichtbar; frühere Stationen, Zertifikate, Projekte, Engagement und Auszeichnungen lassen sich per Maus oder Tastatur aufklappen. Die Canvas selbst bleibt frei von einer chronologischen Timeline.
-- „Work“ im Dock öffnet eine eigene Projektübersicht mit allen drei gestalteten Bänden, kurzen Produktbeschreibungen und den belegten Rollen. Ein Band öffnet seine Details im selben Fenster; „All projects“ führt zur Übersicht zurück. Beim Schließen kehrt der Fokus zum Dock bzw. zum ursprünglichen Band zurück. Die Projektbände auf der Canvas lassen sich weiterhin direkt öffnen.
+- „Work“ im Dock öffnet eine Portfolio-Ansicht mit den drei Original-Logos, jeweils einem konkreten Nutzenversprechen, den belegten Rollen und horizontalen Screenshot-Reihen. „Explore project“ öffnet die Details im selben Fenster; „All projects“ führt zur Übersicht zurück. Beim Schließen kehrt der Fokus zum Dock bzw. zum ursprünglichen Band zurück. Die Projektbände auf der Canvas lassen sich weiterhin direkt öffnen.
 - Produkt- und CV-Fenster nutzen native HTML-Dialoge mit Escape, Fokusbindung und Rückkehr zum Auslöser. Auf Mobilgeräten werden sie bildschirmfüllend.
 - Die kleine Pixel-Figur chalkt bei Hover einmal die Hände, klopft sie ab und erzeugt eine kurze Kreidewolke. Klick, Touch und Tastaturfokus lösen die Szene ebenfalls aus. Unter reduzierter Bewegung bleibt die Figur ruhig. Es ist eine frei gestaltete Figur, kein Porträt; die Palette liegt unter `profile.pixelAvatar`.
 - „Grip Happens“ ersetzt das frühere Routenrätsel. Pfeiltasten oder A/D sowie die beiden antippbaren Wandhälften steuern Pixel-Tim. Der umkreiste nächste Griff gibt die Richtung vor. Der Zeitzeiger startet nach jedem Zug neu; in der markierten Zone entstehen Combos. Die Trefferzone wandert zwischen Griffen leicht, bleibt während eines Zugs aber fest. Saubere Treffer verbreitern sie, unsaubere Treffer und Fehlgriffe verkleinern sie; die Breite bleibt zwischen 20 und 42 Prozent. Zu frühes Greifen, eine falsche Richtung oder ablaufender Halt kosten zunächst die einmalige Rettung, danach endet der Run. Zwei große Handsymbole zeigen die verbleibenden Leben, das letzte wird orange hervorgehoben. Normale Griffe, große Ruhegriffe und bröselige Griffe haben unterschiedliche Zeitbudgets. Ab dem zehnten Zug bieten regelmäßige Verzweigungen die Wahl zwischen mehr Höhe und mehr Zeit. Die Schwierigkeit steigt begrenzt; Ruhegriffe bleiben erhalten. Die nächsten Griffe werden aus einem Seed vorab erzeugt und stimmen mit der spielbaren Route überein.
@@ -106,7 +106,7 @@ Der Workflow prüft den Code vor der Veröffentlichung. Er wird absichtlich nur 
 
 ## Geprüfter Stand · 17. November 2026
 
-- Produktionsbuild, TypeScript und ESLint erfolgreich; 71 automatisierte Tests für Spielregeln, Tastaturbedienung, Dialoge, Pop-outs, externe Links, Kalenderdaten und GitHub-Zustände.
+- Produktionsbuild, TypeScript und ESLint erfolgreich; 72 automatisierte Tests für Spielregeln, Tastaturbedienung, Dialoge, Pop-outs, externe Links, Kalenderdaten und GitHub-Zustände.
 - Browserprüfung bei 1440 × 1000, 768 × 1024, 390 × 844 und 320 × 740 Pixeln; kein horizontaler Seitenüberlauf.
 - Dock-Navigation, alle drei Produktansichten, Fenstervergrößerung, Escape, Tab/Shift-Tab und Rückkehr zum Auslöser geprüft.
 - Endless Climber im Browser mit Pfeiltasten und mobilen Steuerflächen gespielt; Combos, Ruhegriffe und Verzweigungen geprüft. Spielregeln, begrenzte Schwierigkeit, 249 aufeinanderfolgende Züge je Test-Seed, Rettung, Verlust, Neustart, Pause und Speicherung sind automatisiert geprüft.
@@ -153,7 +153,7 @@ Mehrere Screenshots lassen sich je Produkt unter `products[].screenshots` in `sr
 ```ts
 screenshots: [
   {
-    src: 'images/projects/shopvibes-overview.png',
+    src: 'images/projects/shopvibes/overview.png',
     alt: 'Product data overview in shopvibes',
     caption: 'A single place for product information.',
     width: 1600,
@@ -162,7 +162,7 @@ screenshots: [
 ]
 ```
 
-Das ist ein Konfigurationsbeispiel, kein bereits vorhandenes Asset. Pro Screenshot sind `src` und ein sinnvoller `alt`-Text erforderlich; Bildmaße und Bildunterschrift sind optional. Bilder werden vollständig dargestellt, nicht beschnitten. Vorschaubilder, Vor-/Zurück-Schaltflächen und Pfeiltasten wechseln das aktive Bild. Ein Klick öffnet eine größere Galerie; Escape schließt nur diese und führt zurück ins Projekt. Fehlgeschlagene Bilder zeigen einen ruhigen Fehlerzustand. Ohne Bilder bleibt die ausdrücklich gekennzeichnete Produktillustration erhalten. Das bisherige einzelne `image` wird ebenfalls weiter unterstützt.
+Das ist ein Konfigurationsbeispiel, kein bereits vorhandenes Asset. Pro Screenshot sind `src` und ein sinnvoller `alt`-Text erforderlich; Bildmaße und Bildunterschrift sind optional. Bilder werden vollständig dargestellt, nicht beschnitten. Die Work-Übersicht und Projektansichten zeigen die Bilder in horizontalen Reihen wie in der [Portfolio-Referenz](https://ana.sh/portfolio). Auf Touch-Geräten lässt sich die Reihe horizontal scrollen. Tab sowie linke/rechte Pfeiltaste erreichen jedes Bild; ein Klick oder Enter öffnet genau dieses Bild in der großen Galerie. Dort wechseln Vor-/Zurück-Schaltflächen und Pfeiltasten das aktive Bild; Escape schließt nur diese und führt zurück ins Projekt. Fehlgeschlagene Bilder zeigen einen ruhigen Fehlerzustand. Ohne Bilder erscheint ein zurückhaltender leerer Bildbereich. Es werden keine App-Oberflächen erfunden. Ungefüllte Angaben zu Beitrag und Designentscheidung bleiben ausgeblendet, bis sie konfiguriert sind. Das bisherige einzelne `image` wird ebenfalls weiter unterstützt.
 
 Die neue Galerie wurde mit ausdrücklich markierten lokalen Testmotiven auf Desktop und Mobilgröße geprüft. Es wurden keine Produktscreenshots erfunden. Automatisiert geprüft sind Bildwechsel, Umlauf, leere/einzelne Galerien, Bildfehler, verschachtelte Dialoge und Fokus-Rückkehr. Die Canvas-Neigung wurde auf ihre Grenzen, Abschaltung für Touch/reduzierte Bewegung/offene Dialoge und Zurücksetzen vor Interaktionen geprüft.
 
@@ -171,3 +171,11 @@ Produktregal und Work-App wurden bei 1280, 680, 390 und 320 Pixeln CSS-Breite ge
 Die Spotify-Playlist [Timsen](https://open.spotify.com/playlist/7crg0zzkXhWfEMMetYnd6O) ist hinterlegt, ohne den Freigabeparameter `si`. Titel und Originalcover wurden über Spotifys öffentliche [oEmbed-Schnittstelle](https://developer.spotify.com/documentation/embeds/reference/oembed) übernommen und lokal konfiguriert. Das Cover wird direkt vom Spotify-CDN geladen; bei einem Bildfehler bleibt die gestaltete Plattenhülle sichtbar. Der Player lädt erst beim Öffnen der Detailansicht und startet nicht automatisch. Ein direkter Spotify-Link bleibt zusätzlich verfügbar.
 
 Bei der Browserprüfung am 17.11.2026 wurden Cover und Titel korrekt geladen, die eingebettete Spotify-Vorschau lieferte in dieser Sitzung jedoch keine Titelliste. Die Ursache ist nicht geklärt; der direkte Spotify-Link ist unabhängig davon hinterlegt.
+
+## Logos und konkrete Produktversprechen
+
+Die Logos liegen unverändert als SVG unter `public/images/projects/<produkt>/logo.svg` und sind unter `products[].logo` konfiguriert. Quellen sind die bereits vorhandenen Originaldateien: `shopvibes-frontend/public/logo_black.svg`, `shopvibes-imagestudio-website/src/assets/showcase-logo.svg` und `backlane_logo/backlane-logo.svg`. Die dunklen Buchcover verwenden eine weiße Darstellung derselben Konturen.
+
+Die Produktlinks und Aussagen wurden anhand der offiziellen Seiten geprüft: [shopvibes](https://www.shop-vibes.de/), [showcase](https://getshowcase.ai/en/) und [Backlane](https://getbacklane.com/en/). `headline` enthält das klare Nutzenversprechen für die Work-App und Details; `shortDescription` die knappe Version unter dem Projektband. `summary` konkretisiert Zielgruppe und Funktion. Nicht belegte Rollen oder Ergebnisse wurden nicht ergänzt.
+
+Für neue Screenshots sind die drei Ordner `public/images/projects/shopvibes/`, `showcase/` und `backlane/` vorbereitet. Dateien dort ablegen und in `products[].screenshots` eintragen. Bildreihen sind mit markierten lokalen Testmotiven auf Desktop und bei 320 Pixeln geprüft: horizontales Scrollen, Tastaturauswahl, Vergrößern des gewählten Bildes, Umlauf, Escape und Fokus-Rückkehr funktionieren. Die Testmotive sind kein Bestandteil des Portfolios. Der Fensterkopf bleibt beim Tastaturscrollen stehen. Aktuell warten alle drei Galerien auf die ausgewählten echten App-Screenshots.

@@ -42,7 +42,7 @@ describe('canvas interactions', () => {
     expect(dialog).toBeVisible()
     expect(screen.getByRole('button', { name: 'Close window' })).toHaveFocus()
     await user.click(within(dialog).getByRole('button', { name: 'showcase' }))
-    expect(within(dialog).getByRole('heading', { name: 'One product. A new context.' })).toBeVisible()
+    expect(within(dialog).getByRole('heading', { name: 'Create lifestyle product images without a photoshoot.' })).toBeVisible()
     fireEvent(dialog, new Event('cancel', { cancelable: true }))
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(trigger).toHaveFocus()

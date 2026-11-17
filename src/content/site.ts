@@ -6,6 +6,7 @@ export type ProfilePhoto = ImageAsset & { caption?: string; placeholder?: boolea
 export type Product = {
   id: ProductId
   name: string
+  logo: ImageAsset
   category: string
   headline: string
   summary: string
@@ -105,30 +106,33 @@ export const siteConfig: PortfolioConfig = {
   products: [
     {
       id: 'shopvibes', name: 'shopvibes', category: 'Information',
-      headline: 'Better data. More possibilities.',
-      summary: 'Using AI to structure, maintain and prepare product data for sales channels.',
-      shortDescription: 'AI for product data', role: 'Chief Product Officer', screenshots: [],
+      logo: { src: 'images/projects/shopvibes/logo.svg', alt: 'shopvibes' },
+      headline: 'Turn product data into retail-ready listings.',
+      summary: 'Structure and enrich your catalogue with AI, then deliver the right product data to each sales channel.',
+      shortDescription: 'Product data, ready for your sales channels.', role: 'Chief Product Officer', screenshots: [],
       problem: 'Product information lives in different places, comes in different formats and needs to meet different channel requirements. Working with it quickly turns into manual work.',
       approach: 'shopvibes uses AI to structure and maintain product data, making it useful wherever products are sold.',
-      contribution: null, decision: null, image: null, url: null,
+      contribution: null, decision: null, image: null, url: 'https://www.shop-vibes.de/',
     },
     {
       id: 'showcase', name: 'showcase', category: 'Presentation',
-      headline: 'One product. A new context.',
-      summary: 'AI-powered product photography and visual storytelling for furniture and home & living.',
-      shortDescription: 'AI product photography', role: 'Co-founder & CPO', screenshots: [],
+      logo: { src: 'images/projects/showcase/logo.svg', alt: 'showcase' },
+      headline: 'Create lifestyle product images without a photoshoot.',
+      summary: 'Turn product cutouts into photorealistic room scenes and product imagery with AI. Built for furniture and home & living.',
+      shortDescription: 'Product imagery without a photoshoot.', role: 'Co-founder & CPO', screenshots: [],
       problem: 'Isolating a product is one thing. Showing how it feels in a room is another. With furniture, context makes a difference.',
       approach: 'showcase uses AI for product photography and visual storytelling, with a focus on furniture and home & living.',
-      contribution: null, decision: null, image: null, url: null,
+      contribution: null, decision: null, image: null, url: 'https://getshowcase.ai/en/',
     },
     {
       id: 'backlane', name: 'Backlane', category: 'Action',
-      headline: 'Less switching. More doing.',
-      summary: 'Connecting marketplaces to AI assistants so workflows can happen through conversation.',
-      shortDescription: 'Marketplaces, meet AI', role: null, screenshots: [],
+      logo: { src: 'images/projects/backlane/logo.svg', alt: 'Backlane' },
+      headline: 'Run your marketplace work from your AI chat.',
+      summary: 'Connect your seller accounts to ChatGPT or Claude and handle marketplace workflows through conversation.',
+      shortDescription: 'Marketplace workflows, right in your AI chat.', role: null, screenshots: [],
       problem: 'Marketplace work is spread across different tools and repetitive tasks. There are often too many clicks between a question and getting it done.',
       approach: 'Backlane connects marketplaces to AI assistants like ChatGPT and Claude, letting you run workflows through your assistant.',
-      contribution: null, decision: null, image: null, url: null,
+      contribution: null, decision: null, image: null, url: 'https://getbacklane.com/en/',
     },
   ],
   seo: {
