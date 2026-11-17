@@ -7,3 +7,4 @@ dist/
 coverage/
 *.tsbuildinfo
 .verification/
+/design/workbook-study.html
