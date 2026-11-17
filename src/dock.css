@@ -8,6 +8,8 @@
   .dock .dock-icon.overview { background: #3155ff; }
   .dock .dock-icon.work { background: #783bff; }
   .dock .dock-icon.play { background: #ff5b18; }
+  .dock .dock-icon.spotify { background: #1ed760; color: #101a13; --spotify-line: #1ed760; }
+  .dock .dock-icon.spotify > svg:not(.dock-external) { width: 68%; height: 68%; }
   .dock .dock-icon.ink { background: #101116; }
   .dock .dock-icon.linkedin { background: #0769f9; }
   .dock .dock-icon.mail { background: #ed2877; }

@@ -2,11 +2,12 @@ import { ArrowUpRight, Gamepad2, Github, LayoutGrid, Layers3, Linkedin, Mail } f
 import { Fragment, useEffect, useRef, useSyncExternalStore, type ComponentType } from 'react'
 import { m, LazyMotion, domAnimation, useMotionValue, useSpring, useTransform, type MotionValue } from 'motion/react'
 import type { PortfolioConfig } from '../content/site'
-import { emailUrl, externalUrl, githubProfile } from '../lib/links'
+import { emailUrl, externalUrl, githubProfile, spotifyPlaylist } from '../lib/links'
 import { dockMagnification } from '../lib/dock'
 import { CLIMB_NAME } from '../game/climber'
+import { SpotifyMark } from './Icons'
 
-type DockIcon = ComponentType<{ size?: number; strokeWidth?: number; 'aria-hidden'?: boolean }>
+type DockIcon = ComponentType<{ className?: string; size?: number; strokeWidth?: number; 'aria-hidden'?: boolean }>
 type DockEntry = { label: string; accessibleLabel?: string; href?: string; onClick?: () => void; Icon: DockIcon; color: string; external?: boolean; current?: boolean }
 
 const hoverQuery = '(min-width: 621px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)'
@@ -42,7 +43,7 @@ function DockItem({ entry, index, pointerX, focusIndex, enabled }: { entry: Dock
   </m.div>
 }
 
-export function Dock({ profile, username, onPlay, onWork }: { profile: PortfolioConfig['profile']; username: string | null; onPlay: () => void; onWork: () => void }) {
+export function Dock({ profile, username, playlistUrl, onPlay, onWork }: { profile: PortfolioConfig['profile']; username: string | null; playlistUrl?: string | null; onPlay: () => void; onWork: () => void }) {
   const enabled = useSyncExternalStore(subscribe, canMagnify, () => false)
   const pointerX = useMotionValue(Infinity)
   const focusIndex = useMotionValue(-1)
@@ -53,6 +54,7 @@ export function Dock({ profile, username, onPlay, onWork }: { profile: Portfolio
     return () => { window.removeEventListener('blur', reset); window.removeEventListener('resize', reset) }
   }, [pointerX, focusIndex])
   const external = [
+    { label: 'Spotify', href: spotifyPlaylist(playlistUrl ?? null)?.url, Icon: SpotifyMark, color: 'spotify' },
     { label: 'GitHub', href: githubProfile(username), Icon: Github, color: 'ink' },
     { label: 'LinkedIn', href: externalUrl(profile.linkedinUrl), Icon: Linkedin, color: 'linkedin' },
     { label: 'Email', href: emailUrl(profile.email), Icon: Mail, color: 'mail' },

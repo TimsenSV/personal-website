@@ -31,7 +31,7 @@ export default function App() {
         <RunningWidget config={siteConfig.running} onOpen={() => setDetail('running')}/>
       </main>
     </div>
-    <Dock profile={siteConfig.profile} username={siteConfig.github.username} onPlay={() => setDetail('play')} onWork={() => setDetail('work')}/>
+    <Dock profile={siteConfig.profile} username={siteConfig.github.username} playlistUrl={siteConfig.spotify.url} onPlay={() => setDetail('play')} onWork={() => setDetail('work')}/>
     {detail && <Window title={titles[detail]} expandable={detail !== 'play'} initialFocus={detail === 'play' ? '[data-game-start]' : undefined} onClose={() => setDetail(null)} variant={detail === 'play' ? 'game-window' : detail === 'cv' ? 'cv-window' : ''}>
       {detail === 'work' && <WorkOverview products={siteConfig.products} onOpen={setDetail}/>}
       {product && <ProductDetail product={product} products={siteConfig.products} onSelect={setDetail} onOverview={() => setDetail('work')}/>}
