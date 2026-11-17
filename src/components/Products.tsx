@@ -1,4 +1,4 @@
-import { ArrowRight, ArrowUpRight } from 'lucide-react'
+import { ArrowUpRight } from 'lucide-react'
 import type { Product, ProductId } from '../content/site'
 import { assetUrl } from '../lib/links'
 import { ExternalLink } from './ExternalLink'
@@ -6,17 +6,14 @@ import { ProductVisual } from './ProductVisual'
 
 export function Products({ products, onOpen }: { products: Product[]; onOpen: (id: ProductId) => void }) {
   return <section id="work" className="card projects-card" aria-labelledby="work-title" tabIndex={-1}>
-    <div className="projects-top"><span className="eyebrow"><span className="tiny-square"/> Meine Arbeit</span><span className="quiet-label">Drei Perspektiven auf E-Commerce</span></div>
     <h2 id="work-title">Aus Komplexität wird <em>ein Produkt.</em></h2>
     <div className="product-grid">
-      {products.map((product, index) => <button key={product.id} className={`product-card product-${product.id}`} onClick={() => onOpen(product.id)} aria-label={`${product.name}: Details öffnen`}>
-        <span className="product-step"><span>0{index + 1} / {product.category}</span>{index < products.length - 1 && <ArrowRight size={13}/>}</span>
+      {products.map((product) => <button key={product.id} className={`product-card product-${product.id}`} onClick={() => onOpen(product.id)} aria-label={`${product.name}: Details öffnen`}>
         <ProductVisual id={product.id}/>
         <span className="product-name">{product.name}<ArrowUpRight size={19}/></span>
         <span className="product-summary">{product.summary}</span>
       </button>)}
     </div>
-    <div className="project-footnote"><span>Information <ArrowRight/> Darstellung <ArrowRight/> Handlung</span></div>
   </section>
 }
 

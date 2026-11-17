@@ -10,7 +10,7 @@
   .route-art > .route-label { font-size: 7px; top: 9px; }
   .heatmap-card.prs-open { z-index: 20; }
   .heatmap-card .widget-top { margin-bottom: 10px; gap: 12px; }
-  .heatmap-card .widget-top > .external-link { margin-left: auto; font: 11px var(--mono); color: #56647d; }
+  .heatmap-card .widget-top > .external-link { margin-right: auto; gap: 8px; font: 11px var(--mono); color: #56647d; }
   .contribution-calendar { min-width: 0; width: 100%; }
   .heatmap-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; font: 11px var(--mono); color: #5b6780; }
   .heatmap-heading > strong { font-size: 12px; font-weight: 500; color: #304d80; }

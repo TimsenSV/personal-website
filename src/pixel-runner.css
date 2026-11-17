@@ -1,13 +1,14 @@
 @layer widgets {
   .runner-card { display: flex; flex-direction: column; align-items: stretch; padding: 20px 25px 19px; background: #fff7ef; border-color: #efdece; min-height: 340px; }
-  .runner-card .widget-top { margin-bottom: 9px; }
-  .runner-card .eyebrow { color: #a54820; }
+  .runner-heading { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 10px; }
+  .runner-heading > .round-link { flex-shrink: 0; }
   .runner-card .round-link { background: transparent; border: none; margin-right: -9px; color: #8e5c43; }
-  .runner-card h2 { max-width: 310px; font-size: 25px; font-weight: 600; line-height: 1.16; letter-spacing: -.85px; margin: 0 0 5px; text-wrap: balance; }
+  .runner-card h2 { min-width: 0; flex: 1; max-width: 310px; font-size: 25px; font-weight: 600; line-height: 1.16; letter-spacing: -.85px; margin: 0; text-wrap: balance; }
   .strava-run-link { position: relative; display: flex; flex-direction: column; align-items: stretch; gap: 0; width: 100%; margin-top: auto; border-radius: 10px; }
   .strava-run-link:hover { text-decoration: none; }
   .strava-run-link > svg { position: absolute; right: 0; bottom: 14px; color: #b83c0c; }
-  .strava-follow { display: flex; align-items: center; min-height: 44px; padding-right: 22px; color: #a7380c; font-size: 11px; font-weight: 550; border-top: 1px solid #ebd8c9; }
+  .strava-follow { display: flex; align-items: center; gap: 7px; min-height: 44px; padding-right: 22px; color: #a7380c; font-size: 11px; font-weight: 550; border-top: 1px solid #ebd8c9; }
+  .strava-follow > svg { width: 17px; height: 17px; flex-shrink: 0; }
   .strava-run-link:hover .strava-follow { text-decoration: underline; text-underline-offset: 4px; }
   .runner-scene { display: block; position: relative; width: 100%; height: 142px; overflow: hidden; }
   .pixel-runner { position: absolute; width: 128px; height: 144px; bottom: 3px; left: calc(50% - 54px); image-rendering: pixelated; overflow: visible; }

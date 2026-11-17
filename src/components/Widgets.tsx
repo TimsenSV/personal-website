@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ArrowUpRight, AudioLines, Code2, FileUser, Footprints, GitBranch, Github, ImagePlus, Play, Plus, Sparkles } from 'lucide-react'
+import { ArrowUpRight, AudioLines, Code2, FileUser, Footprints, GitBranch, Github, ImagePlus, Play, Plus } from 'lucide-react'
 import type { PortfolioConfig } from '../content/site'
 import { assetUrl, externalUrl, githubProfile, spotifyPlaylist } from '../lib/links'
 import { useGitHubActivity } from '../hooks/useGitHubActivity'
@@ -14,8 +14,7 @@ import { PhotoCarousel } from './PhotoCarousel'
 
 export function IntroWidget({ profile, onOpenCv }: { profile: PortfolioConfig['profile']; onOpenCv: () => void }) {
   return <section className="card intro-card" aria-labelledby="intro-title">
-    <div className="intro-top"><span className="eyebrow">Ein bisschen ich</span><span className="intro-spark" aria-hidden="true">✳</span></div>
-    <div className="portrait-row"><PhotoCarousel photos={profile.photos} name={profile.name}/><div className="intro-name"><span className="intro-greeting">Hi, ich bin</span><h1 id="intro-title">{profile.name}<span>.</span></h1></div></div>
+    <div className="portrait-row"><PhotoCarousel photos={profile.photos} name={profile.name}/><div className="intro-name"><h1 id="intro-title">{profile.name}<span>.</span></h1></div></div>
     <div className="intro-copy"><p className="intro-positioning">{profile.positioning}</p></div>
     <div className="intro-actions">
     <Popout className="focus-popout" buttonClassName="current-focus" label="Aktuellen Gedanken aufklappen" title="Gerade im Kopf" trigger={<><span className="focus-dot"/><span><span className="eyebrow">Gerade im Kopf</span><span className="focus-preview">{profile.focus}</span></span><Plus size={15}/></>}>
@@ -44,7 +43,7 @@ export function GithubDetail({ config }: { config: PortfolioConfig['github'] }) 
 
 export function MusicWidget({ config, onOpen }: { config: PortfolioConfig['spotify']; onOpen: () => void }) {
   const playlist = spotifyPlaylist(config.url)
-  return <section className="card music-card" aria-labelledby="music-title"><div className="widget-top"><span className="eyebrow"><AudioLines size={16}/> Auf den Ohren</span><SpotifyMark className="spotify-mark"/></div>
+  return <section className="card music-card" aria-labelledby="music-title">
     <Popout className="record-popout" buttonClassName="record-object" label="Playlist-Vorschau öffnen" title="Eine Seite von mir" action={playlist ? { label: 'Playlist öffnen', onClick: onOpen } : undefined} trigger={<>
       <span className="vinyl-disc" aria-hidden="true"><span><AudioLines size={20}/></span></span>
       <span className="record-sleeve">{config.cover ? <img src={assetUrl(config.cover.src)} alt={config.cover.alt} width="160" height="160" loading="lazy"/> : <span className="album-art" aria-hidden="true"><span className="album-art-title">A SIDE<br/>OF ME<span>01</span></span><span className="album-star">✳</span><span className="album-art-bottom">MUSIC IS A GOOD PLACE.</span></span>}</span>
@@ -53,7 +52,7 @@ export function MusicWidget({ config, onOpen }: { config: PortfolioConfig['spoti
       <><div className="popout-icon"><AudioLines size={24}/></div><h3>{config.title}</h3><p>{playlist ? config.note : 'Hier zieht bald meine Lieblingsplaylist ein. Bis dahin ist das Cover ein Platzhalter – und es bleibt still.'}</p></>
     </Popout>
     <div className="playlist-copy"><h2 id="music-title">{config.title}</h2>{playlist && <p>{config.note}</p>}</div>
-    <div className="music-bottom"><span className="record-side">SIDE A</span><span className="equalizer" aria-hidden="true"><i/><i/><i/><i/><i/></span></div>
+    <div className="music-bottom"><SpotifyMark className="spotify-mark"/><span className="equalizer" aria-hidden="true"><i/><i/><i/><i/><i/></span></div>
   </section>
 }
 
@@ -65,9 +64,8 @@ export function MusicDetail({ config }: { config: PortfolioConfig['spotify'] }) 
 export function RunningWidget({ config, onOpen }: { config: PortfolioConfig['running']; onOpen: () => void }) {
   const scene = <span className="runner-scene" aria-hidden="true"><span className="runner-track"/><span className="runner-speed"><i/><i/><i/></span><PixelRunner/></span>
   return <section className="card running-card runner-card" aria-labelledby="running-title">
-    <div className="widget-top"><span className="eyebrow"><StravaMark/> Laufen</span><button className="round-link" onClick={onOpen} aria-label="Laufen: Details öffnen"><ArrowUpRight size={18}/></button></div>
-    <h2 id="running-title" lang="en">{config.title}</h2>
-    {externalUrl(config.stravaUrl) ? <ExternalLink href={config.stravaUrl} className="strava-run-link">{scene}<span className="strava-follow">Mit mir auf Strava laufen</span></ExternalLink> : <>{scene}<span className="small-note">Strava-Link folgt.</span></>}
+    <div className="runner-heading"><h2 id="running-title" lang="en">{config.title}</h2><button className="round-link" onClick={onOpen} aria-label="Laufen: Details öffnen"><ArrowUpRight size={18}/></button></div>
+    {externalUrl(config.stravaUrl) ? <ExternalLink href={config.stravaUrl} className="strava-run-link">{scene}<span className="strava-follow"><StravaMark/>Mit mir auf Strava laufen</span></ExternalLink> : <>{scene}<span className="small-note">Strava-Link folgt.</span></>}
   </section>
 }
 
@@ -77,5 +75,5 @@ export function RunningDetail({ config }: { config: PortfolioConfig['running'] }
 
 export function BoulderWidget({ onOpen }: { onOpen: () => void }) {
   const [chalkCue, setChalkCue] = useState(0)
-  return <section className="card boulder-card" aria-labelledby="boulder-title" onPointerEnter={(event) => { if (event.pointerType !== 'touch') setChalkCue(value => value + 1) }} onFocus={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setChalkCue(value => value + 1) }}><div className="widget-top"><span className="eyebrow"><Sparkles size={15}/> Kopf & Hände</span></div><div className="boulder-heading"><h2 id="boulder-title">Noch ein<br/>Versuch.</h2><span className="boulder-number" aria-hidden="true">01</span></div><div className="boulder-scene"><button className="boulder-preview-button" onClick={onOpen} aria-label="Boulder-Problem vergrößern und spielen"><BoulderPreview/><span className="board-open-hint"><Play size={12} fill="currentColor"/> Losklettern</span></button><div className="boulder-avatar"><ChalkClimber cue={chalkCue}/></div></div><div className="boulder-bottom"><button className="round-link" onClick={onOpen} aria-label="Boulder-Minispiel starten"><ArrowUpRight size={18}/></button></div></section>
+  return <section className="card boulder-card" aria-labelledby="boulder-title" onPointerEnter={(event) => { if (event.pointerType !== 'touch') setChalkCue(value => value + 1) }} onFocus={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setChalkCue(value => value + 1) }}><div className="boulder-heading"><h2 id="boulder-title">Noch ein<br/>Versuch.</h2><span className="boulder-number" aria-hidden="true">01</span></div><div className="boulder-scene"><button className="boulder-preview-button" onClick={onOpen} aria-label="Boulder-Problem vergrößern und spielen"><BoulderPreview/><span className="board-open-hint"><Play size={12} fill="currentColor"/> Losklettern</span></button><div className="boulder-avatar"><ChalkClimber cue={chalkCue}/></div></div><div className="boulder-bottom"><button className="round-link" onClick={onOpen} aria-label="Boulder-Minispiel starten"><ArrowUpRight size={18}/></button></div></section>
 }
