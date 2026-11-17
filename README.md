@@ -35,7 +35,7 @@ Die typisierte Datei **`src/content/site.ts`** enthält die persönlichen Canvas
 | Kontakt | E-Mail-Adresse; LinkedIn ist im Dock hinterlegt |
 | GitHub | TimsenSV ist verbunden; Links zu ausgewählten öffentlichen Repositories können noch ergänzt werden |
 | Spotify | Playlist „Timsen“ mit Link und Originalcover ist hinterlegt; Begleittext optional anpassen |
-| Produkte | Eigener Beitrag, je eine konkrete Entscheidung und ausgewählte App-Screenshots; Logos und Produktlinks sind hinterlegt |
+| Produkte | Eigener Beitrag, je eine konkrete Entscheidung und Backlane-Screenshots; Logos, Produktlinks sowie echte Website- und Demo-App-Aufnahmen für shopvibes und showcase sind hinterlegt |
 | Laufen | Strava und Halbmarathon-Ziel sind hinterlegt; Lieblingsstrecke optional |
 
 Für Bilder Dateien unter `public/images/` ablegen und z. B. `{ src: 'images/portrait.jpg', alt: '…' }` eintragen. Relative Pfade funktionieren auch in einem GitHub-Pages-Unterverzeichnis.
@@ -178,4 +178,8 @@ Die Logos liegen unverändert als SVG unter `public/images/projects/<produkt>/lo
 
 Die Produktlinks und Aussagen wurden anhand der offiziellen Seiten geprüft: [shopvibes](https://www.shop-vibes.de/), [showcase](https://getshowcase.ai/en/) und [Backlane](https://getbacklane.com/en/). `headline` enthält das klare Nutzenversprechen für die Work-App und Details; `shortDescription` die knappe Version unter dem Projektband. `summary` konkretisiert Zielgruppe und Funktion. Nicht belegte Rollen oder Ergebnisse wurden nicht ergänzt.
 
-Für neue Screenshots sind die drei Ordner `public/images/projects/shopvibes/`, `showcase/` und `backlane/` vorbereitet. Dateien dort ablegen und in `products[].screenshots` eintragen. Bildreihen sind mit markierten lokalen Testmotiven auf Desktop und bei 320 Pixeln geprüft: horizontales Scrollen, Tastaturauswahl, Vergrößern des gewählten Bildes, Umlauf, Escape und Fokus-Rückkehr funktionieren. Die Testmotive sind kein Bestandteil des Portfolios. Der Fensterkopf bleibt beim Tastaturscrollen stehen. Aktuell warten alle drei Galerien auf die ausgewählten echten App-Screenshots.
+Für neue Screenshots sind die drei Ordner `public/images/projects/shopvibes/`, `showcase/` und `backlane/` vorbereitet. Dateien dort ablegen und in `products[].screenshots` eintragen. Bildreihen sind mit markierten lokalen Testmotiven auf Desktop und bei 320 Pixeln geprüft: horizontales Scrollen, Tastaturauswahl, Vergrößern des gewählten Bildes, Umlauf, Escape und Fokus-Rückkehr funktionieren. Die Testmotive sind kein Bestandteil des Portfolios. Der Fensterkopf bleibt beim Tastaturscrollen stehen.
+
+shopvibes und showcase enthalten seit dem 17.11.2026 jeweils drei echte Chrome-Aufnahmen. Den Einstieg bildet der obere Abschnitt der jeweiligen englischen Produktwebsite (`shop-vibes.de` bzw. `getshowcase.ai/en/`). Darauf folgen der shopvibes-Demokatalog und die Kanalverwaltung bzw. das showcase-Demostudio und vorhandene Sofa-Varianten in der Bibliothek. Es wurden keine neuen Bilder generiert oder Produktdaten verändert. Die App-Aufnahmen sind auf 2000 Pixel Breite optimiert; die fotoreiche Variantenansicht verwendet JPEG. Backlane wartet weiterhin auf ausgewählte Screenshots.
+
+Die echten Bildreihen wurden bei 1280 und 390 Pixeln im Browser geprüft: Einstieg und Reihenfolge stimmen, alle sechs Bilder laden, Vergrößern und Bildwechsel funktionieren. Escape schließt nur die Galerie und setzt den Fokus auf das auslösende Bild zurück; mobil entsteht kein seitlicher Seitenüberlauf. Lint, alle 72 Tests und der Produktionsbuild sind erfolgreich.
