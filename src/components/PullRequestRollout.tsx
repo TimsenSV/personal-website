@@ -1,5 +1,5 @@
 import { useEffect, useState, type CSSProperties } from 'react'
-import { GitMerge, GitPullRequest, GitPullRequestDraft } from 'lucide-react'
+import { Check, GitPullRequest, GitPullRequestDraft } from 'lucide-react'
 import type { PortfolioConfig } from '../content/site'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 
@@ -39,12 +39,15 @@ export function PullRequestRollout({ requests }: { requests: PortfolioConfig['gi
       const sequence = head + index
       const pr = requests[sequence % requests.length]
       const status = reducedMotion ? 'merged' : index > 0 ? 'draft' : phase === 'leaving' ? 'merged' : phase
-      const Icon = status === 'merged' ? GitMerge : status === 'review' ? GitPullRequest : GitPullRequestDraft
+      const Icon = status === 'merged' ? Check : status === 'review' ? GitPullRequest : GitPullRequestDraft
       return <li key={sequence} className="pr-slot" style={{ '--pr-order': index } as CSSProperties}>
-        <div className={`pr-item is-${status}`}>
-          <Icon size={19} aria-hidden="true"/>
-          <span className="pr-copy"><strong>{pr.title}</strong><small>{pr.tag}</small></span>
-          <span key={status} className="pr-status">{status === 'merged' ? 'Merged' : status === 'review' ? 'Review' : 'Draft'}</span>
+        <div className="pr-entry">
+          <div className={`pr-item is-${status}`}>
+            <span key={`icon-${status}`} className="pr-state-icon" aria-hidden="true"><Icon size={20}/></span>
+            <span className="pr-copy"><strong>{pr.title}</strong><small>{pr.tag}</small></span>
+            <span className="pr-status-frame"><span key={status} className="pr-status">{status === 'merged' ? 'Merged' : status === 'review' ? 'Review' : 'Draft'}</span></span>
+            <span className="pr-progress" aria-hidden="true"><i/></span>
+          </div>
         </div>
       </li>
     })}

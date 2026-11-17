@@ -7,9 +7,11 @@ import { IntroWidget, GithubDetail, MusicWidget, MusicDetail, RunningWidget, Run
 import { GithubWidget } from './components/GithubWidget'
 import { Products, ProductDetail } from './components/Products'
 import { Window } from './components/Window'
+import { CvDetail } from './components/CvDetail'
+import { cvConfig } from './content/cv'
 
-type Detail = ProductId | 'play' | 'github' | 'music' | 'running'
-const titles: Record<Detail, string> = { shopvibes: 'Meine Arbeit / shopvibes', showcase: 'Meine Arbeit / showcase', backlane: 'Meine Arbeit / Backlane', play: 'Eine kleine Pause / Boulder No. 01', github: 'Werkbank / GitHub & Experimente', music: 'Auf den Ohren / Spotify', running: 'Draußen sein / Laufen' }
+type Detail = ProductId | 'play' | 'github' | 'music' | 'running' | 'cv'
+const titles: Record<Detail, string> = { shopvibes: 'Meine Arbeit / shopvibes', showcase: 'Meine Arbeit / showcase', backlane: 'Meine Arbeit / Backlane', play: 'Eine kleine Pause / Boulder No. 01', github: 'Werkbank / GitHub & Experimente', music: 'Auf den Ohren / Spotify', running: 'Draußen sein / Laufen', cv: `Lebenslauf / ${cvConfig.name}` }
 
 export default function App() {
   const [detail, setDetail] = useState<Detail | null>(null)
@@ -18,7 +20,7 @@ export default function App() {
     <a className="skip-link" href="#canvas">Zum Inhalt springen</a>
     <div className="page-shell" id="overview" tabIndex={-1}>
       <main className="bento-grid" id="canvas" tabIndex={-1}>
-        <IntroWidget profile={siteConfig.profile}/>
+        <IntroWidget profile={siteConfig.profile} onOpenCv={() => setDetail('cv')}/>
         <Products products={siteConfig.products} onOpen={setDetail}/>
         <GithubWidget config={siteConfig.github} onOpen={() => setDetail('github')}/>
         <MusicWidget config={siteConfig.spotify} onOpen={() => setDetail('music')}/>
@@ -27,12 +29,13 @@ export default function App() {
       </main>
     </div>
     <Dock profile={siteConfig.profile} username={siteConfig.github.username} onPlay={() => setDetail('play')}/>
-    {detail && <Window title={titles[detail]} onClose={() => setDetail(null)} variant={detail === 'play' ? 'game-window' : ''}>
+    {detail && <Window title={titles[detail]} onClose={() => setDetail(null)} variant={detail === 'play' ? 'game-window' : detail === 'cv' ? 'cv-window' : ''}>
       {product && <ProductDetail product={product} products={siteConfig.products} onSelect={setDetail}/>}
       {detail === 'play' && <BoulderGame/>}
       {detail === 'github' && <GithubDetail config={siteConfig.github}/>}
       {detail === 'music' && <MusicDetail config={siteConfig.spotify}/>}
       {detail === 'running' && <RunningDetail config={siteConfig.running}/>}
+      {detail === 'cv' && <CvDetail config={cvConfig}/>}
     </Window>}
   </>
 }

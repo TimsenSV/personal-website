@@ -1,0 +1,28 @@
+@layer widgets {
+  .intro-card .intro-top { margin-bottom: 14px; }
+  .intro-card .portrait-row { margin-bottom: 22px; }
+  .intro-card .intro-positioning { max-width: 290px; margin: 0; font-size: 22px; line-height: 1.35; }
+  .intro-actions { display: flex; align-items: center; gap: 12px; margin-top: auto; padding-top: 22px; }
+  .intro-card .focus-popout { flex: 1; min-width: 0; margin: 0; }
+  .intro-card .current-focus { display: flex; align-items: center; gap: 9px; padding: 11px 0; min-height: 48px; margin: 0; border: 0; border-radius: 5px; background: none; box-shadow: none; }
+  .intro-card .current-focus::after { display: none; }
+  .intro-card .current-focus .focus-dot { flex-shrink: 0; background: var(--blue); }
+  .intro-card .current-focus .eyebrow { font: 11px var(--mono); letter-spacing: -.2px; color: #59647b; text-transform: none; }
+  .intro-card .focus-preview { display: none; }
+  .intro-card .current-focus > svg { margin-left: 0; flex-shrink: 0; color: #59647b; width: 13px; }
+  .intro-card .current-focus:hover .eyebrow { color: var(--blue); }
+  .cv-trigger { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 12px; color: #284ac5; background: #f0f4ff; border: 1px solid #dce4fc; border-radius: 9px; font-size: 12px; font-weight: 600; transition: background .2s, transform .2s; }
+  .cv-trigger:hover { background: #e3ebff; transform: translateY(-2px); }
+  @media (max-width: 960px) and (min-width: 621px) {
+    .intro-card .intro-top { grid-column: 1 / -1; }
+    .intro-card .portrait-row { grid-row: 2 / 4; margin-bottom: 0; }
+    .intro-card .intro-copy { align-self: end; }
+    .intro-actions { grid-column: 2; grid-row: 3; align-self: start; margin: 0; padding-top: 20px; }
+  }
+  @media (max-width: 620px) {
+    .intro-card .portrait-row { margin-bottom: 22px; }
+    .intro-card .intro-positioning { font-size: 23px; }
+    .intro-actions { padding-top: 20px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .cv-trigger { transition: none; }.cv-trigger:hover { transform: none; } }
+}

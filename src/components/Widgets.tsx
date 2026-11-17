@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ArrowUpRight, AudioLines, Code2, Footprints, GitBranch, Github, ImagePlus, Linkedin, Play, Plus, Sparkles } from 'lucide-react'
+import { ArrowUpRight, AudioLines, Code2, FileUser, Footprints, GitBranch, Github, ImagePlus, Play, Plus, Sparkles } from 'lucide-react'
 import type { PortfolioConfig } from '../content/site'
 import { assetUrl, externalUrl, githubProfile, spotifyPlaylist } from '../lib/links'
 import { useGitHubActivity } from '../hooks/useGitHubActivity'
@@ -12,17 +12,17 @@ import { GitHubHeatmap } from './GitHubHeatmap'
 import { PixelRunner } from './PixelRunner'
 import { PhotoCarousel } from './PhotoCarousel'
 
-export function IntroWidget({ profile }: { profile: PortfolioConfig['profile'] }) {
+export function IntroWidget({ profile, onOpenCv }: { profile: PortfolioConfig['profile']; onOpenCv: () => void }) {
   return <section className="card intro-card" aria-labelledby="intro-title">
     <div className="intro-top"><span className="eyebrow">Ein bisschen ich</span><span className="intro-spark" aria-hidden="true">✳</span></div>
     <div className="portrait-row"><PhotoCarousel photos={profile.photos} name={profile.name}/><div className="intro-name"><span className="intro-greeting">Hi, ich bin</span><h1 id="intro-title">{profile.name}<span>.</span></h1></div></div>
-    <div className="intro-copy"><p className="intro-positioning">{profile.positioning}</p>
-    <p className="intro-description">{profile.introduction}</p>
-    <p className="intro-personal">{profile.personal}</p></div>
+    <div className="intro-copy"><p className="intro-positioning">{profile.positioning}</p></div>
+    <div className="intro-actions">
     <Popout className="focus-popout" buttonClassName="current-focus" label="Aktuellen Gedanken aufklappen" title="Gerade im Kopf" trigger={<><span className="focus-dot"/><span><span className="eyebrow">Gerade im Kopf</span><span className="focus-preview">{profile.focus}</span></span><Plus size={15}/></>}>
       <><span className="note-symbol" aria-hidden="true">✳</span><p className="popout-thought">{profile.focus}</p><p>Meine drei Produkte zeigen verschiedene Perspektiven darauf: Information, Darstellung und Handlung.</p></>
     </Popout>
-    {externalUrl(profile.linkedinUrl) && <div className="linkedin-widget"><Linkedin size={16}/><ExternalLink href={profile.linkedinUrl}>Auf LinkedIn verbinden</ExternalLink></div>}
+    <button className="cv-trigger" onClick={onOpenCv} aria-label="Lebenslauf öffnen" aria-haspopup="dialog"><FileUser size={18} aria-hidden="true"/><span>CV</span><ArrowUpRight size={14} aria-hidden="true"/></button>
+    </div>
   </section>
 }
 

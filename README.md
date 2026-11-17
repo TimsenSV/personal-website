@@ -25,11 +25,11 @@ Dieser Befehl führt ESLint, die Tests und den TypeScript-/Produktionsbuild aus.
 
 ## Persönliche Inhalte ergänzen
 
-Die typisierte Datei **`src/content/site.ts`** enthält alle persönlichen Texte und Verknüpfungen. `null` bedeutet bewusst „noch nicht hinterlegt“. Keine Platzhalter-URLs eintragen.
+Die typisierte Datei **`src/content/site.ts`** enthält die persönlichen Canvas-Texte und Verknüpfungen. Der vollständige Lebenslauf liegt in **`src/content/cv.ts`**. `null` bedeutet bewusst „noch nicht hinterlegt“. Keine Platzhalter-URLs eintragen.
 
 | Bereich | Noch zu ergänzen |
 | --- | --- |
-| Profil | Vollständiger öffentlicher Name, eigene Fotos für den Polaroid-Stapel, ggf. Feinschliff an Kurzvorstellung und Fokus |
+| Profil | Eigene Fotos für den Polaroid-Stapel, ggf. Feinschliff an Kurzvorstellung und Fokus |
 | Kontakt | E-Mail-Adresse; LinkedIn ist im Dock hinterlegt |
 | GitHub | TimsenSV ist verbunden; Links zu ausgewählten öffentlichen Repositories können noch ergänzt werden |
 | Spotify | Playlist-Link oder Embed-URL, Titel, optional eigenes Cover und Begleittext |
@@ -38,7 +38,7 @@ Die typisierte Datei **`src/content/site.ts`** enthält alle persönlichen Texte
 
 Für Bilder Dateien unter `public/images/` ablegen und z. B. `{ src: 'images/portrait.jpg', alt: '…' }` eintragen. Relative Pfade funktionieren auch in einem GitHub-Pages-Unterverzeichnis.
 
-Der Vorname Tim stammt aus dem vorhandenen lokalen Projektkontext. Es sind keine Rollen, Resultate, Kundenzahlen, realen Aktivitäten oder Profiladressen ergänzt worden. Das Repository `personal-website` bezeichnet dieses tatsächlich angelegte lokale Projekt. Es hat noch keinen öffentlichen Link.
+Der Lebenslauf wurde am 17.11.2026 aus dem vom Nutzer verlinkten LinkedIn-Profil von Tim Hoffmann übernommen. Er enthält alle 14 beruflichen Stationen, vier Ausbildungsstationen, zehn Zertifikate, sechs Projekte, zwei Engagements, zwei Auszeichnungen, 16 Kenntnisse und drei Sprachen. Beschreibungen sind auf Deutsch verdichtet; Rollen und Zeiträume stammen aus dem Profil. LinkedIn nennt beim Brandathon 2016 unterschiedliche Monate, daher steht bei der Auszeichnung nur das Jahr. Die Daten werden lokal gepflegt, ohne Laufzeitabruf oder Scraping; der Quellenlink und Stand bleiben im CV sichtbar. Nicht belegte Angaben, insbesondere eine Backlane-Rolle samt Zeitraum, wurden nicht ergänzt. Das Repository `personal-website` bezeichnet dieses tatsächlich angelegte lokale Projekt. Es hat noch keinen öffentlichen Link.
 
 Die Produktdarstellungen sind eigenständige schematische Illustrationen, keine Screenshots oder Belege für tatsächliche Produktfunktionen. Das Backlane-Signet stammt aus dem bereits vorhandenen Markenasset `backlane/backlane_logo/backlane-signet.svg`. Die inhaltliche Klammer Information → Darstellung → Handlung ist keine Unternehmenschronologie oder technische Abhängigkeitskette.
 
@@ -48,11 +48,12 @@ Die Produktdarstellungen sind eigenständige schematische Illustrationen, keine 
 - Die größeren Profilfotos liegen als Polaroid-Stapel in der Einstiegskachel. Klick oder die seitlichen Pfeile blättern weiter; horizontales Ziehen folgt dem Zeiger und wechselt ab einer Schwelle das Foto. Kurze Gesten federn zurück, vertikales Scrollen und Pinch-Zoom bleiben auf Mobilgeräten möglich. Linke/rechte Pfeiltasten funktionieren bei Fokus in der Galerie. Es gibt kein Autoplay. Bei reduzierter Bewegung wechselt das Bild sofort. Leere und einzelne Galerien sowie fehlgeschlagene Bilder haben passende Zustände.
 - Gedanken und Playlist haben kleine, nichtmodale Pop-outs. Sie öffnen per Klick, Touch oder Tastatur, schließen per Escape, Klick daneben oder beim Verlassen mit Tab. Ein weiterführendes Detailfenster stellt den Fokus anschließend am ursprünglichen Widget wieder her.
 - Hover-Effekte bewegen gezielt die Objekte innerhalb der Widgets; Tastaturfokus bietet dieselben Hinweise. Die PR-Warteschlange läuft nur, solange sie geöffnet und der Browser-Tab sichtbar ist. `prefers-reduced-motion` unterbindet die Bewegung.
-- Produktfenster nutzen native HTML-Dialoge mit Escape, Fokusbindung und Rückkehr zum Auslöser. Auf Mobilgeräten werden sie bildschirmfüllend.
+- Über den kompakten CV-Button in der aufgeräumten Ich-Kachel öffnet sich ein Lebenslauf-Fenster. Die aktuellen Rollen und Ausbildung sind direkt sichtbar; frühere Stationen, Zertifikate, Projekte, Engagement und Auszeichnungen lassen sich per Maus oder Tastatur aufklappen. Die Canvas selbst bleibt frei von einer chronologischen Timeline.
+- Produkt- und CV-Fenster nutzen native HTML-Dialoge mit Escape, Fokusbindung und Rückkehr zum Auslöser. Auf Mobilgeräten werden sie bildschirmfüllend.
 - Die kleine Pixel-Figur chalkt bei Hover einmal die Hände, klopft sie ab und erzeugt eine kurze Kreidewolke. Klick, Touch und Tastaturfokus lösen die Szene ebenfalls aus. Unter reduzierter Bewegung bleibt die Figur ruhig. Es ist eine frei gestaltete Figur, kein Porträt; die Palette liegt unter `profile.pixelAvatar`.
 - Das Boulder-Spiel ist mit Maus, Touch und Tastatur spielbar. Umrandete Griffe sind erreichbar. Ziel: Top in maximal sieben Zügen. Rückwege verbrauchen ebenfalls Kraft. Es gibt Gewinn, Verlust und Neustart.
 - Die öffentlichen GitHub-Ereignisse werden erst beim Öffnen des Detailfensters und nur mit konfiguriertem Nutzernamen abgefragt. Die offizielle öffentliche Events-API benötigt hier keine Zugangsdaten. Die Ansicht behandelt Laden, fehlende Aktivität, Fehler, Timeout und manuelles Wiederholen. Sie ist kein Contribution- oder Echtzeit-Tracker.
-- Die GitHub-Heatmap verwendet einen echten GraphQL-Snapshot für TimsenSV: das vollständige letzte Jahr im breiten Widget und im Detail, auf kleinen Bildschirmen in zwei Kalenderzeilen, jeweils mit Datenstand. Der Import speichert ausschließlich anonyme Tageszählungen und Intensitätsstufen, keine Repository-Namen oder Inhalte. Anonym gezählte private Beiträge sind enthalten, wie im GitHub-Kalender. Die humorvollen KI-Pull-Requests sind eine lokale Animation ohne Verbindung zur echten Aktivitätsliste: Bei Hover, Tastaturfokus oder Antippen rollen sie unterhalb der Kachel aus und wechseln nacheinander von Draft über Review zu Merged. Es sind immer höchstens drei PRs sichtbar: Der oberste wird bearbeitet, bleibt kurz als Merged stehen und löst sich auf; die übrigen rücken hoch und unten kommt der nächste aus dem Pool von zwölf Ideen hinzu. Nach der letzten Idee beginnt die Reihe erneut. Kachel und Pop-out behalten dabei ihre Höhe. Escape oder Antippen außerhalb schließt sie; ein erneutes Öffnen startet von vorn. Es gibt keine Fußleiste oder separaten PR-Schalter: Die Heatmap selbst lässt sich antippen oder per Tastatur aktivieren. Repository-Infos bleiben über den Pfeil im GitHub-Kopf erreichbar. Reduzierte Bewegung zeigt sofort den ruhigen Endzustand. Texte: `github.playfulPullRequests`.
+- Die GitHub-Heatmap verwendet einen echten GraphQL-Snapshot für TimsenSV: das vollständige letzte Jahr im breiten Widget und im Detail, auf kleinen Bildschirmen in zwei Kalenderzeilen, jeweils mit Datenstand. Der Import speichert ausschließlich anonyme Tageszählungen und Intensitätsstufen, keine Repository-Namen oder Inhalte. Anonym gezählte private Beiträge sind enthalten, wie im GitHub-Kalender. Die humorvollen KI-Pull-Requests sind eine lokale Animation ohne Verbindung zur echten Aktivitätsliste: Bei Hover, Tastaturfokus oder Antippen rollen sie unterhalb der Kachel aus und wechseln nacheinander von Draft über Review zu Merged. Es sind immer höchstens drei PRs sichtbar: Beim Review klappt das Status-Badge um, das Icon dreht kurz ein und eine grüne Fortschrittslinie läuft durch. Beim Merge zeichnet sich ein weißes Häkchen in einem violetten Feld ein; ein kurzer Impuls und Ring markieren den Abschluss. Der oberste bleibt kurz als Merged stehen und löst sich auf; die übrigen rücken hoch und unten kommt der nächste aus dem Pool von zwölf Ideen hinzu. Nach der letzten Idee beginnt die Reihe erneut. Kachel und Pop-out behalten dabei ihre Höhe. Escape oder Antippen außerhalb schließt sie; ein erneutes Öffnen startet von vorn. Es gibt keine Fußleiste oder separaten PR-Schalter: Die Heatmap selbst lässt sich antippen oder per Tastatur aktivieren. Repository-Infos bleiben über den Pfeil im GitHub-Kopf erreichbar. Reduzierte Bewegung zeigt sofort den ruhigen Endzustand. Texte: `github.playfulPullRequests`.
 - Spotify wird ausschließlich bei gültigem Playlist-Link und erst beim Öffnen geladen. Kein OAuth, kein Autoplay. Ein direkter Spotify-Link bleibt als Alternative verfügbar.
 - Die Lauf-Kachel enthält den vom Nutzer gelieferten Halbmarathon-Satz und den Strava-Link `https://www.strava.com/athletes/137493657`, ohne Tracking-Parameter. Pixel-Runner und Boulder-Figur teilen sich Kopf und Farbpalette mit braunblondem Haar. Der Laufzyklus verwendet vier gezeichnete Pixel-Posen je Bein mit versetztem Bodenkontakt; die Füße bleiben in getrennten Bahnen, ohne gekreuzte oder rotierte starre Beine. Beim Hover oder Tastaturfokus laufen Beine, Arme und Boden; reduzierte Bewegung zeigt die ruhige Pose. Die abstrakte Zeichnung bleibt in der Detailansicht und behauptet keine GPS-Aktivität.
 - Titel, Beschreibung und Open-Graph-Text werden beim Build aus derselben Konfiguration eingesetzt. Eine echte kanonische URL und ein persönliches Social-Preview-Bild können nach Festlegung der Domain ergänzt werden.
@@ -60,7 +61,8 @@ Die Produktdarstellungen sind eigenständige schematische Illustrationen, keine 
 ## Projektstruktur
 
 ```text
-src/content/site.ts       Persönliche Inhalte und Typen
+src/content/site.ts       Persönliche Canvas-Inhalte und Typen
+src/content/cv.ts         Verifizierte LinkedIn-Stationen, Quelle und Stand
 src/components/           Canvas, Widgets, Dock, Dialoge und Spielansicht
 src/services/github.ts   Öffentliche GitHub-Ereignisse
 src/services/contributions.ts  Snapshot-Validierung und Kalenderdarstellung
@@ -92,7 +94,7 @@ Der Workflow prüft den Code vor der Veröffentlichung. Er wird absichtlich nur 
 
 ## Geprüfter Stand · 17. November 2026
 
-- Produktionsbuild, TypeScript und ESLint erfolgreich; 43 automatisierte Tests für Spielregeln, Tastaturbedienung, Dialoge, Pop-outs, externe Links, Kalenderdaten und GitHub-Zustände.
+- Produktionsbuild, TypeScript und ESLint erfolgreich; 47 automatisierte Tests für Spielregeln, Tastaturbedienung, Dialoge, Pop-outs, externe Links, Kalenderdaten und GitHub-Zustände.
 - Browserprüfung bei 1440 × 1000, 768 × 1024, 390 × 844 und 320 × 740 Pixeln; kein horizontaler Seitenüberlauf.
 - Dock-Navigation, alle drei Produktansichten, Fenstervergrößerung, Escape, Tab/Shift-Tab und Rückkehr zum Auslöser geprüft.
 - Boulder-Route im mobilen Browser vollständig gespielt, Gewinn und Neustart geprüft; Verlust und Umwege zusätzlich automatisiert getestet.

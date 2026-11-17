@@ -27,7 +27,7 @@ describe('widget quick looks', () => {
     await user.click(screen.getByRole('button', { name: 'Aktuellen Gedanken aufklappen' }))
     await user.tab()
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /Auf LinkedIn verbinden/ })).toHaveFocus()
+    expect(screen.getByRole('button', { name: 'Lebenslauf öffnen' })).toHaveFocus()
     await user.tab()
     expect(screen.getByRole('button', { name: 'shopvibes: Details öffnen' })).toHaveFocus()
     expect(document.body.style.overflow).toBe('')
