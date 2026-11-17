@@ -12,7 +12,12 @@ export default defineConfig({
     transformIndexHtml: (html) => html
       .replaceAll('__SITE_TITLE__', escapeAttribute(siteConfig.seo.title))
       .replaceAll('__SITE_DESCRIPTION__', escapeAttribute(siteConfig.seo.description))
-      .replaceAll('__SITE_URL__', escapeAttribute(siteConfig.seo.url)),
+      .replaceAll('__SITE_URL__', escapeAttribute(siteConfig.seo.url))
+      .replaceAll('__SITE_IMAGE__', escapeAttribute(new URL(siteConfig.seo.image.src, siteConfig.seo.url).href))
+      .replaceAll('__SITE_IMAGE_ALT__', escapeAttribute(siteConfig.seo.image.alt))
+      .replaceAll('__SITE_IMAGE_TYPE__', escapeAttribute(siteConfig.seo.image.type))
+      .replaceAll('__SITE_IMAGE_WIDTH__', String(siteConfig.seo.image.width))
+      .replaceAll('__SITE_IMAGE_HEIGHT__', String(siteConfig.seo.image.height)),
   }],
   server: { port: 5173, strictPort: true },
   test: {

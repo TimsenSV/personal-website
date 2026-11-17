@@ -47,7 +47,10 @@ export type PortfolioConfig = {
   }
   running: { title: string; note: string; stravaUrl: string | null; routeName: string | null; goal: string | null }
   products: Product[]
-  seo: { title: string; description: string; url: string }
+  seo: {
+    title: string; description: string; url: string
+    image: { src: string; alt: string; width: number; height: number; type: string }
+  }
 }
 
 // All personal content lives here. null means deliberately not yet supplied.
@@ -205,5 +208,10 @@ export const siteConfig: PortfolioConfig = {
     url: 'https://timsen.me/',
     title: 'Tim — Products, perspectives & a little movement',
     description: 'A look into my world of product development, UX, AI and e-commerce. Featuring shopvibes, showcase, backlane, music and movement.',
+    image: {
+      src: 'images/social/timsen-preview.jpg',
+      alt: 'Tim Hoffmann — Product, UX & an entrepreneurial mindset. A portrait of Tim alongside shopvibes, showcase and backlane project books.',
+      width: 1200, height: 630, type: 'image/jpeg',
+    },
   },
 }
