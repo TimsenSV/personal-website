@@ -39,7 +39,7 @@ export type PortfolioConfig = {
     playfulPullRequests: { title: string; tag: string }[]
     repositories: { name: string; description: string; url: string | null; tags: string[] }[]
   }
-  spotify: { title: string; note: string; url: string | null; cover: ImageAsset | null }
+  spotify: { title: string; note: string | null; url: string | null; cover: ImageAsset | null }
   running: { title: string; note: string; stravaUrl: string | null; routeName: string | null; goal: string | null }
   products: Product[]
   seo: { title: string; description: string }
@@ -92,7 +92,7 @@ export const siteConfig: PortfolioConfig = {
   },
   spotify: {
     title: 'Timsen',
-    note: 'The soundtrack to my world.',
+    note: null,
     url: 'https://open.spotify.com/playlist/7crg0zzkXhWfEMMetYnd6O',
     cover: { src: 'https://image-cdn-fa.spotifycdn.com/image/ab67706c0000da842dd8f22a296b4003cfb3421a', alt: 'Cover of the Spotify playlist Timsen' },
   },

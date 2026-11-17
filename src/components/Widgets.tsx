@@ -51,16 +51,16 @@ export function MusicWidget({ config, onOpen }: { config: PortfolioConfig['spoti
       <span className="record-sleeve">{config.cover && failedCover !== config.cover.src ? <img src={assetUrl(config.cover.src)} alt={config.cover.alt} width="160" height="160" loading="lazy" onError={() => setFailedCover(config.cover?.src ?? null)}/> : <span className="album-art" aria-hidden="true"><span className="album-art-title">A SIDE<br/>OF ME<span>01</span></span><span className="album-star">✳</span><span className="album-art-bottom">MUSIC IS A GOOD PLACE.</span></span>}</span>
       <span className="record-sticker" aria-hidden="true">{playlist ? 'LISTEN IN ↗' : 'PLAYLIST SOON'}</span>
     </>}>
-      <><div className="popout-icon"><AudioLines size={24}/></div><h3>{config.title}</h3><p>{playlist ? config.note : 'My favourite playlist will move in here soon. For now, the cover is a placeholder and the needle stays up.'}</p></>
+      <><div className="popout-icon"><AudioLines size={24}/></div><h3>{config.title}</h3>{playlist ? config.note && <p>{config.note}</p> : <p>My favourite playlist will move in here soon. For now, the cover is a placeholder and the needle stays up.</p>}</>
     </Popout>
-    <div className="playlist-copy"><h2 id="music-title">{config.title}</h2>{playlist && <p>{config.note}</p>}</div>
+    <div className="playlist-copy"><h2 id="music-title">{config.title}</h2>{playlist && config.note && <p>{config.note}</p>}</div>
     <div className="music-bottom"><SpotifyMark className="spotify-mark"/><span className="equalizer" aria-hidden="true"><i/><i/><i/><i/><i/></span></div>
   </section>
 }
 
 export function MusicDetail({ config }: { config: PortfolioConfig['spotify'] }) {
   const playlist = spotifyPlaylist(config.url)
-  return <div className="standard-detail"><p className="eyebrow"><AudioLines size={16}/> My soundtrack</p><h3>{config.title}</h3><p>{config.note}</p>{playlist ? <><iframe className="spotify-embed" src={playlist.embed} title={`Spotify playlist: ${config.title}`} width="100%" height="352" allow="encrypted-media; fullscreen; picture-in-picture" loading="lazy"/><p className="small-note">If the player won’t load, you can open the playlist directly on Spotify.</p><ExternalLink href={playlist.url} className="button primary">Open on Spotify</ExternalLink></> : <div className="honest-empty"><ImagePlus size={24}/><p>Playlist coming soon. Until then, a little quiet.</p></div>}</div>
+  return <div className="standard-detail"><p className="eyebrow"><AudioLines size={16}/> My soundtrack</p><h3>{config.title}</h3>{config.note && <p>{config.note}</p>}{playlist ? <><iframe className="spotify-embed" src={playlist.embed} title={`Spotify playlist: ${config.title}`} width="100%" height="352" allow="encrypted-media; fullscreen; picture-in-picture" loading="lazy"/><p className="small-note">If the player won’t load, you can open the playlist directly on Spotify.</p><ExternalLink href={playlist.url} className="button primary">Open on Spotify</ExternalLink></> : <div className="honest-empty"><ImagePlus size={24}/><p>Playlist coming soon. Until then, a little quiet.</p></div>}</div>
 }
 
 export function RunningWidget({ config, onOpen }: { config: PortfolioConfig['running']; onOpen: () => void }) {
