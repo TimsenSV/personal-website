@@ -1,6 +1,47 @@
 import { useState, type CSSProperties } from 'react'
 import { siteConfig } from '../content/site'
 import { PixelTimHead } from './PixelTimHead'
+import { limbPath, type JointPair } from './pixelLimb'
+
+type Palm = 'rest' | 'cup' | 'upright' | 'cover'
+type Arm = { joints: JointPair; palm: Palm }
+type ChalkPose = { name: string; near: Arm; far: Arm }
+
+// Cuff → elbow → wrist, in the same 40 × 52 pixel grid as the portrait.
+const poses: ChalkPose[] = [
+  { name: 'idle', near: { joints: [[11,32], [14,33]], palm: 'rest' }, far: { joints: [[29,31], [27,33]], palm: 'rest' } },
+  { name: 'dip', near: { joints: [[12,32], [16,31]], palm: 'cup' }, far: { joints: [[32,29], [31,32]], palm: 'rest' } },
+  { name: 'lift', near: { joints: [[12,32], [17,30]], palm: 'cup' }, far: { joints: [[29,31], [25,29]], palm: 'cup' } },
+  { name: 'brush', near: { joints: [[13,32], [19,29]], palm: 'cup' }, far: { joints: [[28,30], [23,27]], palm: 'cup' } },
+  { name: 'open', near: { joints: [[10,31], [15,28]], palm: 'upright' }, far: { joints: [[30,31], [27,27]], palm: 'upright' } },
+  { name: 'clap', near: { joints: [[13,31], [20,28]], palm: 'upright' }, far: { joints: [[28,31], [23,28]], palm: 'upright' } },
+  { name: 'cough', near: { joints: [[12,33], [17,32]], palm: 'rest' }, far: { joints: [[29,27], [25,22]], palm: 'cover' } },
+]
+
+const handShape: Record<Palm, string> = {
+  rest: 'M-1 -1h3v1h1v2H0v-1h-1z',
+  cup: 'M-1 -1h2v-1h1v1h2v2H2v1H0V1h-1z',
+  upright: 'M-1 0v-2h1v-2h2v4h1v1H0v1h-1z',
+  cover: 'M-1 0v-2h1v-1h3v2H2v2H0v1h-1z',
+}
+
+function ChalkArm({ arm, far = false }: { arm: Arm; far?: boolean }) {
+  const side = far ? -1 : 1
+  const [x, y] = arm.joints[1]
+  const stroke = limbPath([far ? 29 : 11, 29], arm.joints, 3)
+  return <g>
+    <path d={stroke} transform="translate(0 1)" fill={far ? '#ae795e' : '#cd9473'}/>
+    <path d={stroke} fill={far ? '#dca581' : 'var(--pixel-skin)'}/>
+    <g transform={`translate(${x} ${y}) scale(${side} 1)`}>
+      <path d={handShape[arm.palm]} fill={far ? '#dfa986' : 'var(--pixel-skin)'}/>
+      {arm.palm === 'upright' && <>
+        <path d="M1-2h1v3H1z" fill={far ? '#ad765d' : '#cf9475'}/>
+        <path d="M0-3h2v1H0z" fill={far ? '#dbd2bf' : '#f7e7ce'}/>
+      </>}
+      {arm.palm === 'cup' && <path d="M2-1h2v1H2z" fill="#f5dfc3"/>}
+    </g>
+  </g>
+}
 
 /** Original pixel drawing, not a portrait. Whole pixels and discrete poses keep the 8-bit feel. */
 export function ChalkClimber({ cue = 0, compact = false }: { cue?: number; compact?: boolean }) {
@@ -29,11 +70,11 @@ export function ChalkClimber({ cue = 0, compact = false }: { cue?: number; compa
         <path d="M10 27h4v2H9v-2zM27 27h4v2h-4z" fill="#bdcedd"/>
         <path d="M17 21h8v2h-2v1h-5v-1h-1z" fill="#203a86"/>
         <path d="M18 20h6v2h-2v1h-3v-1h-1z" fill="var(--pixel-skin)"/>
-        <PixelTimHead/>
+        <g className="pixel-chalk-head"><PixelTimHead/>
         <g className="pixel-cough-face">
           <path d="M17 14h3v2h-3zM24 14h3v2h-3zM21 18h3v2h-3z" fill="var(--pixel-skin)"/>
           <path d="M17 14h2v1h1v1h-3v-1h1zM24 14h2v1h1v1h-3v-1h1zM21 18h3v2h-3z" fill="#29263a"/>
-        </g>
+        </g></g>
         <path d="M13 33h14v2H13zM25 32h4v2h-4z" fill="#243048"/>
         <path d="M18 33h3v2h-3z" fill="#98a5ac"/>
         <g className="pixel-chalkbag">
@@ -43,36 +84,17 @@ export function ChalkClimber({ cue = 0, compact = false }: { cue?: number; compa
           <path d="M28 31h6v1h-6zM28 35h2v3h-2z" fill="#ffdea8"/>
           <path d="M34 35h2v1h1v2h-1v-1h-2z" fill="#364860"/>
         </g>
-        <g className="pixel-pose-idle" fill="var(--pixel-skin)">
-          <path d="M9 28h4v4h2v2h-4v-2H9zM28 28h3v3h-2v3h-4v-3h3z"/>
-          <path d="M11 32h3v1h-3zM25 32h3v1h-3z" fill="#ffedce"/>
-        </g>
-        <g className="pixel-pose-dip">
-          <path d="M9 28h4v3h3v-1h4v3h-3v1h-5v-2H9z" fill="var(--pixel-skin)"/>
-          <path d="M28 28h3v1h3v2h-2v3h-3v-4h-1z" fill="#dca17f"/>
-          <path d="M29 32h4v1h-4z" fill="#fff5dd"/>
-        </g>
-        <g className="pixel-pose-rub">
-          <path d="M10 27h4v3h4v-3h3v5h-3v2h-5v-2h-3zM28 27h3v5h-3v2h-4v-3h-2v-4h3v3h3z" fill="var(--pixel-skin)"/>
-          <g className="pixel-hand-left"><path d="M18 25h5v4h-5z" fill="var(--pixel-skin)"/><path d="M20 25h3v2h-3z" fill="#fff"/></g>
-          <g className="pixel-hand-right"><path d="M22 24h4v4h-4z" fill="var(--pixel-skin)"/><path d="M22 24h3v2h-3z" fill="#fff"/></g>
-        </g>
-        <g className="pixel-pose-clap" fill="var(--pixel-skin)">
-          <path d="M10 27h4v3h2v-2h2v-3h4v4h-3v3h-3v2h-4v-2h-2zM28 27h3v5h-3v2h-4v-3h-2v-6h3v4h3z"/>
-          <path d="M18 25h4v2h-4zM22 25h3v2h-3z" fill="#fff"/>
-        </g>
-        <g className="pixel-pose-cough" fill="var(--pixel-skin)">
-          <path d="M10 27h4v4h6v3h-7v-2h-3zM28 27h3v-4h-3v-3h-3v-2h-3v4h3v4h3z"/>
-          <path d="M22 18h3v1h-3z" fill="#fff"/>
-        </g>
+        {poses.map(({ name, near, far }) => <g key={name} className={`chalk-pose pose-${name}`}>
+          <ChalkArm arm={far} far/>
+          <ChalkArm arm={near}/>
+        </g>)}
         </g>
       </g>
-      <g className="pixel-chalk-cloud" fill="#fffdf7" stroke="#a9bad4" strokeWidth=".5">
-        <path className="chalk-puff puff-left" d="M13 24h3v-2h3v2h2v3h-3v2h-4v-2h-1zM9 26h2v2H9zM13 31h1v1h-1z"/>
-        <path className="chalk-puff puff-right" d="M24 22h4v2h3v3h-2v2h-4v-2h-2v-3h1zM32 26h2v2h-2zM29 31h1v1h-1z"/>
-        <path className="chalk-puff puff-up" d="M19 20h2v-2h3v2h2v4h-2v2h-4v-2h-2v-3h1zM16 23h2v2h-2zM26 19h2v2h-2z"/>
+      <g className="pixel-chalk-cloud" fill="#fffdf7">
+        <path className="chalk-puff puff-left" d="M17 25h2v1h1v2h-3v-1h-1v-1h1zM14 27h1v1h-1z"/>
+        <path className="chalk-puff puff-right" d="M23 25h3v1h1v1h-1v1h-3v-1h-1v-1h1zM28 25h1v1h-1z"/>
+        <path className="chalk-puff puff-up" d="M20 23h2v-1h1v2h1v1h-3v1h-2v-2h1zM24 21h1v1h-1z"/>
       </g>
-      <g className="pixel-chalk-spark" fill="#fff"><path d="M9 18h2v2H9zM32 17h2v2h-2zM22 13h1v1h-1z"/></g>
       <g className="pixel-cough-puff" fill="#fff" stroke="#a9bad9" strokeWidth=".3"><path d="M30 19h2v2h-2zM33 17h2v2h-2zM34 22h1v1h-1z"/></g>
     </svg>
     <span className="climber-name" aria-hidden="true">{siteConfig.profile.name}</span>
