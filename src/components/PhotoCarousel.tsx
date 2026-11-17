@@ -11,12 +11,12 @@ type Departure = { photo: ProfilePhoto; index: number; direction: number; offset
 function PhotoImage({ photo }: { photo: ProfilePhoto }) {
   const [failed, setFailed] = useState(false)
   return <span className="polaroid-media">
-    {failed ? <span className="polaroid-missing"><Camera size={30}/><span>Foto nicht verfügbar</span></span> : <img src={assetUrl(photo.src)} alt={photo.alt} width="640" height="640" draggable={false} decoding="async" onError={() => setFailed(true)} style={{ objectPosition: photo.position, transform: `scale(${photo.zoom ?? 1})`, filter: photo.monochrome ? 'grayscale(1)' : undefined }}/>} 
+    {failed ? <span className="polaroid-missing"><Camera size={30}/><span>Photo unavailable</span></span> : <img src={assetUrl(photo.src)} alt={photo.alt} width="640" height="640" draggable={false} decoding="async" onError={() => setFailed(true)} style={{ objectPosition: photo.position, transform: `scale(${photo.zoom ?? 1})`, filter: photo.monochrome ? 'grayscale(1)' : undefined }}/>}
   </span>
 }
 
 function PhotoPrint({ photo, index, total }: { photo: ProfilePhoto; index: number; total: number }) {
-  return <><PhotoImage key={photo.src} photo={photo}/><span className="polaroid-caption"><span>{photo.placeholder ? 'Platzhalter' : photo.caption ?? 'Ein bisschen ich.'}</span><span>{String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}</span></span></>
+  return <><PhotoImage key={photo.src} photo={photo}/><span className="polaroid-caption"><span>{photo.placeholder ? 'Placeholder' : photo.caption ?? 'A little bit of me.'}</span><span>{String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}</span></span></>
 }
 
 function PhotoDeck({ photos, name, index, onChange, onOpen, expanded = false }: {
@@ -91,20 +91,20 @@ function PhotoDeck({ photos, name, index, onChange, onOpen, expanded = false }: 
     setDragging(false)
   }
 
-  if (!photos.length) return <div className="photo-carousel photo-empty" role="img" aria-label="Platz für persönliche Fotos"><Camera size={32}/><span>Fotos folgen.</span></div>
+  if (!photos.length) return <div className="photo-carousel photo-empty" role="img" aria-label="Space for personal photos"><Camera size={32}/><span>Photos coming soon.</span></div>
 
-  return <div className={`photo-carousel ${expanded ? 'photo-carousel-large' : ''} ${dragging ? 'is-dragging' : ''} ${departure ? 'is-flipping' : ''}`} role="region" aria-roledescription="Karussell" aria-label={`Fotos von ${name}`} onKeyDown={event => {
+  return <div className={`photo-carousel ${expanded ? 'photo-carousel-large' : ''} ${dragging ? 'is-dragging' : ''} ${departure ? 'is-flipping' : ''}`} role="region" aria-roledescription="carousel" aria-label={`Photos of ${name}`} onKeyDown={event => {
     if (event.altKey || event.ctrlKey || event.metaKey || !['ArrowLeft', 'ArrowRight'].includes(event.key)) return
     event.preventDefault()
     flip(event.key === 'ArrowRight' ? 1 : -1)
   }}>
-    <span id={hintId} className="sr-only">{onOpen ? 'Mit Klick vergrößern. Mit Ziehen oder den Pfeiltasten durch die Fotos blättern.' : 'Mit Klick, Ziehen oder den Pfeiltasten durch die Fotos blättern.'}</span>
+    <span id={hintId} className="sr-only">{onOpen ? 'Click to enlarge. Drag or use the arrow keys to browse photos.' : 'Click, drag or use the arrow keys to browse photos.'}</span>
     <div className="photo-deck">
       {Array.from({ length: Math.min(photos.length - 1, 2) }, (_, depth) => {
         const back = (current + depth + 1) % photos.length
         return <div key={depth} className={`polaroid-frame photo-back photo-back-${depth + 1}`} aria-hidden="true"><PhotoPrint photo={photos[back]} index={back} total={photos.length}/></div>
       })}
-      <button className="polaroid-frame photo-current" aria-label={onOpen ? 'Fotos vergrößern' : 'Fotos durchblättern'} aria-haspopup={onOpen ? 'dialog' : undefined} aria-describedby={hintId} disabled={!canFlip && !onOpen}
+      <button className="polaroid-frame photo-current" aria-label={onOpen ? 'Enlarge photos' : 'Browse photos'} aria-haspopup={onOpen ? 'dialog' : undefined} aria-describedby={hintId} disabled={!canFlip && !onOpen}
         style={{ '--drag-x': `${reducedMotion ? 0 : offset}px`, '--drag-tilt': `${reducedMotion ? 0 : offset / 18}deg` } as CSSProperties}
         onPointerDown={begin} onPointerMove={move} onPointerUp={finish} onPointerCancel={cancel} onLostPointerCapture={cancel}
         onClick={event => {
@@ -117,8 +117,8 @@ function PhotoDeck({ photos, name, index, onChange, onOpen, expanded = false }: 
       </button>
       {departure && <div className="polaroid-frame photo-departing" aria-hidden="true" style={{ '--flip-direction': -departure.direction, '--flip-start': `${departure.offset}px` } as CSSProperties}><PhotoPrint photo={departure.photo} index={departure.index} total={photos.length}/></div>}
     </div>
-    {canFlip && <><button className="photo-nav photo-prev" aria-label="Vorheriges Foto" onClick={() => flip(-1)}><ArrowLeft size={15}/></button><button className="photo-nav photo-next" aria-label="Nächstes Foto" onClick={() => flip(1)}><ArrowRight size={15}/></button></>}
-    <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">Foto {current + 1} von {photos.length}{photos[current].placeholder ? ' · Platzhalter' : ''}</span>
+    {canFlip && <><button className="photo-nav photo-prev" aria-label="Previous photo" onClick={() => flip(-1)}><ArrowLeft size={15}/></button><button className="photo-nav photo-next" aria-label="Next photo" onClick={() => flip(1)}><ArrowRight size={15}/></button></>}
+    <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">Photo {current + 1} of {photos.length}{photos[current].placeholder ? ' · Placeholder' : ''}</span>
   </div>
 }
 

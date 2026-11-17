@@ -13,7 +13,7 @@ export function useContributionCalendar(username: string | null) {
     fetchCalendar(username, controller.signal).then(calendar => {
       if (!cancelled) setResult({ username, state: { status: 'ready', calendar } })
     }).catch((error: unknown) => {
-      if (!cancelled) setResult({ username, state: { status: 'error', message: controller.signal.aborted ? 'Der Kalender braucht gerade eine Pause.' : error instanceof Error ? error.message : 'Der Kalender ist gerade nicht verfügbar.' } })
+      if (!cancelled) setResult({ username, state: { status: 'error', message: controller.signal.aborted ? 'The calendar is taking a breather.' : error instanceof Error ? error.message : 'The calendar is currently unavailable.' } })
     }).finally(() => window.clearTimeout(timeout))
     return () => { cancelled = true; controller.abort(); window.clearTimeout(timeout) }
   }, [username, attempt])

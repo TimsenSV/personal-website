@@ -8,7 +8,7 @@ export function ChalkClimber({ cue = 0, compact = false }: { cue?: number; compa
   const colors = Object.fromEntries(Object.entries(siteConfig.profile.pixelAvatar).map(([key, value]) => [`--pixel-${key}`, value])) as CSSProperties
 
   return <button className={`chalk-climber ${compact ? 'is-compact' : ''}`} style={colors}
-    aria-label={`${siteConfig.profile.name}: Hände chalken`}
+    aria-label={`${siteConfig.profile.name}: Chalk up`}
     onPointerEnter={(event) => { if (event.pointerType !== 'touch') setReplay(value => value + 1) }}
     onFocus={(event) => { if (event.currentTarget.matches(':focus-visible')) setReplay(value => value + 1) }}
     onClick={() => setReplay(value => value + 1)}>

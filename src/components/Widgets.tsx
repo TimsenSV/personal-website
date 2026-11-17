@@ -18,39 +18,39 @@ export function IntroWidget({ profile, onOpenCv }: { profile: PortfolioConfig['p
     <div className="portrait-row"><PhotoCarousel photos={profile.photos} name={profile.name}/><div className="intro-name"><h1 id="intro-title">{profile.name}<span>.</span></h1></div></div>
     <div className="intro-copy"><p className="intro-positioning">{profile.positioning}</p></div>
     <div className="intro-actions">
-    <Popout className="focus-popout" buttonClassName="current-focus" label="Aktuellen Gedanken aufklappen" title="Gerade im Kopf" trigger={<><span className="focus-dot"/><span><span className="eyebrow">Gerade im Kopf</span><span className="focus-preview">{profile.focus}</span></span><Plus size={15}/></>}>
-      <><span className="note-symbol" aria-hidden="true">✳</span><p className="popout-thought">{profile.focus}</p><p>Meine drei Produkte zeigen verschiedene Perspektiven darauf: Information, Darstellung und Handlung.</p></>
+    <Popout className="focus-popout" buttonClassName="current-focus" label="Open current thought" title="On my mind" trigger={<><span className="focus-dot"/><span><span className="eyebrow">On my mind</span><span className="focus-preview">{profile.focus}</span></span><Plus size={15}/></>}>
+      <><span className="note-symbol" aria-hidden="true">✳</span><p className="popout-thought">{profile.focus}</p><p>My three products explore it from different angles: information, presentation and action.</p></>
     </Popout>
-    <button className="cv-trigger" onClick={onOpenCv} aria-label="Lebenslauf öffnen" aria-haspopup="dialog"><FileUser size={18} aria-hidden="true"/><span>CV</span><ArrowUpRight size={14} aria-hidden="true"/></button>
+    <button className="cv-trigger" onClick={onOpenCv} aria-label="Open CV" aria-haspopup="dialog"><FileUser size={18} aria-hidden="true"/><span>CV</span><ArrowUpRight size={14} aria-hidden="true"/></button>
     </div>
   </section>
 }
 
 export function GithubDetail({ config }: { config: PortfolioConfig['github'] }) {
   const { state, retry } = useGitHubActivity(config.username)
-  return <div className="standard-detail"><p className="eyebrow"><Github size={16}/> Die Werkbank</p><h3>Von „Was wäre, wenn“<br/><em>zu „Schau mal“.</em></h3><p>Ein Platz für Experimente, kleine Werkzeuge und Dinge, an denen ich weiterdenke.</p>
-    <GitHubHeatmap username={config.username} full/><section className="activity-section"><h4>Öffentliche GitHub-Aktivität</h4>
-      {state.status === 'idle' && <div className="honest-empty"><GitBranch size={25}/><p>Hier ist noch kein GitHub-Profil verbunden.<span>Sobald mein Nutzername hinterlegt ist, erscheinen hier echte öffentliche Aktivitäten.</span></p></div>}
-      {state.status === 'loading' && <p role="status" className="loading-copy">Aktivität wird von GitHub geladen …</p>}
-      {state.status === 'empty' && <p className="honest-empty" role="status">Im aktuellen GitHub-Zeitraum sind keine öffentlichen Aktivitäten sichtbar. Das heißt nicht, dass nichts entsteht.</p>}
-      {state.status === 'error' && <div className="honest-empty" role="status"><p>{state.message}</p><button className="button secondary" onClick={retry}>Erneut versuchen</button></div>}
-      {state.status === 'success' && <ul className="activity-list">{state.activities.map((activity) => <li key={activity.id}><GitBranch size={17}/><div><ExternalLink href={activity.url}>{activity.repository}</ExternalLink><p>{activity.label}</p></div><time dateTime={activity.date}>{new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: 'short' }).format(new Date(activity.date))}</time></li>)}</ul>}
-      {config.username && <p className="small-note">Aktuelle öffentliche Ereignisse von GitHub, zeitverzögert. Kein vollständiger Contribution-Verlauf.</p>}
+  return <div className="standard-detail"><p className="eyebrow"><Github size={16}/> The workbench</p><h3>From “What if”<br/><em>to “Look at this”.</em></h3><p>A place for experiments, little tools and ideas I keep coming back to.</p>
+    <GitHubHeatmap username={config.username} full/><section className="activity-section"><h4>Public GitHub activity</h4>
+      {state.status === 'idle' && <div className="honest-empty"><GitBranch size={25}/><p>No GitHub profile connected yet.<span>Once my username is added, real public activity will appear here.</span></p></div>}
+      {state.status === 'loading' && <p role="status" className="loading-copy">Loading activity from GitHub …</p>}
+      {state.status === 'empty' && <p className="honest-empty" role="status">No public activity in GitHub’s current window. That doesn’t mean nothing is being built.</p>}
+      {state.status === 'error' && <div className="honest-empty" role="status"><p>{state.message}</p><button className="button secondary" onClick={retry}>Try again</button></div>}
+      {state.status === 'success' && <ul className="activity-list">{state.activities.map((activity) => <li key={activity.id}><GitBranch size={17}/><div><ExternalLink href={activity.url}>{activity.repository}</ExternalLink><p>{activity.label}</p></div><time dateTime={activity.date}>{new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short' }).format(new Date(activity.date))}</time></li>)}</ul>}
+      {config.username && <p className="small-note">Recent public GitHub events, with a delay. This isn’t a complete contribution history.</p>}
     </section>
-    <section className="selected-repositories"><h4>Ausgewählte Experimente</h4>{config.repositories.length ? config.repositories.map((repository) => <article key={repository.name}><Code2 size={23}/><div><h5>{repository.name}</h5><p>{repository.description}</p><div className="tag-row">{repository.tags.map((tag) => <span key={tag}>{tag}</span>)}</div><ExternalLink href={repository.url}>Repository ansehen</ExternalLink>{!repository.url && <span className="small-note">Noch lokal. Der öffentliche Link folgt.</span>}</div></article>) : <p className="placeholder-copy">Meine Auswahl ergänze ich hier noch.</p>}</section>
-    <ExternalLink className="button primary" href={githubProfile(config.username)}>Zum GitHub-Profil</ExternalLink>
+    <section className="selected-repositories"><h4>Selected experiments</h4>{config.repositories.length ? config.repositories.map((repository) => <article key={repository.name}><Code2 size={23}/><div><h5>{repository.name}</h5><p>{repository.description}</p><div className="tag-row">{repository.tags.map((tag) => <span key={tag}>{tag}</span>)}</div><ExternalLink href={repository.url}>View repository</ExternalLink>{!repository.url && <span className="small-note">Still local. Public link coming soon.</span>}</div></article>) : <p className="placeholder-copy">I’ll add my selection here soon.</p>}</section>
+    <ExternalLink className="button primary" href={githubProfile(config.username)}>View GitHub profile</ExternalLink>
   </div>
 }
 
 export function MusicWidget({ config, onOpen }: { config: PortfolioConfig['spotify']; onOpen: () => void }) {
   const playlist = spotifyPlaylist(config.url)
   return <section className="card music-card" aria-labelledby="music-title">
-    <Popout className="record-popout" buttonClassName="record-object" label="Playlist-Vorschau öffnen" title="Eine Seite von mir" action={playlist ? { label: 'Playlist öffnen', onClick: onOpen } : undefined} trigger={<>
+    <Popout className="record-popout" buttonClassName="record-object" label="Open playlist preview" title="A side of me" action={playlist ? { label: 'Open playlist', onClick: onOpen } : undefined} trigger={<>
       <span className="vinyl-disc" aria-hidden="true"><span><AudioLines size={20}/></span></span>
       <span className="record-sleeve">{config.cover ? <img src={assetUrl(config.cover.src)} alt={config.cover.alt} width="160" height="160" loading="lazy"/> : <span className="album-art" aria-hidden="true"><span className="album-art-title">A SIDE<br/>OF ME<span>01</span></span><span className="album-star">✳</span><span className="album-art-bottom">MUSIC IS A GOOD PLACE.</span></span>}</span>
-      <span className="record-sticker" aria-hidden="true">{playlist ? 'REINHÖREN ↗' : 'PLAYLIST FOLGT'}</span>
+      <span className="record-sticker" aria-hidden="true">{playlist ? 'LISTEN IN ↗' : 'PLAYLIST SOON'}</span>
     </>}>
-      <><div className="popout-icon"><AudioLines size={24}/></div><h3>{config.title}</h3><p>{playlist ? config.note : 'Hier zieht bald meine Lieblingsplaylist ein. Bis dahin ist das Cover ein Platzhalter – und es bleibt still.'}</p></>
+      <><div className="popout-icon"><AudioLines size={24}/></div><h3>{config.title}</h3><p>{playlist ? config.note : 'My favourite playlist will move in here soon. For now, the cover is a placeholder and the needle stays up.'}</p></>
     </Popout>
     <div className="playlist-copy"><h2 id="music-title">{config.title}</h2>{playlist && <p>{config.note}</p>}</div>
     <div className="music-bottom"><SpotifyMark className="spotify-mark"/><span className="equalizer" aria-hidden="true"><i/><i/><i/><i/><i/></span></div>
@@ -59,22 +59,22 @@ export function MusicWidget({ config, onOpen }: { config: PortfolioConfig['spoti
 
 export function MusicDetail({ config }: { config: PortfolioConfig['spotify'] }) {
   const playlist = spotifyPlaylist(config.url)
-  return <div className="standard-detail"><p className="eyebrow"><AudioLines size={16}/> Mein Soundtrack</p><h3>{config.title}</h3><p>{config.note}</p>{playlist ? <><iframe className="spotify-embed" src={playlist.embed} title={`Spotify-Playlist: ${config.title}`} width="100%" height="352" allow="encrypted-media; fullscreen; picture-in-picture" loading="lazy"/><p className="small-note">Falls der Player nicht lädt, kannst du die Playlist direkt auf Spotify öffnen.</p><ExternalLink href={playlist.url} className="button primary">Auf Spotify öffnen</ExternalLink></> : <div className="honest-empty"><ImagePlus size={24}/><p>Meine Playlist folgt noch. Bis dahin bleibt es hier bewusst still.</p></div>}</div>
+  return <div className="standard-detail"><p className="eyebrow"><AudioLines size={16}/> My soundtrack</p><h3>{config.title}</h3><p>{config.note}</p>{playlist ? <><iframe className="spotify-embed" src={playlist.embed} title={`Spotify playlist: ${config.title}`} width="100%" height="352" allow="encrypted-media; fullscreen; picture-in-picture" loading="lazy"/><p className="small-note">If the player won’t load, you can open the playlist directly on Spotify.</p><ExternalLink href={playlist.url} className="button primary">Open on Spotify</ExternalLink></> : <div className="honest-empty"><ImagePlus size={24}/><p>Playlist coming soon. Until then, a little quiet.</p></div>}</div>
 }
 
 export function RunningWidget({ config, onOpen }: { config: PortfolioConfig['running']; onOpen: () => void }) {
   const scene = <span className="runner-scene" aria-hidden="true"><span className="runner-track"/><span className="runner-speed"><i/><i/><i/></span><PixelRunner/></span>
   return <section className="card running-card runner-card" aria-labelledby="running-title">
-    <div className="runner-heading"><h2 id="running-title" lang="en">{config.title}</h2><button className="round-link" onClick={onOpen} aria-label="Laufen: Details öffnen"><ArrowUpRight size={18}/></button></div>
-    {externalUrl(config.stravaUrl) ? <ExternalLink href={config.stravaUrl} className="strava-run-link">{scene}<span className="strava-follow"><StravaMark/>Mit mir auf Strava laufen</span></ExternalLink> : <>{scene}<span className="small-note">Strava-Link folgt.</span></>}
+    <div className="runner-heading"><h2 id="running-title" lang="en">{config.title}</h2><button className="round-link" onClick={onOpen} aria-label="Running: open details"><ArrowUpRight size={18}/></button></div>
+    {externalUrl(config.stravaUrl) ? <ExternalLink href={config.stravaUrl} className="strava-run-link">{scene}<span className="strava-follow"><StravaMark/>Run with me on Strava</span></ExternalLink> : <>{scene}<span className="small-note">Strava link coming soon.</span></>}
   </section>
 }
 
 export function RunningDetail({ config }: { config: PortfolioConfig['running'] }) {
-  return <div className="standard-detail running-detail"><p className="eyebrow"><Footprints size={16}/> Laufen</p><h3>{config.title}</h3><p>{config.note}</p><ExternalLink href={config.stravaUrl} className="button primary">Mit mir auf Strava laufen</ExternalLink><figure><RouteDrawing/><figcaption>Ein abstraktes Motiv, keine aufgezeichnete Strecke.</figcaption></figure><div className="contribution-grid"><section><h4>Meine Lieblingsstrecke</h4><p className={config.routeName ? '' : 'placeholder-copy'}>{config.routeName ?? 'Die ergänze ich hier noch.'}</p></section><section><h4>Worauf ich hinlaufe</h4><p className={config.goal ? '' : 'placeholder-copy'}>{config.goal ?? 'Hier ist Platz für mein nächstes persönliches Laufziel.'}</p></section></div></div>
+  return <div className="standard-detail running-detail"><p className="eyebrow"><Footprints size={16}/> Running</p><h3>{config.title}</h3><p>{config.note}</p><ExternalLink href={config.stravaUrl} className="button primary">Run with me on Strava</ExternalLink><figure><RouteDrawing/><figcaption>An abstract illustration, not a recorded route.</figcaption></figure><div className="contribution-grid"><section><h4>My favourite route</h4><p className={config.routeName ? '' : 'placeholder-copy'}>{config.routeName ?? 'I’ll add it here soon.'}</p></section><section><h4>What I’m running towards</h4><p className={config.goal ? '' : 'placeholder-copy'}>{config.goal ?? 'A space for my next running goal.'}</p></section></div></div>
 }
 
 export function BoulderWidget({ onOpen }: { onOpen: () => void }) {
   const [chalkCue, setChalkCue] = useState(0)
-  return <section className="card boulder-card" aria-labelledby="boulder-title" onPointerEnter={(event) => { if (event.pointerType !== 'touch') setChalkCue(value => value + 1) }} onFocus={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setChalkCue(value => value + 1) }}><div className="boulder-heading"><h2 id="boulder-title" lang="en">{CLIMB_NAME}.</h2><span className="boulder-number" aria-hidden="true">∞</span></div><div className="boulder-scene"><button className="boulder-preview-button" onClick={onOpen} aria-label="Boulder-Problem vergrößern und spielen"><BoulderPreview/><span className="board-open-hint"><Play size={12} fill="currentColor"/> Losklettern</span></button><div className="boulder-avatar"><ChalkClimber cue={chalkCue}/></div></div><div className="boulder-bottom"><button className="round-link" onClick={onOpen} aria-label="Boulder-Minispiel starten"><ArrowUpRight size={18}/></button></div></section>
+  return <section className="card boulder-card" aria-labelledby="boulder-title" onPointerEnter={(event) => { if (event.pointerType !== 'touch') setChalkCue(value => value + 1) }} onFocus={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setChalkCue(value => value + 1) }}><div className="boulder-heading"><h2 id="boulder-title" lang="en">{CLIMB_NAME}.</h2><span className="boulder-number" aria-hidden="true">∞</span></div><div className="boulder-scene"><button className="boulder-preview-button" onClick={onOpen} aria-label="Open and play the climbing game"><BoulderPreview/><span className="board-open-hint"><Play size={12} fill="currentColor"/> Start climbing</span></button><div className="boulder-avatar"><ChalkClimber cue={chalkCue}/></div></div><div className="boulder-bottom"><button className="round-link" onClick={onOpen} aria-label="Start climbing game"><ArrowUpRight size={18}/></button></div></section>
 }

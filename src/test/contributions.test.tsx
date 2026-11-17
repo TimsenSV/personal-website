@@ -11,7 +11,7 @@ import { calendarFixture } from './fixtures/calendar'
 describe('verified contribution snapshots', () => {
   it('accepts a matching complete calendar and rejects another profile', () => {
     expect(parseCalendar(calendarFixture(), 'timsensv').total).toBe(3)
-    expect(() => parseCalendar(calendarFixture(), 'someone-else')).toThrow(/vollständiger/)
+    expect(() => parseCalendar(calendarFixture(), 'someone-else')).toThrow(/complete/)
   })
   it('rejects invalid counts, levels, dates, gaps and totals', () => {
     for (const change of [
@@ -33,7 +33,7 @@ describe('verified contribution snapshots', () => {
   it('loads a same-origin snapshot without credentials and rejects missing files', async () => {
     const fetch = vi.fn().mockResolvedValue({ ok: false })
     vi.stubGlobal('fetch', fetch)
-    await expect(fetchCalendar('TimsenSV', new AbortController().signal)).rejects.toThrow(/nicht verfügbar/)
+    await expect(fetchCalendar('TimsenSV', new AbortController().signal)).rejects.toThrow(/unavailable/)
     expect(fetch.mock.calls[0][0]).toBe('/data/github-contributions.json')
     expect(fetch.mock.calls[0][1].credentials).toBe('omit')
   })
@@ -42,29 +42,29 @@ describe('verified contribution snapshots', () => {
     data.days.forEach(day => { day.count = 0; day.level = 0 }); data.total = 0
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => data }))
     render(<GitHubHeatmap username="TimsenSV"/>)
-    expect(screen.getByRole('status')).toHaveTextContent(/geladen/)
-    expect(await screen.findByRole('img', { name: /^0 GitHub-Beiträge von TimsenSV/ })).toBeVisible()
-    expect(screen.getByText('Hier war es öffentlich ruhig.')).toBeVisible()
+    expect(screen.getByRole('status')).toHaveTextContent(/Loading/)
+    expect(await screen.findByRole('img', { name: /^0 GitHub contributions by TimsenSV/ })).toBeVisible()
+    expect(screen.getByText('Quiet on the public side.')).toBeVisible()
   })
   it('recovers from a failed load without showing a fabricated heatmap', async () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValueOnce(new Error('Offline')).mockResolvedValueOnce({ ok: true, json: async () => calendarFixture() }))
     render(<GitHubHeatmap username="TimsenSV"/>)
-    await userEvent.click(await screen.findByRole('button', { name: 'Erneut laden' }))
-    expect(await screen.findByRole('img', { name: /^3 GitHub-Beiträge/ })).toBeVisible()
+    await userEvent.click(await screen.findByRole('button', { name: 'Reload' }))
+    expect(await screen.findByRole('img', { name: /^3 GitHub contributions/ })).toBeVisible()
   })
   it('includes the first and last day of the year in the widget, not just the latest half', async () => {
     render(<GithubWidget config={siteConfig.github} onOpen={() => {}}/>)
-    const graph = await screen.findByRole('img', { name: /^3 GitHub-Beiträge/ })
-    expect(graph).toHaveAccessibleName(/16\. November 2025 bis 15\. November 2026/)
+    const graph = await screen.findByRole('img', { name: /^3 GitHub contributions/ })
+    expect(graph).toHaveAccessibleName(/16 November 2025 to 15 November 2026/)
     expect(graph.querySelectorAll('.heatmap-wide rect')).toHaveLength(365)
     expect(graph.querySelectorAll('.heatmap-stacked rect')).toHaveLength(365)
-    expect(screen.getByText('Ein Jahr auf GitHub')).toBeVisible()
+    expect(screen.getByText('A year on GitHub')).toBeVisible()
   })
   it('makes the fictional PRs available by hover, keyboard and explicit toggle', async () => {
     const user = userEvent.setup({ skipHover: true })
     render(<GithubWidget config={siteConfig.github} onOpen={() => {}}/>)
-    const card = screen.getByRole('region', { name: 'Commit für Commit.' })
-    const toggle = await screen.findByRole('button', { name: 'Pull Requests anzeigen' })
+    const card = screen.getByRole('region', { name: 'Commit by commit.' })
+    const toggle = await screen.findByRole('button', { name: 'Show pull requests' })
     expect(toggle).toHaveAttribute('aria-expanded', 'false')
     await user.hover(card)
     expect(toggle).toHaveAttribute('aria-expanded', 'true')
@@ -93,7 +93,7 @@ describe('verified contribution snapshots', () => {
     vi.useFakeTimers()
     try {
       await act(async () => { render(<GithubWidget config={siteConfig.github} onOpen={() => {}}/>) })
-      const toggle = screen.getByRole('button', { name: 'Pull Requests anzeigen' })
+      const toggle = screen.getByRole('button', { name: 'Show pull requests' })
       fireEvent.click(toggle)
       const statuses = () => screen.getAllByRole('listitem').map(item => item.querySelector('.pr-status')?.textContent)
       const titles = () => screen.getAllByRole('listitem').map(item => item.querySelector('strong')?.textContent)

@@ -27,8 +27,8 @@ export function GithubWidget({ config, onOpen }: { config: PortfolioConfig['gith
     onPointerEnter={event => { if (event.pointerType !== 'touch') setHovered(true) }} onPointerLeave={() => setHovered(false)}
     onFocus={event => { if (event.target.matches(':focus-visible') && !event.target.closest('.heatmap-trigger')) setFocused(true) }}
     onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false) }}>
-    <div className="widget-top"><ExternalLink href={githubProfile(config.username)}><Github size={19} aria-hidden="true"/>@{config.username}</ExternalLink><button className="round-link" onClick={onOpen} aria-label="GitHub und Experimente öffnen"><ArrowUpRight size={18}/></button></div>
-    <h2 className="sr-only" id="github-title">Commit für Commit.</h2>
+    <div className="widget-top"><ExternalLink href={githubProfile(config.username)}><Github size={19} aria-hidden="true"/>@{config.username}</ExternalLink><button className="round-link" onClick={onOpen} aria-label="Open GitHub and experiments"><ArrowUpRight size={18}/></button></div>
+    <h2 className="sr-only" id="github-title">Commit by commit.</h2>
     <GitHubHeatmap username={config.username} interaction={config.playfulPullRequests.length ? { expanded: show, controls: 'playful-pull-requests', onToggle: () => { setPinned(!pinned); setHovered(false); setFocused(false) } } : undefined}/>
     <div id="playful-pull-requests" className="pr-rollout" hidden={!show}>{show && <PullRequestRollout requests={config.playfulPullRequests}/>}</div>
   </section>

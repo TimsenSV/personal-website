@@ -127,8 +127,8 @@ export function PhotoLightbox({ name, children }: {
       }}
       onPointerDown={event => { backdropPress.current = event.target === event.currentTarget }}
       onClick={event => { if (backdropPress.current && event.target === event.currentTarget) close() }}>
-      <h2 id={titleId} className="sr-only">Fotos von {name}</h2>
-      <button className="photo-lightbox-close" data-close onClick={close} aria-label="Fotogalerie schließen"><X size={22}/></button>
+      <h2 id={titleId} className="sr-only">Photos of {name}</h2>
+      <button className="photo-lightbox-close" data-close onClick={close} aria-label="Close photo gallery"><X size={22}/></button>
       <div ref={anchorRef} className="photo-lightbox-anchor" inert={closing}/>
       {createPortal(children({ expanded: !!origin, open: trigger => setOrigin({ rect: host.getBoundingClientRect(), trigger }) }), host)}
     </dialog>, document.body)}

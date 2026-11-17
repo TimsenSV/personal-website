@@ -24,21 +24,21 @@ export function CvDetail({ config }: { config: CvConfig }) {
       <p className="cv-location"><MapPin size={14} aria-hidden="true"/>{config.location}</p>
       <p className="cv-summary">{config.summary}</p>
     </header>
-    <section className="cv-section" aria-labelledby="cv-experience"><h4 id="cv-experience"><span>01</span> Erfahrung</h4>
+    <section className="cv-section" aria-labelledby="cv-experience"><h4 id="cv-experience"><span>01</span> Experience</h4>
       <Entries entries={config.experience.slice(0, 3)}/>
-      {config.experience.length > 3 && <Collection title="Frühere Stationen" entries={config.experience.slice(3)}/>}
+      {config.experience.length > 3 && <Collection title="Previous roles" entries={config.experience.slice(3)}/>}
     </section>
-    <section className="cv-section" aria-labelledby="cv-education"><h4 id="cv-education"><span>02</span> Ausbildung</h4><Entries entries={config.education}/></section>
-    <section className="cv-section cv-more" aria-labelledby="cv-more"><h4 id="cv-more"><span>03</span> Darüber hinaus</h4>
-      <Collection title="Zertifikate & Weiterbildung" entries={config.certifications}/>
-      <Collection title="Projekte & Programme" entries={config.projects}/>
-      <Collection title="Engagement" entries={config.volunteering}/>
-      <Collection title="Auszeichnungen" entries={config.awards}/>
+    <section className="cv-section" aria-labelledby="cv-education"><h4 id="cv-education"><span>02</span> Education</h4><Entries entries={config.education}/></section>
+    <section className="cv-section cv-more" aria-labelledby="cv-more"><h4 id="cv-more"><span>03</span> Beyond work</h4>
+      <Collection title="Certifications & learning" entries={config.certifications}/>
+      <Collection title="Projects & programmes" entries={config.projects}/>
+      <Collection title="Volunteering" entries={config.volunteering}/>
+      <Collection title="Awards" entries={config.awards}/>
     </section>
-    <section className="cv-section" aria-labelledby="cv-skills"><h4 id="cv-skills"><span>04</span> Kenntnisse & Sprachen</h4>
+    <section className="cv-section" aria-labelledby="cv-skills"><h4 id="cv-skills"><span>04</span> Skills & languages</h4>
       <ul className="cv-skills">{config.skills.map((skill) => <li key={skill}>{skill}</li>)}</ul>
       <dl className="cv-languages">{config.languages.map((language) => <div key={language.name}><dt>{language.name}</dt><dd>{language.level}</dd></div>)}</dl>
     </section>
-    <p className="cv-source">Nach meinem LinkedIn-Profil · Stand <time dateTime={config.source.checkedAt}>{new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC' }).format(new Date(config.source.checkedAt))}</time></p>
+    <p className="cv-source">Based on my LinkedIn profile · Updated <time dateTime={config.source.checkedAt}>{new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC' }).format(new Date(config.source.checkedAt))}</time></p>
   </article>
 }

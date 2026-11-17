@@ -11,7 +11,7 @@ export type ClimbState = {
   zone: TimingZone
 }
 
-export const CLIMB_NAME = 'Chalk ’til you drop'
+export const CLIMB_NAME = 'Grip Happens'
 export const ZONE_INITIAL_WIDTH = .3
 export const ZONE_MIN_WIDTH = .2
 export const ZONE_MAX_WIDTH = .42
@@ -60,7 +60,7 @@ export function holdTime(step: number, kind: HoldKind) {
 }
 
 export function createClimb(seed = 1): ClimbState {
-  return { seed, status: 'ready', step: 0, height: 0, side: null, kind: 'jug', elapsed: 0, budget: 3200, cooldown: 0, combo: 0, maxCombo: 0, saves: 1, feedback: 'Dein nächster Griff wartet.', event: 0, lastMove: 'start', reason: null, zone: { center: .45, width: ZONE_INITIAL_WIDTH, change: 'steady' } }
+  return { seed, status: 'ready', step: 0, height: 0, side: null, kind: 'jug', elapsed: 0, budget: 3200, cooldown: 0, combo: 0, maxCombo: 0, saves: 1, feedback: 'Your next hold is waiting.', event: 0, lastMove: 'start', reason: null, zone: { center: .45, width: ZONE_INITIAL_WIDTH, change: 'steady' } }
 }
 
 export function startClimb(seed: number): ClimbState { return { ...createClimb(seed), status: 'playing' } }
@@ -69,8 +69,8 @@ export function resumeClimb(state: ClimbState): ClimbState { return state.status
 
 function miss(state: ClimbState, reason: 'time' | 'wrong' | 'early'): ClimbState {
   const zone = adaptZone(state, false, false)
-  if (state.saves > 0) return { ...state, zone, saves: 0, combo: 0, elapsed: 0, cooldown: 320, feedback: `${reason === 'early' ? 'Zu hektisch.' : reason === 'wrong' ? 'Daneben.' : 'Abgerutscht.'} Gerade noch gefangen!`, lastMove: 'slip', event: state.event + 1 }
-  return { ...state, zone, status: 'fallen', combo: 0, reason, feedback: reason === 'time' ? 'Die Schwerkraft war schneller.' : reason === 'early' ? 'Die Hände schneller als der Kopf.' : 'Es lag am Griff.', event: state.event + 1 }
+  if (state.saves > 0) return { ...state, zone, saves: 0, combo: 0, elapsed: 0, cooldown: 320, feedback: `${reason === 'early' ? 'Too eager.' : reason === 'wrong' ? 'Missed it.' : 'Slipped.'} Caught yourself. Just!`, lastMove: 'slip', event: state.event + 1 }
+  return { ...state, zone, status: 'fallen', combo: 0, reason, feedback: reason === 'time' ? 'Gravity got there first.' : reason === 'early' ? 'Hands faster than your brain.' : 'It was definitely the hold.', event: state.event + 1 }
 }
 
 export function tickClimb(state: ClimbState, milliseconds: number): ClimbState {
@@ -94,7 +94,7 @@ export function reachClimb(state: ClimbState, side: Side): ClimbState {
     height: Math.round((state.height + gain) * 10) / 10,
     elapsed: 0, budget: holdTime(state.step + 1, target.kind), cooldown: 160,
     combo, maxCombo: Math.max(combo, state.maxCombo), zone: adaptZone(state, clean, true),
-    feedback: clean ? combo >= 3 ? `${combo} in Folge. Im Flow!` : 'Sauber!' : progress > zoneBounds(state.zone).end ? 'Knapp, aber dran.' : 'Griff sitzt.',
+    feedback: clean ? combo >= 3 ? `${combo} in a row. In the flow!` : 'Clean!' : progress > zoneBounds(state.zone).end ? 'Close, but hanging on.' : 'Got a grip.',
     lastMove: clean ? 'clean' : 'catch', event: state.event + 1,
   }
 }
@@ -120,4 +120,4 @@ export function saveBest(height: number): void {
   if (!Number.isFinite(height) || height < 0 || height > 1_000_000) return
   try { localStorage.setItem(BEST_KEY, String(Math.max(readBest(), height))) } catch { /* Storage may be unavailable; the in-memory record still works. */ }
 }
-export const formatHeight = (height: number) => height.toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
+export const formatHeight = (height: number) => height.toLocaleString('en-GB', { minimumFractionDigits: 1, maximumFractionDigits: 1 })

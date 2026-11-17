@@ -6,6 +6,6 @@ export function ExternalLink({ href, children, className = '' }: { href: string 
   const url = externalUrl(href)
   if (!url) return null
   return <a href={url} target="_blank" rel="noopener noreferrer" className={`external-link ${className}`}>
-    {children}<ArrowUpRight size={15} aria-hidden="true"/><span className="sr-only"> (öffnet einen neuen Tab)</span>
+    {children}<ArrowUpRight size={15} aria-hidden="true"/><span className="sr-only"> (opens in a new tab)</span>
   </a>
 }

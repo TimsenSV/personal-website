@@ -73,7 +73,7 @@ export function Popout({ label, title, trigger, children, action, className = ''
   return <div className={`popout-anchor ${className} ${open ? 'is-open' : ''}`}>
     <button ref={triggerRef} className={buttonClassName} aria-label={label} aria-expanded={open} aria-controls={open ? id : undefined} aria-haspopup="dialog" onClick={() => setOpen(!open)}>{trigger}</button>
     {open && <div className="widget-popout" id={id} ref={panelRef} role="dialog" aria-labelledby={`${id}-title`}>
-      <div className="popout-heading"><span id={`${id}-title`}>{title}</span><button data-popout-close className="icon-button" aria-label="Vorschau schließen" onClick={close}><X size={16}/></button></div>
+      <div className="popout-heading"><span id={`${id}-title`}>{title}</span><button data-popout-close className="icon-button" aria-label="Close preview" onClick={close}><X size={16}/></button></div>
       <div className="popout-content">{children}{action && <button className="button primary" onClick={() => { close(); action.onClick() }}>{action.label}<ArrowUpRight size={15}/></button>}</div>
     </div>}
   </div>

@@ -12,13 +12,13 @@ import { cvConfig } from './content/cv'
 import { CLIMB_NAME } from './game/climber'
 
 type Detail = ProductId | 'play' | 'github' | 'music' | 'running' | 'cv'
-const titles: Record<Detail, string> = { shopvibes: 'Meine Arbeit / shopvibes', showcase: 'Meine Arbeit / showcase', backlane: 'Meine Arbeit / Backlane', play: CLIMB_NAME, github: 'Werkbank / GitHub & Experimente', music: 'Auf den Ohren / Spotify', running: 'Draußen sein / Laufen', cv: `Lebenslauf / ${cvConfig.name}` }
+const titles: Record<Detail, string> = { shopvibes: 'My work / shopvibes', showcase: 'My work / showcase', backlane: 'My work / Backlane', play: CLIMB_NAME, github: 'Workbench / GitHub & experiments', music: 'On repeat / Spotify', running: 'Outside / Running', cv: `CV / ${cvConfig.name}` }
 
 export default function App() {
   const [detail, setDetail] = useState<Detail | null>(null)
   const product = siteConfig.products.find((item) => item.id === detail)
   return <>
-    <a className="skip-link" href="#canvas">Zum Inhalt springen</a>
+    <a className="skip-link" href="#canvas">Skip to content</a>
     <div className="page-shell" id="overview" tabIndex={-1}>
       <main className="bento-grid" id="canvas" tabIndex={-1}>
         <IntroWidget profile={siteConfig.profile} onOpenCv={() => setDetail('cv')}/>

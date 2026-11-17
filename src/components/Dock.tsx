@@ -55,15 +55,15 @@ export function Dock({ profile, username, onPlay }: { profile: PortfolioConfig['
   const external = [
     { label: 'GitHub', href: githubProfile(username), Icon: Github, color: 'ink' },
     { label: 'LinkedIn', href: externalUrl(profile.linkedinUrl), Icon: Linkedin, color: 'linkedin' },
-    { label: 'E-Mail', href: emailUrl(profile.email), Icon: Mail, color: 'mail' },
-  ].filter((item) => item.href).map((item): DockEntry => ({ ...item, href: item.href!, external: item.label !== 'E-Mail', accessibleLabel: `${item.label} ${item.label === 'E-Mail' ? '(E-Mail-Programm öffnen)' : '(öffnet einen neuen Tab)'}` }))
+    { label: 'Email', href: emailUrl(profile.email), Icon: Mail, color: 'mail' },
+  ].filter((item) => item.href).map((item): DockEntry => ({ ...item, href: item.href!, external: item.label !== 'Email', accessibleLabel: `${item.label} ${item.label === 'Email' ? '(opens your email app)' : '(opens in a new tab)'}` }))
   const entries: DockEntry[] = [
-    { label: 'Übersicht', href: '#overview', Icon: LayoutGrid, color: 'overview', current: true },
-    { label: 'Arbeit', href: '#work', Icon: Layers3, color: 'work' },
-    { label: CLIMB_NAME, accessibleLabel: `Spielen: ${CLIMB_NAME} öffnen`, onClick: onPlay, Icon: Gamepad2, color: 'play' },
+    { label: 'Overview', href: '#overview', Icon: LayoutGrid, color: 'overview', current: true },
+    { label: 'Work', href: '#work', Icon: Layers3, color: 'work' },
+    { label: CLIMB_NAME, accessibleLabel: `Play ${CLIMB_NAME}`, onClick: onPlay, Icon: Gamepad2, color: 'play' },
     ...external,
   ]
-  return <LazyMotion features={domAnimation} strict><nav className="dock" aria-label="Schnellnavigation" data-magnification={enabled ? 'on' : 'off'}
+  return <LazyMotion features={domAnimation} strict><nav className="dock" aria-label="Quick navigation" data-magnification={enabled ? 'on' : 'off'}
     onPointerMove={(event) => {
       if (!enabled || event.pointerType !== 'mouse') return
       focusIndex.set(-1)

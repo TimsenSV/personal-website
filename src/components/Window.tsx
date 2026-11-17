@@ -44,8 +44,8 @@ export function Window({ title, children, onClose, variant = '', expandable = tr
       <span className="window-chrome" aria-hidden="true"><i/><i/><i/></span>
       <h2 id="window-title">{title}</h2>
       <div className="window-controls">
-        {expandable && <button className="window-expand icon-button" onClick={() => setExpanded(!expanded)} aria-label={expanded ? 'Fenster verkleinern' : 'Fenster vergrößern'} aria-pressed={expanded}>{expanded ? <Minimize2 size={17}/> : <Maximize2 size={17}/>}</button>}
-        <button className="icon-button" data-close onClick={onClose} aria-label="Fenster schließen"><X size={20}/><span className="mobile-close-label">Schließen</span></button>
+        {expandable && <button className="window-expand icon-button" onClick={() => setExpanded(!expanded)} aria-label={expanded ? 'Restore window' : 'Expand window'} aria-pressed={expanded}>{expanded ? <Minimize2 size={17}/> : <Maximize2 size={17}/>}</button>}
+        <button className="icon-button" data-close onClick={onClose} aria-label="Close window"><X size={20}/><span className="mobile-close-label">Close</span></button>
       </div>
     </div>
     <div className="window-body">{children}</div>

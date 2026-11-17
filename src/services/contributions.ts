@@ -7,14 +7,14 @@ export type ContributionCalendar = {
 }
 
 export function parseCalendar(value: unknown, username: string): ContributionCalendar {
-  if (!value || typeof value !== 'object') throw new Error('Der GitHub-Kalender ist nicht lesbar.')
+  if (!value || typeof value !== 'object') throw new Error('The GitHub calendar couldn’t be read.')
   const data = value as Partial<ContributionCalendar>
   if (data.version !== 1 || data.username?.toLowerCase() !== username.toLowerCase()
     || typeof data.fetchedAt !== 'string' || Number.isNaN(Date.parse(data.fetchedAt))
     || !Number.isInteger(data.total) || data.total! < 0 || !Number.isInteger(data.anonymousContributions)
     || data.anonymousContributions! < 0 || data.anonymousContributions! > data.total!
     || !Array.isArray(data.days) || data.days.length < 350 || data.days.length > 371) {
-    throw new Error('Für dieses Profil liegt noch kein vollständiger GitHub-Kalender vor.')
+    throw new Error('There’s no complete GitHub calendar for this profile yet.')
   }
   const days = data.days
   if (days.some((day, index) => !day || typeof day.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(day.date)
@@ -23,15 +23,15 @@ export function parseCalendar(value: unknown, username: string): ContributionCal
     || (day.count === 0) !== (day.level === 0)
     || (index > 0 && Date.parse(day.date) - Date.parse(days[index - 1].date) !== 86400000))
     || days.reduce((sum, day) => sum + day.count, 0) !== data.total) {
-    throw new Error('Der GitHub-Kalender enthält unvollständige Tageswerte.')
+    throw new Error('The GitHub calendar contains incomplete daily data.')
   }
   return { ...data, source: 'GitHub GraphQL API' } as ContributionCalendar
 }
 
 export async function fetchCalendar(username: string, signal: AbortSignal): Promise<ContributionCalendar> {
-  if (!githubProfile(username)) throw new Error('Bitte zuerst ein GitHub-Profil hinterlegen.')
+  if (!githubProfile(username)) throw new Error('Please add a GitHub profile first.')
   const response = await fetch(assetUrl('data/github-contributions.json'), { signal, credentials: 'omit' })
-  if (!response.ok) throw new Error('Der GitHub-Kalender ist gerade nicht verfügbar.')
+  if (!response.ok) throw new Error('The GitHub calendar is currently unavailable.')
   return parseCalendar(await response.json(), username)
 }
 

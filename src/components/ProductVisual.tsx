@@ -23,13 +23,13 @@ function ChairScene() {
 
 export function ProductVisual({ id }: { id: ProductId }) {
   if (id === 'shopvibes') return <span className="product-visual visual-data" aria-hidden="true">
-    <span className="data-sheet-back"/><span className="data-sheet"><span className="mini-sheet-head"><span className="mini-swatch"/><span>Ein Produkt.<small>Viele Möglichkeiten.</small></span><Database size={13}/></span>
-      <span className="data-line"><span>Material</span><strong>Eiche</strong><Check/></span>
-      <span className="data-line"><span>Farbe</span><strong>Natur</strong><Check/></span>
-      <span className="data-line"><span>Maße</span><strong>Strukturiert</strong><Check/></span>
-      <span className="data-sheet-foot"><Sparkles size={11}/> Daten werden Möglichkeiten</span>
-    </span><span className="data-sticker"><Check size={12}/> Bereit für mehr.</span>
+    <span className="data-sheet-back"/><span className="data-sheet"><span className="mini-sheet-head"><span className="mini-swatch"/><span>One product.<small>Many possibilities.</small></span><Database size={13}/></span>
+      <span className="data-line"><span>Material</span><strong>Oak</strong><Check/></span>
+      <span className="data-line"><span>Colour</span><strong>Natural</strong><Check/></span>
+      <span className="data-line"><span>Dimensions</span><strong>Structured</strong><Check/></span>
+      <span className="data-sheet-foot"><Sparkles size={11}/> Data becomes possibility</span>
+    </span><span className="data-sticker"><Check size={12}/> Ready for more.</span>
   </span>
-  if (id === 'showcase') return <span className="product-visual visual-studio" aria-hidden="true"><span className="studio-print print-back"/><span className="studio-print print-front"><ChairScene/><span>Ein Produkt. Ein neuer Kontext.</span></span><span className="studio-badge"><Sparkles size={11}/> Perspektive wechseln</span><span className="studio-corner"><Image size={14}/></span></span>
-  return <span className="product-visual visual-action" aria-hidden="true"><span className="chat-query">Was steht als Nächstes an?<CornerDownRight size={12}/></span><span className="connector-line"/><span className="backlane-node"><BacklaneMark/></span><span className="connector-branches"/><span className="channel-nodes"><i/><i/><i/></span><span className="action-caption">Fragen. Verbinden. Machen.</span><span className="action-reply"><Sparkles size={12}/> Von der Frage zur Handlung.</span></span>
+  if (id === 'showcase') return <span className="product-visual visual-studio" aria-hidden="true"><span className="studio-print print-back"/><span className="studio-print print-front"><ChairScene/><span>One product. A new context.</span></span><span className="studio-badge"><Sparkles size={11}/> A fresh perspective</span><span className="studio-corner"><Image size={14}/></span></span>
+  return <span className="product-visual visual-action" aria-hidden="true"><span className="chat-query">What’s next?<CornerDownRight size={12}/></span><span className="connector-line"/><span className="backlane-node"><BacklaneMark/></span><span className="connector-branches"/><span className="channel-nodes"><i/><i/><i/></span><span className="action-caption">Ask. Connect. Act.</span><span className="action-reply"><Sparkles size={12}/> From question to action.</span></span>
 }

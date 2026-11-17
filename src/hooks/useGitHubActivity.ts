@@ -18,7 +18,7 @@ export function useGitHubActivity(username: string | null) {
     fetchGitHubActivity(username, controller.signal).then((activities) => {
       if (!cancelled) setResult({ username, state: activities.length ? { status: 'success', activities } : { status: 'empty' } })
     }).catch((error: unknown) => {
-      if (!cancelled) setResult({ username, state: { status: 'error', message: controller.signal.aborted ? 'GitHub antwortet gerade nicht. Versuche es später erneut.' : error instanceof Error ? error.message : 'Die Aktivität ist gerade nicht erreichbar.' } })
+      if (!cancelled) setResult({ username, state: { status: 'error', message: controller.signal.aborted ? 'GitHub isn’t responding. Please try again later.' : error instanceof Error ? error.message : 'Activity is currently unavailable.' } })
     }).finally(() => window.clearTimeout(timeout))
     return () => { cancelled = true; controller.abort(); window.clearTimeout(timeout) }
   }, [username, attempt])
