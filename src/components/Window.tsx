@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Maximize2, Minimize2, X } from 'lucide-react'
 import type { ReactNode } from 'react'
 
-export function Window({ title, children, onClose, variant = '' }: { title: string; children: ReactNode; onClose: () => void; variant?: string }) {
+export function Window({ title, children, onClose, variant = '', expandable = true, initialFocus }: { title: string; children: ReactNode; onClose: () => void; variant?: string; expandable?: boolean; initialFocus?: string }) {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const [expanded, setExpanded] = useState(false)
   useEffect(() => {
@@ -11,14 +11,15 @@ export function Window({ title, children, onClose, variant = '' }: { title: stri
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     dialog.showModal()
-    dialog.querySelector<HTMLButtonElement>('[data-close]')?.focus({ preventScroll: true })
+    const focusTarget = (initialFocus ? dialog.querySelector<HTMLElement>(initialFocus) : null) ?? dialog.querySelector<HTMLButtonElement>('[data-close]')
+    focusTarget?.focus({ preventScroll: true })
     return () => {
       dialog.close()
       document.body.style.overflow = previousOverflow
       trigger?.focus({ preventScroll: true })
     }
-  }, [])
-  return <dialog ref={dialogRef} className={`window ${variant} ${expanded ? 'is-expanded' : ''}`} aria-labelledby="window-title"
+  }, [initialFocus])
+  return <dialog ref={dialogRef} className={`window ${variant} ${expanded && expandable ? 'is-expanded' : ''}`} aria-labelledby="window-title"
     onCancel={(event) => { event.preventDefault(); onClose() }}
     onKeyDown={(event) => {
       if (event.key !== 'Tab') return
@@ -43,7 +44,7 @@ export function Window({ title, children, onClose, variant = '' }: { title: stri
       <span className="window-chrome" aria-hidden="true"><i/><i/><i/></span>
       <h2 id="window-title">{title}</h2>
       <div className="window-controls">
-        <button className="window-expand icon-button" onClick={() => setExpanded(!expanded)} aria-label={expanded ? 'Fenster verkleinern' : 'Fenster vergrößern'} aria-pressed={expanded}>{expanded ? <Minimize2 size={17}/> : <Maximize2 size={17}/>}</button>
+        {expandable && <button className="window-expand icon-button" onClick={() => setExpanded(!expanded)} aria-label={expanded ? 'Fenster verkleinern' : 'Fenster vergrößern'} aria-pressed={expanded}>{expanded ? <Minimize2 size={17}/> : <Maximize2 size={17}/>}</button>}
         <button className="icon-button" data-close onClick={onClose} aria-label="Fenster schließen"><X size={20}/><span className="mobile-close-label">Schließen</span></button>
       </div>
     </div>

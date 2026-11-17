@@ -1,17 +1,25 @@
 @layer widgets {
-  .game-window { width: min(560px,calc(100% - 48px)); }
-  .game-window.is-expanded { width: min(680px,calc(100% - 48px)); height: auto; }
+  .game-window { width: min(560px,calc(100% - 48px)); height: fit-content; }
   .climb-game { color: #172033; background: #fff; }
   .climb-hud { display: flex; align-items: center; gap: 22px; padding: 15px 23px 13px; border-bottom: 1px solid #e8ebf2; }
+  .climb-lives { margin-left: auto; flex-shrink: 0; }
+  .climb-lives-label { display: flex; align-items: center; justify-content: space-between; gap: 8px; font: 9px var(--mono); letter-spacing: .8px; color: #626f88; margin-bottom: 5px; }
+  .climb-lives-label strong { font-size: 12px; font-weight: 650; letter-spacing: 0; color: #344c9f; }
+  .climb-life-icons { display: flex; gap: 6px; }
+  .climb-life { position: relative; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; border: 1px solid #cbd6ff; background: #edf2ff; color: #3557da; }
+  .climb-life svg { fill: #fff; }.climb-life.is-empty { color: #a8afbd; border-color: #e1e4eb; background: #f5f6f9; animation: climb-life-lost .4s ease-out; }
+  .climb-life.is-empty::after { content: ''; position: absolute; width: 24px; height: 2px; background: #9da7ba; transform: rotate(-45deg); box-shadow: 0 0 0 2px #f5f6f9; }
+  .last-life .climb-life.is-full { color: #bd5226; border-color: #edc3ad; background: #fff0e7; }.last-life .climb-lives-label strong { color: #a84422; }
+  @keyframes climb-life-lost { 0% { transform: scale(1.2) rotate(-10deg); background: #ffcfbb; } 50% { transform: scale(.85) rotate(8deg); } 100% { transform: none; } }
   .climb-height { display: flex; flex-direction: column; gap: 2px; }
   .climb-height > span, .climb-best span, .climb-kicker { font: 9px var(--mono); letter-spacing: 1.1px; color: #687187; }
   .climb-height > strong { font-size: 30px; line-height: 1.05; letter-spacing: -1.3px; font-variant-numeric: tabular-nums; }
   .climb-height small { font-size: 15px; font-weight: 500; color: #727b91; }
-  .climb-best { display: flex; align-items: center; gap: 8px; margin-left: auto; color: #7359a4; }
+  .climb-best { display: flex; align-items: center; gap: 8px; color: #7359a4; }
   .climb-best strong { display: block; font: 600 15px 'DM Sans Variable',sans-serif; color: #30374c; letter-spacing: 0; margin-top: 4px; font-variant-numeric: tabular-nums; }
   .climb-pause { width: 44px; height: 44px; display: grid; place-items: center; background: #f3f5fa; color: #4a536b; border: 1px solid #e5e9f2; border-radius: 12px; }
   .climb-pause:disabled { opacity: .35; cursor: default; }
-  .climb-stage { position: relative; height: min(62dvh,560px); min-height: 340px; overflow: hidden; isolation: isolate; background: #eef2fd; transition: background 1s; touch-action: manipulation; }
+  .climb-stage { position: relative; height: min(62dvh,calc(100dvh - 280px),560px); min-height: 340px; overflow: hidden; isolation: isolate; background: #eef2fd; transition: background 1s; touch-action: manipulation; }
   .climb-stage:focus { outline: none; }
   .climb-stage:focus-visible { box-shadow: inset 0 0 0 2px #5b6fa0; }
   .climb-stage[data-world='1'] { background: #f9f0e6; }
@@ -44,9 +52,9 @@
   @keyframes climb-crumbs { from { opacity: 1; translate: 0 0; } to { opacity: 0; translate: 0 30px; } }
   .climb-live-info { position: absolute; inset: 16px 20px auto; display: flex; align-items: center; justify-content: space-between; pointer-events: none; gap: 10px; }
   .climb-combo { font: 8px var(--mono); letter-spacing: .7px; color: #667391; }.climb-combo b { font: 750 22px 'DM Sans Variable',sans-serif; margin-right: 4px; color: #3657ef; }.climb-combo.in-flow { color: #6440b0; }.climb-combo.in-flow b { color: #7448d4; }
-  .climb-save { display: flex; align-items: center; gap: 5px; font-size: 9px; color: #566c58; }.climb-save i { width: 6px; height: 6px; background: #57966b; border-radius: 50%; }.climb-save.is-used { color: #ad592c; }.climb-save.is-used i { background: #d67c47; }
   .climb-feedback { position: absolute; z-index: 2; left: 50%; top: 52px; transform: translateX(-50%); text-align: center; white-space: nowrap; padding: 7px 11px; border: 1px solid #ffffffb8; border-radius: 9px; background: #ffffffda; color: #3657c3; box-shadow: 0 2px 10px #162f6b08; font-size: 12px; font-weight: 650; pointer-events: none; animation: climb-feedback .8s ease-out both; }
   .climb-feedback.is-warning { color: #a94c24; }.climb-feedback small { display: block; font-size: 8px; font-weight: 500; margin-top: 3px; color: #7b46b7; }
+  .climb-feedback small.zone-narrower { color: #aa4c28; }
   @keyframes climb-feedback { 0% { opacity: 0; translate: 0 5px; scale: .9; } 15%,65% { opacity: 1; translate: 0 0; scale: 1; } 100% { opacity: 0; translate: 0 -8px; } }
   .climb-inputs { position: absolute; inset: 0; display: flex; z-index: 3; }
   .climb-input { width: 50%; height: 100%; position: relative; background: transparent; color: #40547f; touch-action: manipulation; -webkit-tap-highlight-color: transparent; user-select: none; }
@@ -63,6 +71,8 @@
   .climb-kicker { display: block; color: #4f6498; font-size: 9px; letter-spacing: 1.8px; margin-bottom: 13px; }
   .climb-overlay h3 { font-size: clamp(40px,5vw,58px); letter-spacing: -2.5px; line-height: .98; font-weight: 700; margin: 0; }
   .climb-overlay h3 em { color: #3657ef; font-style: normal; }.climb-overlay p { font-size: 13px; line-height: 1.55; color: #5b6680; margin: 15px 0 20px; }
+  .overlay-ready h3 { max-width: 285px; margin: 0 auto; text-align: left; font-size: 48px; letter-spacing: -2px; }
+  .climb-start-shortcut { display: block; margin-top: 12px; color: #65708a; font: 9px var(--mono); }
   .climb-how { display: flex; flex-direction: column; gap: 7px; margin: 0 0 24px; color: #54627b; font-size: 10px; }
   .climb-how kbd { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 23px; margin: 0 2px; border: 1px solid #ced8ec; background: #fff; box-shadow: 0 2px 0 #cbd5e8; border-radius: 5px; color: #344a7a; }
   .climb-primary { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 50px; width: 100%; max-width: 255px; margin: 0 auto; padding: 13px 22px; background: #3657ef; color: white; border-radius: 12px; font-size: 14px; font-weight: 600; box-shadow: 0 4px 0 #203db4,0 7px 18px #3159f51c; transition: background .15s, transform .15s; }
@@ -75,16 +85,18 @@
   .climb-rhythm { padding: 14px 22px 19px; border-top: 1px solid #e0e6f0; }
   .climb-rhythm-label { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 10px; color: #53617b; margin-bottom: 11px; }.climb-rhythm-label > span:last-child { font: 8px var(--mono); letter-spacing: .3px; color: #77839a; }
   .climb-rhythm.is-perfect .climb-rhythm-label > span:first-child { color: #3657ef; font-weight: 650; }
-  .climb-timing-track { position: relative; height: 10px; border-radius: 6px; background: #e9edf5; }
-  .climb-perfect-zone { position: absolute; height: 100%; top: 0; background: #c2cdfb; border-left: 2px solid #3657ef; border-right: 2px solid #3657ef; }
+  .climb-timing-track { position: relative; height: 14px; border-radius: 6px; background: #e9edf5; }
+  .climb-perfect-zone { position: absolute; height: 100%; top: 0; background: #c2cdfb; border-left: 2px solid #3657ef; border-right: 2px solid #3657ef; transition: left 80ms ease-out, width 80ms ease-out; }
+  .climb-perfect-zone.zone-narrower { background: #f5cbb9; border-color: #bd663e; }
   .is-perfect .climb-perfect-zone { background: #8fa4fb; }
-  .climb-timing-cursor { position: absolute; top: -4px; left: clamp(0px,calc(var(--progress) * 100%),calc(100% - 4px)); width: 4px; height: 18px; background: #243862; border-radius: 2px; box-shadow: 0 0 0 2px #fff; }
+  .climb-timing-cursor { position: absolute; top: -4px; left: clamp(0px,calc(var(--progress) * 100%),calc(100% - 4px)); width: 4px; height: 22px; background: #243862; border-radius: 2px; box-shadow: 0 0 0 2px #fff; }
   @media (max-width:620px) {
     html:has(.game-window[open]) { scrollbar-gutter: auto; }
-    .game-window, .game-window.is-expanded { width: 100vw; max-width: none; height: 100dvh; max-height: 100dvh; border-radius: 0; margin: 0; }
+    .game-window { width: 100vw; max-width: none; height: 100dvh; max-height: 100dvh; border-radius: 0; margin: 0; }
     .game-window .window-body { flex: 1; display: flex; }.climb-game { display: flex; flex-direction: column; width: 100%; }
-    .climb-hud { padding: 13px 20px; flex-shrink: 0; }.climb-stage { flex: 1; height: auto; min-height: 340px; }
-    .climb-rhythm { flex-shrink: 0; padding-bottom: max(21px,env(safe-area-inset-bottom)); }.climb-overlay { padding: 16px; }.climb-overlay h3 { font-size: 52px; }
+    .climb-hud { padding: 12px 16px; gap: 12px; flex-shrink: 0; }.climb-stage { flex: 1; height: auto; min-height: 340px; }
+    .climb-best { gap: 5px; }.climb-best span { font-size: 0; letter-spacing: 0; }.climb-best strong { font-size: 12px; margin-top: 0; white-space: nowrap; }.climb-height > strong { font-size: 27px; }.climb-lives { margin-left: auto; }.climb-pause { flex-shrink: 0; width: 40px; }
+    .climb-rhythm { flex-shrink: 0; padding-bottom: max(21px,env(safe-area-inset-bottom)); }.climb-overlay { padding: 16px; }.climb-overlay h3 { font-size: 52px; }.overlay-ready h3 { font-size: 46px; }
     .overlay-paused h3 { font-size: clamp(34px,10vw,50px); letter-spacing: -1.6px; }
     .climb-input > span { bottom: 14px; }.input-left > span { left: 16px; }.input-right > span { right: 16px; }
   }

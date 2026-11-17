@@ -2,17 +2,37 @@ export type Side = 'left' | 'right'
 export type HoldKind = 'normal' | 'jug' | 'crimp'
 export type ClimbHold = { side: Side; kind: HoldKind }
 export type ClimbStatus = 'ready' | 'playing' | 'paused' | 'fallen'
+export type TimingZone = { center: number; width: number; change: 'steady' | 'wider' | 'narrower' }
 export type ClimbState = {
   seed: number; status: ClimbStatus; step: number; height: number; side: Side | null
   kind: HoldKind; elapsed: number; budget: number; cooldown: number
   combo: number; maxCombo: number; saves: number; feedback: string; event: number
   lastMove: 'start' | 'clean' | 'catch' | 'slip'; reason: 'time' | 'wrong' | 'early' | null
+  zone: TimingZone
 }
 
-export const PERFECT_START = .3
-export const PERFECT_END = .6
+export const CLIMB_NAME = 'Chalk ’til you drop'
+export const ZONE_INITIAL_WIDTH = .3
+export const ZONE_MIN_WIDTH = .2
+export const ZONE_MAX_WIDTH = .42
 export const MIN_REACH = .14
 export const BEST_KEY = 'tim:endless-climber:best:v1'
+
+export function zoneBounds(zone: TimingZone) { return { start: zone.center - zone.width / 2, end: zone.center + zone.width / 2 } }
+export function isInTimingZone(progress: number, zone: TimingZone) {
+  const { start, end } = zoneBounds(zone)
+  return progress >= start - 1e-9 && progress <= end + 1e-9
+}
+
+// The zone only moves when a new hold is reached. It never moves underneath
+// the time cursor, and a rescue keeps its center so the retry stays readable.
+function adaptZone(state: ClimbState, clean: boolean, move: boolean): TimingZone {
+  const width = Math.round(Math.max(ZONE_MIN_WIDTH, Math.min(ZONE_MAX_WIDTH, state.zone.width + (clean ? .025 : -.035))) * 1000) / 1000
+  const random = randomAt(state.seed + 97, state.step + 1)
+  const shift = move ? (random < .5 ? -1 : 1) * (.025 + Math.abs(random - .5) * .08) : 0
+  const center = Math.max(.17 + width / 2, Math.min(.88 - width / 2, state.zone.center + shift))
+  return { center, width, change: width === state.zone.width ? 'steady' : width > state.zone.width ? 'wider' : 'narrower' }
+}
 
 // A route is generated from its seed and row, so the visible preview is always
 // the route that will be played. No growing history or impossible random jumps.
@@ -40,7 +60,7 @@ export function holdTime(step: number, kind: HoldKind) {
 }
 
 export function createClimb(seed = 1): ClimbState {
-  return { seed, status: 'ready', step: 0, height: 0, side: null, kind: 'jug', elapsed: 0, budget: 3200, cooldown: 0, combo: 0, maxCombo: 0, saves: 1, feedback: 'Dein nächster Griff wartet.', event: 0, lastMove: 'start', reason: null }
+  return { seed, status: 'ready', step: 0, height: 0, side: null, kind: 'jug', elapsed: 0, budget: 3200, cooldown: 0, combo: 0, maxCombo: 0, saves: 1, feedback: 'Dein nächster Griff wartet.', event: 0, lastMove: 'start', reason: null, zone: { center: .45, width: ZONE_INITIAL_WIDTH, change: 'steady' } }
 }
 
 export function startClimb(seed: number): ClimbState { return { ...createClimb(seed), status: 'playing' } }
@@ -48,8 +68,9 @@ export function pauseClimb(state: ClimbState): ClimbState { return state.status 
 export function resumeClimb(state: ClimbState): ClimbState { return state.status === 'paused' ? { ...state, status: 'playing' } : state }
 
 function miss(state: ClimbState, reason: 'time' | 'wrong' | 'early'): ClimbState {
-  if (state.saves > 0) return { ...state, saves: 0, combo: 0, elapsed: 0, cooldown: 320, feedback: `${reason === 'early' ? 'Zu hektisch.' : reason === 'wrong' ? 'Daneben.' : 'Abgerutscht.'} Gerade noch gefangen!`, lastMove: 'slip', event: state.event + 1 }
-  return { ...state, status: 'fallen', combo: 0, reason, feedback: reason === 'time' ? 'Die Schwerkraft war schneller.' : reason === 'early' ? 'Die Hände schneller als der Kopf.' : 'Es lag am Griff.', event: state.event + 1 }
+  const zone = adaptZone(state, false, false)
+  if (state.saves > 0) return { ...state, zone, saves: 0, combo: 0, elapsed: 0, cooldown: 320, feedback: `${reason === 'early' ? 'Zu hektisch.' : reason === 'wrong' ? 'Daneben.' : 'Abgerutscht.'} Gerade noch gefangen!`, lastMove: 'slip', event: state.event + 1 }
+  return { ...state, zone, status: 'fallen', combo: 0, reason, feedback: reason === 'time' ? 'Die Schwerkraft war schneller.' : reason === 'early' ? 'Die Hände schneller als der Kopf.' : 'Es lag am Griff.', event: state.event + 1 }
 }
 
 export function tickClimb(state: ClimbState, milliseconds: number): ClimbState {
@@ -65,15 +86,15 @@ export function reachClimb(state: ClimbState, side: Side): ClimbState {
   if (!target) return miss(state, 'wrong')
   const progress = state.elapsed / state.budget
   if (progress < MIN_REACH) return miss(state, 'early')
-  const clean = progress >= PERFECT_START && progress <= PERFECT_END
+  const clean = isInTimingZone(progress, state.zone)
   const combo = clean ? state.combo + 1 : 0
   const gain = target.kind === 'crimp' ? 2.8 : target.kind === 'jug' ? 1.6 : 2
   return {
     ...state, step: state.step + 1, side, kind: target.kind,
     height: Math.round((state.height + gain) * 10) / 10,
     elapsed: 0, budget: holdTime(state.step + 1, target.kind), cooldown: 160,
-    combo, maxCombo: Math.max(combo, state.maxCombo),
-    feedback: clean ? combo >= 3 ? `${combo} in Folge. Im Flow!` : 'Sauber!' : progress > PERFECT_END ? 'Knapp, aber dran.' : 'Griff sitzt.',
+    combo, maxCombo: Math.max(combo, state.maxCombo), zone: adaptZone(state, clean, true),
+    feedback: clean ? combo >= 3 ? `${combo} in Folge. Im Flow!` : 'Sauber!' : progress > zoneBounds(state.zone).end ? 'Knapp, aber dran.' : 'Griff sitzt.',
     lastMove: clean ? 'clean' : 'catch', event: state.event + 1,
   }
 }

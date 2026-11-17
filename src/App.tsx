@@ -9,9 +9,10 @@ import { Products, ProductDetail } from './components/Products'
 import { Window } from './components/Window'
 import { CvDetail } from './components/CvDetail'
 import { cvConfig } from './content/cv'
+import { CLIMB_NAME } from './game/climber'
 
 type Detail = ProductId | 'play' | 'github' | 'music' | 'running' | 'cv'
-const titles: Record<Detail, string> = { shopvibes: 'Meine Arbeit / shopvibes', showcase: 'Meine Arbeit / showcase', backlane: 'Meine Arbeit / Backlane', play: 'Noch ein Griff / Endless Climber', github: 'Werkbank / GitHub & Experimente', music: 'Auf den Ohren / Spotify', running: 'Draußen sein / Laufen', cv: `Lebenslauf / ${cvConfig.name}` }
+const titles: Record<Detail, string> = { shopvibes: 'Meine Arbeit / shopvibes', showcase: 'Meine Arbeit / showcase', backlane: 'Meine Arbeit / Backlane', play: CLIMB_NAME, github: 'Werkbank / GitHub & Experimente', music: 'Auf den Ohren / Spotify', running: 'Draußen sein / Laufen', cv: `Lebenslauf / ${cvConfig.name}` }
 
 export default function App() {
   const [detail, setDetail] = useState<Detail | null>(null)
@@ -29,7 +30,7 @@ export default function App() {
       </main>
     </div>
     <Dock profile={siteConfig.profile} username={siteConfig.github.username} onPlay={() => setDetail('play')}/>
-    {detail && <Window title={titles[detail]} onClose={() => setDetail(null)} variant={detail === 'play' ? 'game-window' : detail === 'cv' ? 'cv-window' : ''}>
+    {detail && <Window title={titles[detail]} expandable={detail !== 'play'} initialFocus={detail === 'play' ? '[data-game-start]' : undefined} onClose={() => setDetail(null)} variant={detail === 'play' ? 'game-window' : detail === 'cv' ? 'cv-window' : ''}>
       {product && <ProductDetail product={product} products={siteConfig.products} onSelect={setDetail}/>}
       {detail === 'play' && <BoulderGame/>}
       {detail === 'github' && <GithubDetail config={siteConfig.github}/>}

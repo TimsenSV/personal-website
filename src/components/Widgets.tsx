@@ -11,6 +11,7 @@ import { ChalkClimber } from './ChalkClimber'
 import { GitHubHeatmap } from './GitHubHeatmap'
 import { PixelRunner } from './PixelRunner'
 import { PhotoCarousel } from './PhotoCarousel'
+import { CLIMB_NAME } from '../game/climber'
 
 export function IntroWidget({ profile, onOpenCv }: { profile: PortfolioConfig['profile']; onOpenCv: () => void }) {
   return <section className="card intro-card" aria-labelledby="intro-title">
@@ -75,5 +76,5 @@ export function RunningDetail({ config }: { config: PortfolioConfig['running'] }
 
 export function BoulderWidget({ onOpen }: { onOpen: () => void }) {
   const [chalkCue, setChalkCue] = useState(0)
-  return <section className="card boulder-card" aria-labelledby="boulder-title" onPointerEnter={(event) => { if (event.pointerType !== 'touch') setChalkCue(value => value + 1) }} onFocus={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setChalkCue(value => value + 1) }}><div className="boulder-heading"><h2 id="boulder-title">Noch ein<br/>Versuch.</h2><span className="boulder-number" aria-hidden="true">01</span></div><div className="boulder-scene"><button className="boulder-preview-button" onClick={onOpen} aria-label="Boulder-Problem vergrößern und spielen"><BoulderPreview/><span className="board-open-hint"><Play size={12} fill="currentColor"/> Losklettern</span></button><div className="boulder-avatar"><ChalkClimber cue={chalkCue}/></div></div><div className="boulder-bottom"><button className="round-link" onClick={onOpen} aria-label="Boulder-Minispiel starten"><ArrowUpRight size={18}/></button></div></section>
+  return <section className="card boulder-card" aria-labelledby="boulder-title" onPointerEnter={(event) => { if (event.pointerType !== 'touch') setChalkCue(value => value + 1) }} onFocus={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setChalkCue(value => value + 1) }}><div className="boulder-heading"><h2 id="boulder-title" lang="en">{CLIMB_NAME}.</h2><span className="boulder-number" aria-hidden="true">∞</span></div><div className="boulder-scene"><button className="boulder-preview-button" onClick={onOpen} aria-label="Boulder-Problem vergrößern und spielen"><BoulderPreview/><span className="board-open-hint"><Play size={12} fill="currentColor"/> Losklettern</span></button><div className="boulder-avatar"><ChalkClimber cue={chalkCue}/></div></div><div className="boulder-bottom"><button className="round-link" onClick={onOpen} aria-label="Boulder-Minispiel starten"><ArrowUpRight size={18}/></button></div></section>
 }

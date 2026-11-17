@@ -4,6 +4,7 @@ import { m, LazyMotion, domAnimation, useMotionValue, useSpring, useTransform, t
 import type { PortfolioConfig } from '../content/site'
 import { emailUrl, externalUrl, githubProfile } from '../lib/links'
 import { dockMagnification } from '../lib/dock'
+import { CLIMB_NAME } from '../game/climber'
 
 type DockIcon = ComponentType<{ size?: number; strokeWidth?: number; 'aria-hidden'?: boolean }>
 type DockEntry = { label: string; accessibleLabel?: string; href?: string; onClick?: () => void; Icon: DockIcon; color: string; external?: boolean; current?: boolean }
@@ -59,7 +60,7 @@ export function Dock({ profile, username, onPlay }: { profile: PortfolioConfig['
   const entries: DockEntry[] = [
     { label: 'Übersicht', href: '#overview', Icon: LayoutGrid, color: 'overview', current: true },
     { label: 'Arbeit', href: '#work', Icon: Layers3, color: 'work' },
-    { label: 'Eine kleine Pause', accessibleLabel: 'Spielen: Boulder-Minispiel öffnen', onClick: onPlay, Icon: Gamepad2, color: 'play' },
+    { label: CLIMB_NAME, accessibleLabel: `Spielen: ${CLIMB_NAME} öffnen`, onClick: onPlay, Icon: Gamepad2, color: 'play' },
     ...external,
   ]
   return <LazyMotion features={domAnimation} strict><nav className="dock" aria-label="Schnellnavigation" data-magnification={enabled ? 'on' : 'off'}

@@ -1,9 +1,9 @@
 import { memo, useEffect, useReducer, useRef, useState, type CSSProperties, type KeyboardEvent } from 'react'
-import { ArrowLeft, ArrowRight, Pause, Play, RotateCcw, Trophy } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Hand, Pause, Play, RotateCcw, Trophy } from 'lucide-react'
 import { ChalkClimber } from './ChalkClimber'
 import { ClimbingTim } from './ClimbingTim'
 import { holds } from '../game/boulder'
-import { climbReducer, createClimb, formatHeight, PERFECT_END, PERFECT_START, readBest, routeRow, saveBest, type ClimbState, type HoldKind, type Side } from '../game/climber'
+import { climbReducer, createClimb, formatHeight, CLIMB_NAME, isInTimingZone, readBest, routeRow, saveBest, zoneBounds, type ClimbState, type HoldKind, type Side } from '../game/climber'
 
 export function BoulderPreview() {
   return <svg className="boulder-preview" viewBox="0 0 300 280" fill="none" aria-hidden="true">
@@ -64,7 +64,9 @@ export function BoulderGame() {
   const progress = Math.min(1, game.elapsed / game.budget)
   const next = routeRow(game.seed, game.step + 1)
   const direction = next.length > 1 ? 'links oder rechts' : next[0].side === 'left' ? 'links' : 'rechts'
-  const isPerfect = progress >= PERFECT_START && progress <= PERFECT_END
+  const zone = zoneBounds(game.zone)
+  const isPerfect = isInTimingZone(progress, game.zone)
+  const lives = game.status === 'fallen' ? 0 : game.saves + 1
   const active = game.status === 'playing'
   const newRecord = game.height > record && game.height > 0
 
@@ -109,7 +111,10 @@ export function BoulderGame() {
   function keyDown(event: KeyboardEvent) {
     if (event.altKey || event.ctrlKey || event.metaKey) return
     const key = event.key.toLowerCase()
-    if (active && ['arrowleft', 'arrowright', 'a', 'd'].includes(key)) {
+    if ((game.status === 'ready' || game.status === 'fallen') && (key === 'enter' || key === ' ')) {
+      event.preventDefault()
+      if (!event.repeat) start()
+    } else if (active && ['arrowleft', 'arrowright', 'a', 'd'].includes(key)) {
       event.preventDefault()
       if (!event.repeat) dispatch({ type: 'reach', side: key === 'arrowleft' || key === 'a' ? 'left' : 'right' })
     } else if (active && (key === 'p' || key === ' ' || key === 'tab')) {
@@ -123,16 +128,19 @@ export function BoulderGame() {
   }}>
     <header className="climb-hud">
       <div className="climb-height"><span>HÖHE</span><strong>{formatHeight(game.height)}<small> m</small></strong></div>
+      <div className={`climb-lives ${lives === 1 ? 'last-life' : ''}`} role="img" aria-label={`${lives} von 2 Leben`}>
+        <span className="climb-lives-label">LEBEN <strong>{lives}/2</strong></span>
+        <span className="climb-life-icons" aria-hidden="true">{[0, 1].map(index => <span key={`${index}-${index < lives}`} className={`climb-life ${index < lives ? 'is-full' : 'is-empty'}`}><Hand size={25} strokeWidth={1.8}/></span>)}</span>
+      </div>
       <div className="climb-best"><Trophy size={14}/><span>BESTE MARKE<strong>{formatHeight(best)} m</strong></span></div>
       <button className="climb-pause" onClick={() => dispatch({ type: 'pause' })} disabled={!active} aria-label="Spiel pausieren"><Pause size={18}/></button>
     </header>
-    <div className="climb-stage" data-world={Math.floor(game.height / 30) % 3} ref={boardRef} tabIndex={0} role="group" aria-label="Endless Climber: Kletterwand" aria-describedby="climb-next">
+    <div className="climb-stage" data-world={Math.floor(game.height / 30) % 3} ref={boardRef} tabIndex={0} role="group" aria-label={`${CLIMB_NAME}: Kletterwand`} aria-describedby="climb-next">
       <ClimbWall seed={game.seed} step={game.step} side={game.side} kind={game.kind} status={game.status} event={game.event} lastMove={game.lastMove} tired={active && progress > .78} record={record} height={game.height}/>
       <div className="climb-live-info" aria-hidden="true">
         <span className={`climb-combo ${game.combo >= 3 ? 'in-flow' : ''}`}>{game.combo > 1 ? <><b>{game.combo}×</b> FLOW</> : 'JUST ONE MORE HOLD.'}</span>
-        <span className={`climb-save ${!game.saves ? 'is-used' : ''}`}><i/>{game.saves ? '1 Rettung' : 'Letzte Chance'}</span>
       </div>
-      {active && <div key={game.event} className={`climb-feedback ${game.lastMove === 'slip' ? 'is-warning' : ''}`} aria-hidden="true">{game.step === 0 && game.lastMove === 'start' ? 'Links geht’s los.' : game.feedback}{newRecord && game.step > 1 && <small>Neue Bestmarke ↗</small>}</div>}
+      {active && <div key={game.event} className={`climb-feedback ${game.lastMove === 'slip' ? 'is-warning' : ''}`} aria-hidden="true">{game.step === 0 && game.lastMove === 'start' ? 'Links geht’s los.' : game.feedback}{game.zone.change !== 'steady' && <small className={`zone-${game.zone.change}`}>{game.zone.change === 'wider' ? 'Mehr Spielraum +' : 'Trefferzone enger −'}</small>}{newRecord && game.step > 1 && <small>Neue Bestmarke ↗</small>}</div>}
       <div className="climb-inputs" inert={!active}>
         <button className="climb-input input-left" aria-label="Links greifen" aria-keyshortcuts="ArrowLeft A" disabled={!active} onClick={() => dispatch({ type: 'reach', side: 'left' })}><span><ArrowLeft size={22}/><span>LINKS</span></span></button>
         <button className="climb-input input-right" aria-label="Rechts greifen" aria-keyshortcuts="ArrowRight D" disabled={!active} onClick={() => dispatch({ type: 'reach', side: 'right' })}><span><span>RECHTS</span><ArrowRight size={22}/></span></button>
@@ -140,10 +148,10 @@ export function BoulderGame() {
       {game.status !== 'playing' && <div className={`climb-overlay overlay-${game.status}`}>
         <div className="climb-overlay-card">
           {game.status === 'ready' ? <>
-            <div aria-hidden="true" inert><ChalkClimber compact cue={1}/></div><span className="climb-kicker">ENDLESS CLIMBER</span><h3>Noch ein<br/><em>Griff.</em></h3>
+            <div aria-hidden="true" inert><ChalkClimber compact cue={1}/></div><span className="climb-kicker">ENDLESS CLIMBER</span><h3 lang="en" aria-label={CLIMB_NAME}>Chalk ’til<br/><em>you drop.</em></h3>
             <p>Wie weit kommst du,<br/>bevor die Arme zumachen?</p>
-            <div className="climb-how"><span><kbd>←</kbd><kbd>→</kbd> oder links / rechts tippen</span><span>Kurz halten, dann zum umkreisten Griff.</span><span>In der blauen Zone? Saubere Combo.</span></div>
-            <button className="climb-primary" onClick={start}><Play size={17} fill="currentColor"/> Losklettern</button>
+            <div className="climb-how"><span><kbd>←</kbd><kbd>→</kbd> oder links / rechts tippen</span><span>Kurz halten, dann zum umkreisten Griff.</span><span>Gut getroffen? Mehr Spielraum. Daneben? Weniger.</span></div>
+            <button ref={primaryRef} data-game-start className="climb-primary" onClick={start} aria-keyshortcuts="Enter Space"><Play size={17} fill="currentColor"/> Losklettern</button><span className="climb-start-shortcut">Enter oder Leertaste</span>
           </> : game.status === 'paused' ? <>
             <span className="climb-kicker">KURZ DURCHATMEN</span><h3>Arme<br/><em>ausschütteln.</em></h3><p>Dein Run wartet hier auf dich.</p>
             <button ref={primaryRef} className="climb-primary" onClick={resume}><Play size={17} fill="currentColor"/> Weiterklettern</button>
@@ -151,7 +159,7 @@ export function BoulderGame() {
           </> : <>
             <span className="climb-kicker">{newRecord ? 'NEUE BESTMARKE' : 'DIE MATTE HAT DICH'}</span><h3>{formatHeight(game.height)}<em> m.</em></h3><p>{game.feedback}</p>
             <div className="climb-run-stats"><span><strong>{game.step}</strong> Griffe</span><span><strong>{game.maxCombo}×</strong> beste Combo</span></div>
-            <button ref={primaryRef} className="climb-primary" onClick={start}><RotateCcw size={17}/> Noch ein Versuch</button>
+            <button ref={primaryRef} className="climb-primary" onClick={start} aria-keyshortcuts="Enter Space"><RotateCcw size={17}/> Nochmal chalken</button>
             <span className="climb-local-note">Dein Rekord bleibt in diesem Browser.</span>
           </>}
           {game.status !== 'fallen' && <div className="climb-legend"><span><i className="legend-normal"/>Normal</span><span><i className="legend-jug"/>Mehr Zeit</span><span><i className="legend-crimp"/>Schnell weiter</span></div>}
@@ -159,9 +167,9 @@ export function BoulderGame() {
       </div>}
     </div>
     <div className={`climb-rhythm ${isPerfect && active ? 'is-perfect' : ''}`}>
-      <div className="climb-rhythm-label"><span>{!active ? 'Dein Rhythmus' : progress < PERFECT_START ? 'Kurz halten …' : isPerfect ? 'Jetzt sauber greifen!' : progress > .8 ? 'Nicht loslassen, Tim.' : 'Noch hält’s.'}</span><span>{active ? game.kind === 'jug' ? 'GROSSER GRIFF' : game.kind === 'crimp' ? 'BRÖSELIG' : 'NORMALER GRIFF' : '← → / A D · P Pause'}</span></div>
-      <div className="climb-timing-track" aria-hidden="true"><span className="climb-perfect-zone" style={{ left: `${PERFECT_START * 100}%`, width: `${(PERFECT_END - PERFECT_START) * 100}%` }}/><span className="climb-timing-cursor" style={{ '--progress': progress } as CSSProperties}/></div>
+      <div className="climb-rhythm-label"><span>{!active ? 'Dein Rhythmus' : progress < zone.start ? 'Kurz halten …' : isPerfect ? 'Jetzt sauber greifen!' : progress > .8 ? 'Nicht loslassen, Tim.' : 'Noch hält’s.'}</span><span>{active ? game.kind === 'jug' ? 'GROSSER GRIFF' : game.kind === 'crimp' ? 'BRÖSELIG' : 'NORMALER GRIFF' : '← → / A D · P Pause'}</span></div>
+      <div className="climb-timing-track" aria-hidden="true"><span className={`climb-perfect-zone zone-${game.zone.change}`} style={{ left: `${zone.start * 100}%`, width: `${game.zone.width * 100}%` }}/><span className="climb-timing-cursor" style={{ '--progress': progress } as CSSProperties}/></div>
     </div>
-    <span id="climb-next" className="sr-only" role="status" aria-live="polite" aria-atomic="true">{game.status === 'fallen' ? `${formatHeight(game.height)} Meter. ${game.feedback}` : game.status === 'paused' ? 'Spiel pausiert.' : `Nächster Griff: ${direction}. ${next.map(hold => holdNames[hold.kind]).join(' oder ')}. ${game.feedback}`}</span>
+    <span id="climb-next" className="sr-only" role="status" aria-live="polite" aria-atomic="true">{game.status === 'fallen' ? `${formatHeight(game.height)} Meter. ${game.feedback}` : game.status === 'paused' ? 'Spiel pausiert.' : `Nächster Griff: ${direction}. ${next.map(hold => holdNames[hold.kind]).join(' oder ')}. ${game.feedback} ${lives} von 2 Leben.`}</span>
   </div>
 }

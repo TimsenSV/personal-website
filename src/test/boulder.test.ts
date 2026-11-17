@@ -1,7 +1,7 @@
 import { describe, expect, it, afterEach, vi } from 'vitest'
-import { BEST_KEY, createClimb, holdTime, MIN_REACH, pauseClimb, PERFECT_END, PERFECT_START, reachClimb, readBest, resumeClimb, routeRow, saveBest, startClimb, tickClimb, type ClimbState, type Side } from '../game/climber'
+import { BEST_KEY, createClimb, holdTime, MIN_REACH, pauseClimb, isInTimingZone, zoneBounds, ZONE_INITIAL_WIDTH, ZONE_MIN_WIDTH, ZONE_MAX_WIDTH, reachClimb, readBest, resumeClimb, routeRow, saveBest, startClimb, tickClimb, type ClimbState, type Side } from '../game/climber'
 
-const grip = (state: ClimbState, progress = .45, side: Side = routeRow(state.seed, state.step + 1)[0].side) => reachClimb(tickClimb(state, state.budget * progress), side)
+const grip = (state: ClimbState, progress = state.zone.center, side: Side = routeRow(state.seed, state.step + 1)[0].side) => reachClimb(tickClimb(state, state.budget * progress), side)
 afterEach(() => { localStorage.clear(); vi.restoreAllMocks() })
 
 describe('endless climbing rules', () => {
@@ -18,11 +18,11 @@ describe('endless climbing rules', () => {
     let game = startClimb(42)
     for (let i = 0; i < 5; i++) game = grip(game)
     expect(game).toMatchObject({ step: 5, height: 9.6, combo: 5, maxCombo: 5, kind: 'jug', saves: 1 })
-    game = grip(game, .85)
+    game = grip(game, .95)
     expect(game).toMatchObject({ step: 6, combo: 0, maxCombo: 5, lastMove: 'catch' })
   })
   it('uses inclusive perfect boundaries and allows an early normal catch', () => {
-    for (const progress of [PERFECT_START, PERFECT_END]) expect(grip(startClimb(1), progress).combo).toBe(1)
+    for (const progress of Object.values(zoneBounds(startClimb(1).zone))) expect(grip(startClimb(1), progress).combo).toBe(1)
     expect(grip(startClimb(1), MIN_REACH).step).toBe(1)
     expect(grip(startClimb(1), MIN_REACH / 2)).toMatchObject({ step: 0, saves: 0, lastMove: 'slip' })
   })
@@ -76,10 +76,54 @@ describe('endless climbing rules', () => {
     let game = startClimb(71)
     for (let i = 0; i < 9; i++) game = grip(game)
     const choices = routeRow(game.seed, 10)
-    const safe = grip(game, .45, choices.find(hold => hold.kind === 'jug')!.side)
-    const risky = grip(game, .45, choices.find(hold => hold.kind === 'crimp')!.side)
+    const safe = grip(game, game.zone.center, choices.find(hold => hold.kind === 'jug')!.side)
+    const risky = grip(game, game.zone.center, choices.find(hold => hold.kind === 'crimp')!.side)
     expect(risky.height).toBeGreaterThan(safe.height)
     expect(risky.budget).toBeLessThan(safe.budget)
+  })
+  it('moves the target slightly between holds, never while waiting or paused', () => {
+    let game = startClimb(25)
+    for (let i = 0; i < 20; i++) {
+      const waiting = tickClimb(game, game.budget * .1)
+      expect(waiting.zone).toEqual(game.zone)
+      expect(pauseClimb(waiting).zone).toEqual(game.zone)
+      const next = grip(game)
+      expect(Math.abs(next.zone.center - game.zone.center)).toBeLessThanOrEqual(.0650001)
+      if (i === 0) expect(next.zone.center).not.toBe(game.zone.center)
+      expect(next.zone).toEqual(grip(game).zone)
+      game = next
+    }
+  })
+  it('rewards accurate timing, narrows off-zone catches, and bounds both', () => {
+    let game = startClimb(26)
+    const first = grip(game)
+    expect(first.zone.width).toBeGreaterThan(ZONE_INITIAL_WIDTH)
+    expect(first.zone.change).toBe('wider')
+    game = grip(first, .95)
+    expect(game.zone.width).toBeLessThan(first.zone.width)
+    expect(game.zone.change).toBe('narrower')
+    expect(game.saves).toBe(1)
+    for (let i = 0; i < 50; i++) game = grip(game, .15)
+    expect(game.zone.width).toBe(ZONE_MIN_WIDTH)
+    expect(game.status).toBe('playing')
+    for (let i = 0; i < 100; i++) {
+      game = grip(game)
+      const bounds = zoneBounds(game.zone)
+      expect(bounds.start).toBeGreaterThanOrEqual(.17 - 1e-9)
+      expect(bounds.end).toBeLessThanOrEqual(.88 + 1e-9)
+      expect(isInTimingZone(game.zone.center, game.zone)).toBe(true)
+    }
+    expect(game.zone.width).toBe(ZONE_MAX_WIDTH)
+  })
+  it('narrows wrong grips, premature grips and timeouts without moving the retry', () => {
+    const initial = startClimb(3)
+    for (const result of [reachClimb(initial, 'right'), reachClimb(initial, 'left'), tickClimb(initial, initial.budget)]) {
+      expect(result.zone.width).toBeLessThan(initial.zone.width)
+      expect(result.zone.center).toBe(initial.zone.center)
+      expect(result.saves).toBe(0)
+    }
+    const restarted = startClimb(4)
+    expect(restarted.zone).toEqual(initial.zone)
   })
   it('ignores invalid time deltas and freezes precisely when paused', () => {
     const game = tickClimb(startClimb(1), 900)

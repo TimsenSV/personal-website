@@ -41,6 +41,20 @@ describe('canvas interactions', () => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     }
   })
+  it('opens the game ready for keyboard play without an expand control', async () => {
+    const user = userEvent.setup()
+    render(<App/>)
+    const trigger = screen.getByRole('button', { name: 'Spielen: Chalk ’til you drop öffnen' })
+    await user.click(trigger)
+    const dialog = screen.getByRole('dialog', { name: 'Chalk ’til you drop' })
+    expect(within(dialog).queryByRole('button', { name: 'Fenster vergrößern' })).not.toBeInTheDocument()
+    expect(within(dialog).getByRole('button', { name: 'Losklettern' })).toHaveFocus()
+    await user.keyboard(' ')
+    expect(within(dialog).queryByRole('button', { name: 'Losklettern' })).not.toBeInTheDocument()
+    expect(within(dialog).getByRole('group', { name: 'Chalk ’til you drop: Kletterwand' })).toHaveFocus()
+    fireEvent(dialog, new Event('cancel', { cancelable: true }))
+    expect(trigger).toHaveFocus()
+  })
   it('opens the CV by keyboard and returns focus after cancel', async () => {
     const user = userEvent.setup()
     render(<App/>)
