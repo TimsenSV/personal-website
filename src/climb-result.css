@@ -73,7 +73,7 @@
   }
   .result-retry:hover { background: #ffebbf; }
   .result-retry:active { box-shadow: 0 1px 0 #b38353; }
-  .result-retry:focus-visible { outline: 2px solid #e1edff; outline-offset: 4px; }
+  .result-retry:focus-visible { outline: var(--focus-ring-width) solid #e7e5df; outline-offset: 4px; }
   .result-retry kbd { display: inline-flex; align-items: center; padding: 2px 4px; border: 1px solid #a98855; border-bottom-width: 2px; border-radius: 3px; }
   @keyframes result-arrives { from { opacity: 0; } to { opacity: 1; } }
   @keyframes land-on-pad {

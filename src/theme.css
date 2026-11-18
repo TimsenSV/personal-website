@@ -63,6 +63,7 @@
   --ink: #f4f3f0;
   --muted: #adb4c0;
   --blue: #93abff;
+  --focus-ring-color: #adb4c0;
   --surface: #1b1e25;
   --line: #353944;
   --raised: #252a35;
@@ -107,7 +108,6 @@
   & .dock .dock-icon.legal { color: #a6aebc; }
   & .dock .dock-item:hover .dock-icon.legal { background: var(--hover); }
   & .dock-indicator { background: var(--blue); }
-  & .dock .dock-item:focus-visible .dock-icon { outline-color: var(--blue); }
   & .window { border-color: var(--line); }
   & .window::backdrop, & .photo-lightbox::backdrop { background: #07090eb8; }
   & :is(.window-bar, .project-navigation) { background: #191c23; border-color: var(--line); }

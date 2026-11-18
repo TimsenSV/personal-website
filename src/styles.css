@@ -11,6 +11,8 @@
     --ink: #17181c;
     --muted: #60646f;
     --blue: #3159f5;
+    --focus-ring-color: #60646f;
+    --focus-ring-width: 2px;
     --surface: #ffffff;
     --line: #e5e7ec;
     --display: 'DM Sans Variable', sans-serif;
@@ -25,7 +27,10 @@
   button:disabled { cursor: default; }
   a { color: inherit; text-decoration: none; }
   button, a { outline-offset: 5px; }
-  :focus-visible { outline: 2px solid var(--blue); }
+  /* Programmatic dialog focus can match :focus-visible even after a click. */
+  :root[data-input-modality='pointer'] { --focus-ring-width: 0px; }
+  :focus:not(:focus-visible) { outline: none; }
+  :focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); }
   [tabindex='-1']:focus { outline: none; }
   h1, h2, h3, h4, h5, p, figure { margin: 0; }
   h1, h2, h3, h4, h5 { font-weight: 500; }
@@ -287,7 +292,7 @@
   .hold > svg { width: 100%; height: 100%; fill: #3159f5; }.hold .hold-ridge { fill: none; stroke: #92acff; stroke-width: 3.5px; stroke-linecap: round; }
   .hold.is-reachable { border-color: #3159f5; background: #f8fbff52; box-shadow: 0 0 0 4px #f5f7ff4d; }
   .hold.is-current { border: 2px solid #e75c24; background: #fff1e9; }.hold.is-current > svg { fill: #f36b35; }.hold.is-current .hold-ridge { stroke: #ffbf9c; }
-  .hold:not(:disabled):hover { background: #ffffffa1; }.hold:focus-visible { outline: 3px solid #181b24; outline-offset: 4px; }
+  .hold:not(:disabled):hover { background: #ffffffa1; }.hold:focus-visible { outline: var(--focus-ring-width) solid #181b24; outline-offset: 4px; }
   .hold-label { position: absolute; top: 15px; left: 49px; font-size: 8px; letter-spacing: .6px; color: var(--muted);  font-family: var(--mono);}
   .hold.is-top .hold-label { top: 15px; }
   @keyframes window-in { from { opacity: 0; transform: translateY(10px) scale(.985); } to { opacity: 1; transform: none; } }

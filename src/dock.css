@@ -19,7 +19,7 @@
   .dock .dock-divider { flex-shrink: 0; align-self: center; }
   .dock .dock-tooltip { bottom: calc(100% + 13px); font-size: 11px; padding: 8px 11px; border: 1px solid #ffffff20; box-shadow: 0 4px 12px #14245120; }
   .dock .dock-item:focus-visible { outline: none; }
-  .dock .dock-item:focus-visible .dock-icon { outline: 2px solid #3155ff; outline-offset: 4px; }
+  .dock .dock-item:focus-visible .dock-icon { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: 4px; }
   .dock .dock-item:hover .dock-icon { transform: none; }
   .dock[data-magnification="off"] .dock-slot { width: var(--dock-size) !important; }
   @media (hover: hover) and (pointer: fine) {

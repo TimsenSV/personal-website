@@ -15,11 +15,13 @@ import { cvConfig } from './content/cv'
 import { CLIMB_NAME } from './game/climber'
 import { useCanvasTilt } from './hooks/useCanvasTilt'
 import { LegalNotice } from './components/LegalNotice'
+import { useInputModality } from './hooks/useInputModality'
 
 type Detail = ProductId | 'work' | 'play' | 'github' | 'music' | 'running' | 'cv' | 'legal' | 'privacy'
 const titles: Record<Detail, string> = { work: 'My work', shopvibes: 'My work / shopvibes', showcase: 'My work / showcase', backlane: 'My work / backlane', play: CLIMB_NAME, github: 'Workbench / GitHub & experiments', music: 'On repeat / Spotify', running: 'Outside / Running', cv: `CV / ${cvConfig.name}`, legal: 'Impressum & Privacy', privacy: 'Impressum & Privacy' }
 
 export default function App() {
+  useInputModality()
   const [detail, setDetail] = useState<Detail | null>(null)
   const [cvOrigin, setCvOrigin] = useState<DOMRect | null>(null)
   const [musicMinimized, setMusicMinimized] = useState(false)

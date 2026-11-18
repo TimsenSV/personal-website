@@ -9,7 +9,7 @@
     touch-action: pan-y pinch-zoom; user-select: none; -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
   }
-  .cv-index:focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; border-radius: 4px; }
+  .cv-index:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: 4px; border-radius: 4px; }
   .cv-index:active, .cv-index[data-phase="pulling"] { cursor: grabbing; }
   .register-piece {
     display: block; position: absolute; inset: 0;

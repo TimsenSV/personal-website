@@ -21,7 +21,7 @@
   .climb-pause:disabled { opacity: .35; cursor: default; }
   .climb-stage { position: relative; height: min(62dvh,calc(100dvh - 220px),560px); min-height: 340px; overflow: hidden; isolation: isolate; background: #eef2fd; transition: background 1s; touch-action: manipulation; }
   .climb-stage:focus { outline: none; }
-  .climb-stage:focus-visible::after { content: ''; position: absolute; inset: 0; z-index: 4; border: 2px solid #5b6fa0; pointer-events: none; }
+  .climb-stage:focus-visible::after { content: ''; position: absolute; inset: 0; z-index: 4; border: var(--focus-ring-width) solid var(--focus-ring-color); pointer-events: none; }
   .climb-stage[data-world='1'] { background: #f9f0e6; }
   .climb-stage[data-world='2'] { background: #f1edfb; }
   .climb-stage { --rock-far: #dde4f4; --rock-face: #d3dced; --rock-near: #b9c8e1; --rock-light: #e6edfa; }
@@ -68,7 +68,7 @@
   .climb-input > span { position: absolute; bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 9px 17px; min-height: 48px; border: 1px solid #d2dbed; background: #ffffffdf; border-radius: 13px; box-shadow: 0 3px 0 #223c7020; transition: background .12s, transform .12s; }
   .climb-input > span > span { font: 9px var(--mono); letter-spacing: .5px; }.input-left > span { left: 20px; }.input-right > span { right: 20px; }
   .climb-input:active > span { background: #dfe8ff; transform: translateY(2px); box-shadow: none; }
-  .climb-input:focus { outline: none; }.climb-input:focus-visible > span { outline: 2px solid #344f9d; outline-offset: 3px; }
+  .climb-input:focus { outline: none; }.climb-input:focus-visible > span { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: 3px; }
   .climb-overlay { position: absolute; inset: 0; z-index: 5; display: grid; place-items: center; padding: 22px; background: #eef2fdbd; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
   .overlay-paused { background: #edf1f7d9; }
   .climb-overlay-card { width: 100%; max-width: 340px; text-align: center; position: relative; }

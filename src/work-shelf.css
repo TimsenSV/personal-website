@@ -69,7 +69,7 @@
   .volume-caption { display: flex; align-items: center; gap: 8px; position: relative; min-height: 64px; margin-top: 22px; font-size: 12px; line-height: 1.4; color: #586174; }
   .volume-caption > strong { display: none; }
   .volume-caption > svg { flex-shrink: 0; margin-left: auto; color: #8590a5; transition: translate .2s; }
-  .project-volume:focus-visible { outline: 2px solid var(--blue); outline-offset: 9px; }
+  .project-volume:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: 9px; }
   .project-volume:focus-visible .volume-object { transform: perspective(900px) translateY(-12px) rotateY(-4deg) rotateZ(0); }
   @media (hover: hover) and (pointer: fine) {
     .project-volume:hover .volume-object { transform: perspective(900px) translateY(-16px) translateZ(18px) rotateY(-3deg) rotateZ(-1deg); --book-shadow: 5px 12px 14px #24365a29; }

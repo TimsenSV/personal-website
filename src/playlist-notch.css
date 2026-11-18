@@ -26,7 +26,7 @@
   .notch-actions { padding-right: 3px; }
   .notch-actions button { justify-content: center; width: 44px; border-radius: 18px; }
   .notch-actions button:hover { background: #33353a; }
-  .playlist-notch button:focus-visible { outline: 2px solid #bed0ff; outline-offset: -3px; }
+  .playlist-notch button:focus-visible { outline: var(--focus-ring-width) solid #c9c9cf; outline-offset: -3px; }
   .playlist-notch .window-body {
     width: calc(var(--player-width) - 2px); max-height: 0; visibility: hidden;
     overflow: hidden; padding: 0; transition: max-height .19s ease-out;

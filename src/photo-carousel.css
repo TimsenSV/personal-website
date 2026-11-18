@@ -20,7 +20,7 @@
   .photo-current { z-index: 3; text-align: left; touch-action: pan-y pinch-zoom; cursor: grab; user-select: none; transform: translateX(var(--drag-x,0px)) rotate(calc(-3deg + var(--drag-tilt,0deg))); transition: transform .32s cubic-bezier(.2,.7,.25,1),box-shadow .25s; }
   .photo-current:disabled { cursor: default; }
   .photo-carousel button:focus:not(:focus-visible), .photo-lightbox-close:focus:not(:focus-visible) { outline: none; }
-  .photo-carousel button:focus-visible { outline: 2px solid #535763; outline-offset: 4px; }
+  .photo-carousel button:focus-visible { outline: var(--focus-ring-width) solid #535763; outline-offset: 4px; }
   .photo-carousel .photo-current:focus { outline: none; }
   .photo-current:focus-visible .polaroid-caption { text-decoration: underline; text-underline-offset: 3px; }
   .photo-carousel:focus-within .photo-back-1 { transform: translate(12px,3px) rotate(11deg) scale(.97); }
@@ -45,7 +45,7 @@
   .photo-carousel-large .photo-nav { opacity: 1; transform: scale(calc(1 / var(--gallery-scale,1))); }
   .photo-lightbox-close { position: absolute; top: max(20px,env(safe-area-inset-top)); right: max(20px,env(safe-area-inset-right)); width: 48px; height: 48px; display: grid; place-items: center; border: 1px solid #ffffff94; border-radius: 50%; background: #fffffff0; color: #30394f; box-shadow: 0 4px 16px #18233d12; z-index: 2; }
   .photo-lightbox-close:hover { background: white; }
-  .photo-lightbox-close:focus-visible { outline: 2px solid #535763; outline-offset: 4px; }
+  .photo-lightbox-close:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: 4px; }
   .photo-lightbox[open] .photo-lightbox-close { animation: photo-controls-in .22s ease-out .4s both; }
   .photo-lightbox.is-closing .photo-lightbox-close { animation: photo-backdrop-out .15s ease-out both; }
   @keyframes photo-controls-in { from { opacity: 0; } to { opacity: 1; } }
