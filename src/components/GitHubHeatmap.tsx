@@ -4,7 +4,7 @@ import { calendarCells, type ContributionDay } from '../services/contributions'
 
 const shortDate = (date: string) => new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }).format(new Date(date))
 const fullDate = (date: string) => new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(date))
-const fills = ['#e8edf7', '#b3c6ff', '#7c9ef5', '#426ee8', '#2548b7']
+const fills = ['var(--heat-0, #e8edf7)', 'var(--heat-1, #b3c6ff)', 'var(--heat-2, #7c9ef5)', 'var(--heat-3, #426ee8)', 'var(--heat-4, #2548b7)']
 
 function CalendarGrid({ cells }: { cells: (ContributionDay | null)[] }) {
   const columns = cells.length / 7
@@ -39,7 +39,7 @@ export function GitHubHeatmap({ username, full = false, interaction }: { usernam
   return <figure className={`contribution-calendar ${full ? 'is-full' : ''}`}>
     <div className="heatmap-heading"><span>A year on GitHub</span><strong>{count.toLocaleString('en-GB')} contributions</strong></div>
     {interaction ? <button className="heatmap-year heatmap-trigger" aria-label="Show pull requests" aria-expanded={interaction.expanded} aria-controls={interaction.controls} onClick={interaction.onToggle}>{plot}</button> : <div className="heatmap-year">{plot}</div>}
-    <figcaption className="heatmap-caption"><span>{count === 0 ? 'Quiet on the public side.' : `${shortDate(days[0].date)} — ${shortDate(days.at(-1)!.date)}`}</span><span className="heatmap-legend" aria-label="Lighter means fewer contributions, darker means more.">Less {fills.map(fill => <i key={fill} style={{ background: fill }}/>) } More</span></figcaption>
+    <figcaption className="heatmap-caption"><span>{count === 0 ? 'Quiet on the public side.' : `${shortDate(days[0].date)} — ${shortDate(days.at(-1)!.date)}`}</span><span className="heatmap-legend" aria-label="Contribution scale from fewer to more">Less {fills.map(fill => <i key={fill} style={{ background: fill }}/>) } More</span></figcaption>
     {stale && <p className="heatmap-updated">Snapshot updated: {fullDate(calendar.fetchedAt)}</p>}
     {full && calendar.anonymousContributions > 0 && <p className="small-note">Includes anonymous private contribution counts, as shown on GitHub. No private repository names or contents are stored.</p>}
   </figure>

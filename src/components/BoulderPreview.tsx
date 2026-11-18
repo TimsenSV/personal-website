@@ -38,11 +38,11 @@ export function BoulderPreview() {
     <path d="M13 267L225 242 283 262 65 285Z" fill="#b8c4df"/>
     <path d="M119 255L172 274M214 249L252 264" stroke="#9daecc" strokeWidth="1.2"/>
     <path d={wall} transform="translate(5 4)" fill="#929cb5"/>
-    <path d={wall} fill="#ebedf3" stroke="#b5bed2" strokeWidth="1.2"/>
-    <path d="M28 24L218 10 165 97 41 147 18 118Z" fill="#f8f8fa"/>
-    <path d="M218 10L254 34 244 124 165 97Z" fill="#d5dbea"/>
-    <path d="M41 147L165 97 244 124 263 148 132 183Z" fill="#e1e5f0"/>
-    <path d="M132 183L263 148 251 250 190 257Z" fill="#d0d8ea"/>
+    <path d={wall} fill="var(--wall-base, #ebedf3)" stroke="var(--wall-edge, #b5bed2)" strokeWidth="1.2"/>
+    <path d="M28 24L218 10 165 97 41 147 18 118Z" fill="var(--wall-lit, #f8f8fa)"/>
+    <path d="M218 10L254 34 244 124 165 97Z" fill="var(--wall-side, #d5dbea)"/>
+    <path d="M41 147L165 97 244 124 263 148 132 183Z" fill="var(--wall-middle, #e1e5f0)"/>
+    <path d="M132 183L263 148 251 250 190 257Z" fill="var(--wall-shadow, #d0d8ea)"/>
     <path d="M28 24L165 97 218 10M41 147L165 97 244 124M132 183L190 257" stroke="#b8c2d5" strokeWidth="1"/>
     <path d={wall} fill={`url(#${bolts})`}/>
     <g strokeLinejoin="round" strokeWidth="1">

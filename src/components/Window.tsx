@@ -2,7 +2,7 @@ import { useLayoutEffect, useId, useRef, useState } from 'react'
 import { Maximize2, Minimize2, X } from 'lucide-react'
 import type { ReactNode, RefObject } from 'react'
 
-export function Window({ title, children, toolbar, onClose, variant = '', expandable = true, initialFocus, minimizedHeader, returnFocus }: { title: string; children: ReactNode; toolbar?: ReactNode; onClose: () => void; variant?: string; expandable?: boolean; initialFocus?: string; minimizedHeader?: ReactNode; returnFocus?: RefObject<HTMLElement | null> }) {
+export function Window({ title, children, toolbar, onClose, variant = '', expandable = true, initialFocus, minimizedHeader, returnFocus, openFrom }: { title: string; children: ReactNode; toolbar?: ReactNode; onClose: () => void; variant?: string; expandable?: boolean; initialFocus?: string; minimizedHeader?: ReactNode; openFrom?: DOMRect | null; returnFocus?: RefObject<HTMLElement | null> }) {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const titleId = useId()
   const [expanded, setExpanded] = useState(false)
@@ -31,7 +31,20 @@ export function Window({ title, children, toolbar, onClose, variant = '', expand
       target?.focus({ preventScroll: true })
     }
   }, [initialFocus, minimized, returnFocus])
-  return <dialog ref={dialogRef} className={`window ${variant} ${expanded && expandable && !minimized ? 'is-expanded' : ''}`} role={minimized ? 'region' : undefined} aria-label={minimized ? title : undefined} aria-labelledby={minimized ? undefined : titleId}
+  useLayoutEffect(() => {
+    const dialog = dialogRef.current
+    if (!openFrom?.width || !dialog?.open || !dialog.animate || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return
+    const end = dialog.getBoundingClientRect()
+    if (!end.width || !end.height) return
+    const dx = openFrom.left + openFrom.width / 2 - end.left - end.width / 2
+    const dy = openFrom.top + openFrom.height / 2 - end.top - end.height / 2
+    const unfold = dialog.animate([
+      { transform: `translate(${dx}px, ${dy}px) rotate(-2deg) scale(${openFrom.width / end.width}, ${openFrom.height / end.height})` },
+      { transform: 'none' },
+    ], { duration: 380, easing: 'cubic-bezier(.22,.75,.2,1)' })
+    return () => unfold.cancel()
+  }, [openFrom])
+  return <dialog ref={dialogRef} data-from-paper={openFrom ? '' : undefined} className={`window ${variant} ${expanded && expandable && !minimized ? 'is-expanded' : ''}`} role={minimized ? 'region' : undefined} aria-label={minimized ? title : undefined} aria-labelledby={minimized ? undefined : titleId}
     onCancel={(event) => { event.preventDefault(); event.stopPropagation(); onClose() }}
     onKeyDown={(event) => {
       if (event.target instanceof Element && event.target.closest('dialog') !== event.currentTarget) return

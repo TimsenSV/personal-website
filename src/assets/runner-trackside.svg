@@ -1,4 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="172" height="30" viewBox="0 0 172 30" shape-rendering="crispEdges">
+  <style>
+    @media (prefers-color-scheme: dark) {
+      [fill="#8e9b97"] { fill: #385052; } [fill="#b6c1ad"] { fill: #547073; }
+      [fill="#958b80"] { fill: #695558; } [fill="#c9cbba"] { fill: #414a4c; }
+      [fill="#bd9d87"] { fill: #716061; } [fill="#e9cdb4"] { fill: #8b7470; }
+    }
+  </style>
   <defs>
     <g id="poplar">
       <path fill="#8e9b97" d="M5 0h2v2h2v3h1v5h2v8h-1v3H9v2H4v-2H2v-4H1v-6h1V6h2V2h1z"/>

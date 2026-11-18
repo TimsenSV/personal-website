@@ -1,0 +1,142 @@
+/* The dark snapshot sits on top in both directions, with the dock above the waterline. */
+:root[data-theme-wave] .dock { view-transition-name: theme-dock; }
+:root[data-theme-wave]::view-transition { pointer-events: none; }
+:root[data-theme-wave]::view-transition-group(root),
+:root[data-theme-wave]::view-transition-group(theme-dock),
+:root[data-theme-wave]::view-transition-old(root),
+:root[data-theme-wave]::view-transition-new(root),
+:root[data-theme-wave]::view-transition-new(theme-dock) { animation: none; mix-blend-mode: normal; }
+:root[data-theme-wave]::view-transition-group(theme-dock) { z-index: 2; }
+:root[data-theme-wave]::view-transition-old(theme-dock) { display: none; }
+:root[data-theme-wave='out']::view-transition-new(root),
+:root[data-theme-wave='in']::view-transition-old(root) { z-index: 1; animation: dock-theme-wave 920ms linear both; }
+:root[data-theme-wave='in']::view-transition-old(root) { animation-direction: reverse; }
+
+/* The liquid overlaps the face by two SVG units along its top edge. */
+.dock .dock-icon.theme-icon {
+  --theme-face: #2d3151;
+  background: transparent; border: 0; box-shadow: none; overflow: visible; color: #fff2cc;
+}
+.dock-item[aria-pressed='true'] .theme-icon { --theme-face: #ffd48b; color: #6d360d; }
+.dock .theme-icon > .theme-art {
+  width: 100%; height: 100%; overflow: visible; pointer-events: none;
+  filter: drop-shadow(0 2px 2px #14245133);
+}
+.theme-glyph > g { transform-origin: 16px 16px; transition: transform .42s cubic-bezier(.18,.85,.25,1.2), opacity .22s; }
+.theme-sun { opacity: 0; transform: rotate(-80deg) scale(.45); }
+[aria-pressed='true'] .theme-sun { opacity: 1; transform: none; }
+[aria-pressed='true'] .theme-moon { opacity: 0; transform: rotate(65deg) scale(.45); }
+.dock-item:active .theme-glyph > g { scale: .92; }
+
+.theme-edge, .theme-edge > path { transform-box: view-box; transform-origin: 50% 0; }
+.theme-edge { transform: scaleY(0); }
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .dock-item[aria-pressed] .dock-tooltip { bottom: calc(130% + 7px); }
+  .theme-edge { transition: transform .34s cubic-bezier(.4,0,.25,1); }
+  .theme-edge > path { animation: edge-swell 1.9s ease-in-out infinite alternate both paused; }
+  .dock-item:is(:hover,:focus-visible) .theme-edge {
+    transform: scaleY(1); transition: transform .48s cubic-bezier(.22,.85,.32,1.08);
+  }
+  .dock-item:is(:hover,:focus-visible) .theme-edge > path { animation-play-state: running; }
+}
+@keyframes edge-swell {
+  from {
+    d: path('M16 2V0C22 0 22 -4 23 -10C24 -19 31 -20 33 -12C35 -7 32 -3 37 -1C40 0 43 0 48 0V2Z');
+    transform: scaleY(.68);
+  }
+  to {
+    d: path('M16 2V0C22 0 24 -1 26 -3C29 -6 32 -3 33 -11C35 -22 42 -21 43 -12C44 -5 40 0 48 0V2Z');
+    transform: scaleY(1);
+  }
+}
+@media (max-width: 460px) {
+  .dock { width: max-content; max-width: calc(100% - 12px); gap: 2px; padding-inline: 5px; }
+  .dock .dock-slot { min-width: 0; height: 44px; flex-shrink: 1; }
+  .dock .dock-slot .dock-item { height: 44px; }
+  .dock .dock-slot .dock-icon { aspect-ratio: 1; height: auto; }
+}
+@media (prefers-reduced-motion: reduce) { .theme-glyph > g { transition: none; } }
+
+:root[data-theme='light'] { color-scheme: light; }
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --ink: #f4f3f0;
+  --muted: #adb4c0;
+  --blue: #93abff;
+  --surface: #1b1e25;
+  --line: #353944;
+  --raised: #252a35;
+  --hover: #303746;
+  --tint: #2a344f;
+  --heat-0: #2a303d; --heat-1: #384b79; --heat-2: #516eb0; --heat-3: #7997ed; --heat-4: #b3c6ff;
+  background: #111318;
+  color: var(--ink);
+
+  & ::selection { background: #415998; color: white; }
+  & .skip-link { background: var(--ink); color: var(--surface); }
+  & .card { border-color: var(--line); box-shadow: inset 0 0 0 3px #ffffff03, 0 2px 6px #0002; }
+  & :is(.intro-card, .github-card.heatmap-card, .music-card) { background: var(--surface); }
+  & .intro-desk::before { background-image: radial-gradient(circle, #94a1bb8c .8px, transparent 1px); }
+  & .register-tab { background: #375cf6; }
+  & .project-shelf::after { background: #4a4c53; border-color: #5a5d64; box-shadow: inset 0 -4px #373a41, 0 8px 12px -7px #0009; }
+  & .volume-backlane .volume-cover { border-color: #62577f; }
+  & :is(.volume-caption, .heatmap-heading, .heatmap-caption, .heatmap-updated, .contribution-empty > p, .heatmap-card .widget-top > .external-link) { color: var(--muted); }
+  & .project-volume:is(:hover,:focus-visible) .volume-caption, & .heatmap-heading > strong { color: var(--blue); }
+  & .heatmap-month { fill: var(--muted); }
+  & :is(.round-link, .heatmap-placeholder > i) { background: var(--raised); }
+  & .round-link:hover { background: var(--hover); }
+  & .pr-item { background: var(--raised); border-color: var(--line); }
+  & .pr-copy strong { color: var(--ink); }
+  & .pr-copy small { color: var(--muted); }
+  & .pr-item.is-review { background: #212e2b; border-color: #43735d; }
+  & .pr-item.is-merged { background: #2a2438; border-color: #705886; }
+  & .music-bottom { border-color: var(--line); }
+  & .spotify-mark, & .spotify-permission-icon { color: #d8e9d9; --spotify-line: #1b1e25; }
+  & .equalizer i { background: var(--blue); }
+  & .runner-card { background: #282025; border-color: #43353b; }
+  & .runner-card .round-link { background: none; color: #f6b18b; }
+  & .strava-follow, & .strava-run-link > svg { color: #ffab80; border-color: #54404a; }
+  & .runner-track { border-color: #846458; background-image: repeating-linear-gradient(90deg, transparent 0 25px, #70564e 25px 34px, transparent 34px 66px); }
+  & .boulder-card { background: #202535; border-color: #374057; }
+  & .boulder-preview { --wall-base: #546079; --wall-lit: #697790; --wall-side: #414c67; --wall-middle: #586681; --wall-shadow: #3c475f; --wall-edge: #8793ad; }
+  & .boulder-start { background: #2b3550; border-color: #47577c; color: #c8d5ff; }
+  & .boulder-start:hover { background: #364363; }
+
+  & .dock { background: #222630ed; border-color: #4b505b; box-shadow: 0 9px 34px #0006; }
+  & .dock-divider { background: #4b505c; }
+  & .dock .dock-icon.legal { color: #a6aebc; }
+  & .dock .dock-item:hover .dock-icon.legal { background: var(--hover); }
+  & .dock-indicator { background: var(--blue); }
+  & .dock .dock-item:focus-visible .dock-icon { outline-color: var(--blue); }
+  & .window { border-color: var(--line); }
+  & .window::backdrop, & .photo-lightbox::backdrop { background: #07090eb8; }
+  & :is(.window-bar, .project-navigation) { background: #191c23; border-color: var(--line); }
+  & :is(.icon-button:hover, .project-back:hover, .project-choice:hover, .cv-collection > summary:hover, .legal-sections button:hover) { background: var(--hover); color: var(--ink); }
+  & :is(.project-choice[aria-pressed='true'], .screenshot-main, .button.secondary, .cv-collection > summary, .cv-skills li, .privacy-preference, .spotify-permission, .tag-row span, .honest-empty, .loading-copy, .running-detail > figure, .project-screenshots-empty) { background: var(--raised); border-color: var(--line); }
+  & :is(.portfolio-role, .portfolio-summary, .detail-intro > p:not(.project-role), .screenshot-strip figcaption, .screenshot-controls > p, .project-choice, .project-back, .screenshot-unavailable, .cv-label, .cv-location, .cv-summary, .cv-description, .cv-entry-meta, .cv-entry-meta small, .cv-languages dd, .cv-source, .cv-count, .cv-skills li, .privacy-copy, .legal-imprint address, .legal-text-button, .spotify-permission p) { color: var(--muted); }
+  & :is(.project-choice[aria-pressed='true'], .button.secondary) { color: var(--ink); }
+  & :is(.portfolio-actions > button, .legal-sections button[aria-pressed='true']) { color: var(--blue); background: var(--tint); }
+  & :is(.legal-email, .cv-organization, .privacy-copy .external-link) { color: var(--blue); }
+  & .button.primary { background: #3659df; color: white; }
+  & .button.primary:hover { background: #4263ed; }
+  & :is(.portfolio-project, .cv-section, .cv-collection, .cv-collection > .cv-entries) { border-color: var(--line); }
+  & .screenshot-strip { scrollbar-color: #586071 var(--raised); }
+  & :is(.detail-intro, .portfolio-brand-row) > .product-brand { filter: brightness(0) invert(.94); }
+  & .project-nav-divider { background: var(--line); }
+  & .climb-game { background: var(--surface); color: var(--ink); }
+  & .climb-hud { border-color: var(--line); }
+  & :is(.climb-height > span, .climb-height small, .climb-best, .climb-best span, .climb-best strong) { color: var(--muted); }
+  & .climb-pause { background: var(--raised); color: var(--ink); border-color: var(--line); }
+  & .climb-stage { background: #232b3e; --rock-far: #34405b; --rock-face: #2d374e; --rock-near: #43516b; --rock-light: #52617c; }
+  & .climb-stage[data-world='1'] { background: #342a30; --rock-far: #50404a; --rock-face: #433843; --rock-near: #65505b; --rock-light: #75616a; }
+  & .climb-stage[data-world='2'] { background: #2a2439; --rock-far: #40374f; --rock-face: #393046; --rock-near: #554665; --rock-light: #695879; }
+  & .climb-clouds { opacity: .1; }
+  & .climb-next-ring { stroke: #d1dbff; fill: #ffffff10; }
+  & .climb-next-arrow { fill: #e8eeff; }
+  & .climb-combo, & .climb-route-tip small { color: #d1d9eb; }
+  & .climb-combo b, & .climb-combo.in-flow b { color: #bec9ff; }
+  & .climb-route-tip, & .climb-energy-tip { color: #ffbf9f; }
+  & .overlay-paused { background: #1a2032ed; }
+  & .overlay-paused :is(.climb-kicker, p, .climb-secondary, .climb-legend) { color: var(--muted); }
+  & .overlay-paused h3 em { color: var(--blue); }
+}

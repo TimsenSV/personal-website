@@ -59,6 +59,7 @@ export function LegalNotice({ config, initialSection = 'imprint' }: { config: Le
       </section>
 
       <section><h4>Storage in your browser</h4>
+        <p>If you switch between light and dark mode, this browser remembers your choice for your next visit. You can change it in the dock or reset it by clearing this site’s browser data.</p>
         <p>Your Spotify permission and its date are stored locally. Permission is valid for 180 days, then requested again; withdrawal removes the saved choice. This storage is needed to remember and respect your choice (Section 25(2)(2) TDDDG). It is not sent to my own server.</p>
         <p>When you play Grip Happens, your personal best is saved in this browser so it remains available on your next visit. It contains only a score, no name or identifier, and is not transmitted. This supports the game you request under Section 25(2)(2) TDDDG. The score remains until you clear this site’s browser data.</p>
       </section>

@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState } from 'react'
-import { ArrowUpRight, AudioLines, Code2, FileUser, Footprints, GitBranch, Github, ImagePlus, Play } from 'lucide-react'
+import { ArrowUpRight, AudioLines, Code2, Footprints, GitBranch, Github, ImagePlus, Play } from 'lucide-react'
 import type { PortfolioConfig } from '../content/site'
 import { assetUrl, externalUrl, githubProfile, spotifyPlaylist } from '../lib/links'
 import { useGitHubActivity } from '../hooks/useGitHubActivity'
@@ -11,15 +11,22 @@ import { ChalkClimber } from './ChalkClimber'
 import { GitHubHeatmap } from './GitHubHeatmap'
 import { PixelRunner } from './PixelRunner'
 import { PhotoCarousel } from './PhotoCarousel'
+import { PullRegister } from './PullRegister'
 import { CLIMB_NAME } from '../game/climber'
 import { useScrollPreview } from '../hooks/useScrollPreview'
 
-export function IntroWidget({ profile, onOpenCv }: { profile: PortfolioConfig['profile']; onOpenCv: () => void }) {
+export function IntroWidget({ profile, onOpenCv }: { profile: PortfolioConfig['profile']; onOpenCv: (paper: DOMRect) => void }) {
   return <section className="card intro-card" aria-labelledby="intro-title">
-    <div className="portrait-row"><PhotoCarousel photos={profile.photos} name={profile.name}/><div className="intro-name"><h1 id="intro-title">{profile.name}<span>.</span></h1></div></div>
-    <div className="intro-copy"><p className="intro-positioning">{profile.positioning}</p></div>
-    <div className="intro-actions">
-    <button className="cv-trigger" onClick={onOpenCv} aria-label="Open CV" aria-haspopup="dialog"><FileUser size={18} aria-hidden="true"/><span>CV</span><ArrowUpRight size={14} aria-hidden="true"/></button>
+    <div className="intro-desk">
+      <div className="register-sleeve">
+        <PhotoCarousel photos={profile.photos} name={profile.name}/>
+        <PullRegister onOpen={onOpenCv}/>
+      </div>
+    </div>
+    <div className="intro-signature">
+      <h1 id="intro-title">{profile.name.toLowerCase()}{profile.nicknameSuffix && <span>{profile.nicknameSuffix}</span>}</h1>
+      <p>{profile.positioning}</p>
+      {profile.introduction && <p className="intro-note">{profile.introduction}</p>}
     </div>
   </section>
 }

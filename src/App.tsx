@@ -21,6 +21,7 @@ const titles: Record<Detail, string> = { work: 'My work', shopvibes: 'My work / 
 
 export default function App() {
   const [detail, setDetail] = useState<Detail | null>(null)
+  const [cvOrigin, setCvOrigin] = useState<DOMRect | null>(null)
   const [musicMinimized, setMusicMinimized] = useState(false)
   const musicTrigger = useRef<HTMLButtonElement>(null)
   const { allowed } = useSpotifyConsent()
@@ -32,7 +33,7 @@ export default function App() {
     <a className="skip-link" href="#canvas">Skip to content</a>
     <div className={`page-shell${musicMinimized ? ' has-music-notch' : ''}`} id="overview" tabIndex={-1}>
       <main ref={canvasRef} className="bento-grid" id="canvas" tabIndex={-1}>
-        <IntroWidget profile={siteConfig.profile} onOpenCv={() => setDetail('cv')}/>
+        <IntroWidget profile={siteConfig.profile} onOpenCv={paper => { setCvOrigin(paper); setDetail('cv') }}/>
         <Products products={siteConfig.products} onOpen={setDetail}/>
         <GithubWidget config={siteConfig.github} onOpen={() => setDetail('github')}/>
         <MusicWidget config={siteConfig.spotify} onOpen={trigger => { musicTrigger.current = trigger; setDetail('music') }}/>
@@ -47,7 +48,7 @@ export default function App() {
       onClose={() => { setMusicMinimized(allowed && !!spotifyPlaylist(siteConfig.spotify.url)); setDetail(null) }}
       onStop={() => { setMusicMinimized(false); musicTrigger.current?.focus({ preventScroll: true }) }}
     />}
-    {detail && detail !== 'music' && <Window title={titles[detail]} expandable={detail !== 'play' && !isLegal} initialFocus={detail === 'play' ? '[data-game-start]' : isLegal ? '[data-legal-tab][aria-pressed="true"]' : undefined} onClose={() => setDetail(null)} variant={detail === 'play' ? 'game-window' : detail === 'cv' ? 'cv-window' : isLegal ? 'legal-window' : detail === 'work' || product ? 'work-window' : ''}
+    {detail && detail !== 'music' && <Window title={titles[detail]} openFrom={detail === 'cv' ? cvOrigin : null} expandable={detail !== 'play' && !isLegal} initialFocus={detail === 'play' ? '[data-game-start]' : isLegal ? '[data-legal-tab][aria-pressed="true"]' : undefined} onClose={() => setDetail(null)} variant={detail === 'play' ? 'game-window' : detail === 'cv' ? 'cv-window' : isLegal ? 'legal-window' : detail === 'work' || product ? 'work-window' : ''}
       toolbar={product && <ProjectNavigation product={product} products={siteConfig.products} onSelect={setDetail} onOverview={() => setDetail('work')}/>}>
       {detail === 'work' && <WorkOverview products={siteConfig.products} onOpen={setDetail}/>}
       {product && <ProductDetail product={product}/>}

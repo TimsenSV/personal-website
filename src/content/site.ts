@@ -24,6 +24,7 @@ export type Product = {
 export type PortfolioConfig = {
   profile: {
     name: string
+    nicknameSuffix: string
     monogram: string
     positioning: string
     introduction: string
@@ -59,9 +60,10 @@ export type PortfolioConfig = {
 export const siteConfig: PortfolioConfig = {
   profile: {
     name: 'Tim',
+    nicknameSuffix: 'sen',
     monogram: 't.',
-    positioning: 'Product, UX & an entrepreneurial mindset.',
-    introduction: 'I’m interested in turning complex workflows into clear, useful products.',
+    positioning: 'I’m a product generalist, currently building with AI.',
+    introduction: 'I like to start with “Can you show me?” I set the direction, build prototypes, and ship with the team. Then I go back to users to see what we missed.',
     personal: 'Somewhere between product ideas, a good playlist and the next hold.',
     // Stylised game avatar with brown-blond hair as supplied by Tim; not a portrait.
     pixelAvatar: { hair: '#9b774b', hairHighlight: '#ccb27b', skin: '#edbb96', shirt: '#3159f5', trousers: '#30394f', chalkBag: '#ff7140' },
