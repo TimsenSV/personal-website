@@ -18,6 +18,7 @@ import './book-artifacts.css'
 import './canvas-tilt.css'
 import './legal.css'
 import './playlist-notch.css'
+import './blog.css'
 import './theme.css'
 import App from './App'
 

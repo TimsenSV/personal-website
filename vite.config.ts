@@ -1,5 +1,6 @@
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
+import { fileURLToPath } from 'node:url'
 import { siteConfig } from './src/content/site'
 
 const escapeAttribute = (value: string) => value.replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!)
@@ -7,6 +8,11 @@ const escapeAttribute = (value: string) => value.replace(/[&<>"']/g, (char) => (
 export default defineConfig({
   // Relative asset paths also work below /repository-name/ on GitHub Pages.
   base: './',
+  build: {
+    rollupOptions: {
+      input: [fileURLToPath(new URL('./index.html', import.meta.url)), fileURLToPath(new URL('./blog/index.html', import.meta.url))],
+    },
+  },
   plugins: [react(), {
     name: 'portfolio-metadata',
     transformIndexHtml: (html) => html

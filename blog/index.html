@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg?v=pixel-tim" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#fafafa" />
+    <meta name="description" content="Notes on making things for the web, by Tim Hoffmann." />
+    <script>
+      (() => {
+        let saved
+        try { saved = localStorage.getItem('timsen-theme') } catch {}
+        const dark = saved === 'dark' || (saved !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light'
+        if (dark) document.querySelector('meta[name="theme-color"]').content = '#111318'
+      })()
+    </script>
+    <title>Blog · timsen.me</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/blog-main.tsx"></script>
+  </body>
+</html>

@@ -27,6 +27,12 @@ Open http://127.0.0.1:5173.
 - `src/content/cv.ts` — CV content and download
 - `public/` — images, fonts, CV PDF and GitHub activity snapshot
 
+Add a blog post in `src/content/blog/` as `YYYY-MM-DD-your-slug.md`. Start with a
+numbered heading such as `# 02 - your title`, a blank line, and the article in
+Markdown. You can add `<!-- summary: Short teaser. -->` before the article for
+the archive and home card. Leave a blank line after the comment. `##` and `###`
+headings become reading links. The archive sorts by issue number, highest first.
+
 ## Deployment
 
 Target domain: **timsen.me**. Hosting: GitHub Pages via GitHub Actions.

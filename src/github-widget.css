@@ -71,7 +71,6 @@
     .github-card.heatmap-card { grid-column: 1 / -1; grid-row: 3; }
     .music-card { grid-column: 1; grid-row: 4; }
     .running-card { grid-column: 1; grid-row: 5; }
-    .boulder-card { grid-column: 2; grid-row: 4 / 6; }
   }
   @media (max-width: 620px) {
     .github-card.heatmap-card { padding: 17px 23px 15px; }

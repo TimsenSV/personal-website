@@ -15,7 +15,7 @@ describe('legal information and Spotify permission', () => {
   it('opens the legal app by keyboard, exposes readable contact details and returns focus', async () => {
     const user = userEvent.setup()
     render(<App/>)
-    const trigger = screen.getByRole('button', { name: 'Impressum & Privacy' })
+    const trigger = within(screen.getByRole('contentinfo')).getByRole('button', { name: 'Impressum & Privacy' })
     trigger.focus()
     await user.keyboard('{Enter}')
     const dialog = screen.getByRole('dialog', { name: 'Impressum & Privacy' })

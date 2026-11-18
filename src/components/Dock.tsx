@@ -1,7 +1,8 @@
-import { ArrowUpRight, FileText, Gamepad2, Github, LayoutGrid, Layers3, Linkedin, Mail } from 'lucide-react'
+import { ArrowUpRight, BookOpen, Gamepad2, Github, LayoutGrid, Layers3, Linkedin, Mail } from 'lucide-react'
 import { Fragment, useEffect, useRef, useSyncExternalStore, type ComponentType, type MouseEvent } from 'react'
 import { m, LazyMotion, domAnimation, useMotionValue, useSpring, useTransform, type MotionValue } from 'motion/react'
 import type { PortfolioConfig } from '../content/site'
+import { blogHref } from '../content/blog'
 import { emailUrl, externalUrl, githubProfile, spotifyPlaylist } from '../lib/links'
 import { dockMagnification } from '../lib/dock'
 import { CLIMB_NAME } from '../game/climber'
@@ -66,7 +67,7 @@ function DockItem({ entry, index, pointerX, focusIndex, enabled }: { entry: Dock
   </m.div>
 }
 
-export function Dock({ profile, username, playlistUrl, onPlay, onWork, onLegal }: { profile: PortfolioConfig['profile']; username: string | null; playlistUrl?: string | null; onPlay: () => void; onWork: () => void; onLegal: () => void }) {
+export function Dock({ profile, username, playlistUrl, onPlay, onWork }: { profile: PortfolioConfig['profile']; username: string | null; playlistUrl?: string | null; onPlay: () => void; onWork: () => void }) {
   const theme = useColorTheme()
   const enabled = useSyncExternalStore(subscribe, canMagnify, () => false)
   const pointerX = useMotionValue(Infinity)
@@ -87,8 +88,8 @@ export function Dock({ profile, username, playlistUrl, onPlay, onWork, onLegal }
     { label: 'Overview', href: '#overview', Icon: LayoutGrid, color: 'overview', current: true },
     { label: 'Work', onClick: onWork, Icon: Layers3, color: 'work' },
     { label: CLIMB_NAME, accessibleLabel: `Play ${CLIMB_NAME}`, onClick: onPlay, Icon: Gamepad2, color: 'play' },
+    { label: 'Blog', href: blogHref, Icon: BookOpen, color: 'blog' },
     ...external,
-    { label: 'Impressum & Privacy', onClick: onLegal, Icon: FileText, color: 'legal' },
     { label: theme.dark ? 'Switch to light mode' : 'Switch to dark mode', accessibleLabel: 'Dark mode', pressed: theme.dark, onClick: event => theme.toggle(event.currentTarget), Icon: ThemeIcon, color: 'theme-icon' },
   ]
   return <LazyMotion features={domAnimation} strict><nav className="dock" aria-label="Quick navigation" data-magnification={enabled ? 'on' : 'off'}
@@ -106,7 +107,7 @@ export function Dock({ profile, username, playlistUrl, onPlay, onWork, onLegal }
     }}
     onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) focusIndex.set(-1) }}>
     {entries.map((entry, index) => <Fragment key={entry.color}>
-      {index === 3 && <span className="dock-divider" aria-hidden="true"/>}
+      {entry === external[0] && <span className="dock-divider" aria-hidden="true"/>}
       <DockItem entry={entry} index={index} pointerX={pointerX} focusIndex={focusIndex} enabled={enabled}/>
     </Fragment>)}
   </nav></LazyMotion>

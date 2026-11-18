@@ -1,10 +1,11 @@
 import { act, fireEvent, render, screen } from '@testing-library/react'
+import type { ReactNode } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { useCanvasTilt } from '../hooks/useCanvasTilt'
 
-function Canvas() {
+function Canvas({ children }: { children?: ReactNode }) {
   const ref = useCanvasTilt()
-  return <main ref={ref}><section className="card" aria-label="Test card"><button>Open</button></section></main>
+  return <main ref={ref}>{children ?? <section className="card" aria-label="Test card"><button>Open</button></section>}</main>
 }
 function move(target: Element, properties: Partial<PointerEvent> = {}) {
   const event = new Event('pointermove', { bubbles: true })
@@ -27,12 +28,29 @@ describe('canvas pointer response', () => {
     const card = screen.getByRole('region')
     move(card, { clientX: 400 })
     expect(card).toHaveAttribute('data-tilt-active')
-    expect(card.style.getPropertyValue('--tilt-x')).toBe('2.4deg')
-    expect(card.style.getPropertyValue('--tilt-y')).toBe('2.4deg')
+    expect(card.style.getPropertyValue('--tilt-x')).toBe('4deg')
+    expect(card.style.getPropertyValue('--tilt-y')).toBe('4deg')
     fireEvent.pointerDown(screen.getByRole('button'))
     expect(card).not.toHaveAttribute('data-tilt-active')
     expect(card).toHaveAttribute('data-tilt-reset')
     expect(card.style.getPropertyValue('--tilt-x')).toBe('')
+  })
+  it('tilts the two cards in a layout group independently', () => {
+    render(<Canvas><div data-tilt-group>
+      <section className="card" aria-label="Grip Happens"/>
+      <section className="card" aria-label="Blog"><a href="./blog/">Read more</a></section>
+    </div></Canvas>)
+    const game = screen.getByRole('region', { name: 'Grip Happens' })
+    const blog = screen.getByRole('region', { name: 'Blog' })
+    const readMore = screen.getByRole('link', { name: 'Read more' })
+    move(game)
+    expect(game).toHaveAttribute('data-tilt-active')
+    expect(blog).not.toHaveAttribute('data-tilt-active')
+    move(readMore)
+    expect(game).not.toHaveAttribute('data-tilt-active')
+    expect(blog).toHaveAttribute('data-tilt-active')
+    fireEvent.pointerDown(readMore)
+    expect(blog).not.toHaveAttribute('data-tilt-active')
   })
   it('does not tilt for touch, dragging, reduced motion or an open dialog', () => {
     render(<Canvas/>)

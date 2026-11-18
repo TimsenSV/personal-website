@@ -62,7 +62,7 @@ export const siteConfig: PortfolioConfig = {
     name: 'Tim',
     nicknameSuffix: 'sen',
     monogram: 't.',
-    positioning: 'I’m a product generalist, currently building with AI.',
+    positioning: 'Product builder. Real problems, solved (mostly) with AI.',
     introduction: 'I like to start with “Can you show me?” I set the direction, build prototypes, and ship with the team. Then I go back to users to see what we missed.',
     personal: 'Somewhere between product ideas, a good playlist and the next hold.',
     // Stylised game avatar with brown-blond hair as supplied by Tim; not a portrait.

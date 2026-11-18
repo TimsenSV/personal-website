@@ -8,13 +8,12 @@
   .dock .dock-icon.overview { background: #3155ff; }
   .dock .dock-icon.work { background: #783bff; }
   .dock .dock-icon.play { background: #ff5b18; }
+  .dock .dock-icon.blog { background: #f5dcaf; color: #553817; }
   .dock .dock-icon.spotify { background: #1ed760; color: #101a13; --spotify-line: #1ed760; }
   .dock .dock-icon.spotify > svg:not(.dock-external) { width: 68%; height: 68%; }
   .dock .dock-icon.ink { background: #101116; }
   .dock .dock-icon.linkedin { background: #0769f9; }
   .dock .dock-icon.mail { background: #ed2877; }
-  .dock .dock-icon.legal { background: transparent; color: #707887; border-color: transparent; box-shadow: none; }
-  .dock .dock-icon.legal > svg { width: 48%; height: 48%; }
   .dock .dock-external { right: 5%; top: 5%; width: 20%; height: 20%; opacity: .85; }
   .dock .dock-divider { flex-shrink: 0; align-self: center; }
   .dock .dock-tooltip { bottom: calc(100% + 13px); font-size: 11px; padding: 8px 11px; border: 1px solid #ffffff20; box-shadow: 0 4px 12px #14245120; }
@@ -24,7 +23,6 @@
   .dock[data-magnification="off"] .dock-slot { width: var(--dock-size) !important; }
   @media (hover: hover) and (pointer: fine) {
     .dock .dock-item:hover .dock-icon { box-shadow: inset 0 1px 1px #ffffff66, inset 0 -2px 1px #00000013, 0 7px 14px #14245128; }
-    .dock .dock-item:hover .dock-icon.legal { background: #e4e7ed; box-shadow: none; }
   }
   @media (max-width: 620px) {
     .dock { --dock-size: 44px; gap: 6px; padding: 9px 10px 12px; border-radius: 20px; }

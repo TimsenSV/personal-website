@@ -16,6 +16,7 @@ import { CLIMB_NAME } from './game/climber'
 import { useCanvasTilt } from './hooks/useCanvasTilt'
 import { LegalNotice } from './components/LegalNotice'
 import { useInputModality } from './hooks/useInputModality'
+import { BlogCard } from './components/Blog'
 
 type Detail = ProductId | 'work' | 'play' | 'github' | 'music' | 'running' | 'cv' | 'legal' | 'privacy'
 const titles: Record<Detail, string> = { work: 'My work', shopvibes: 'My work / shopvibes', showcase: 'My work / showcase', backlane: 'My work / backlane', play: CLIMB_NAME, github: 'Workbench / GitHub & experiments', music: 'On repeat / Spotify', running: 'Outside / Running', cv: `CV / ${cvConfig.name}`, legal: 'Impressum & Privacy', privacy: 'Impressum & Privacy' }
@@ -39,11 +40,17 @@ export default function App() {
         <Products products={siteConfig.products} onOpen={setDetail}/>
         <GithubWidget config={siteConfig.github} onOpen={() => setDetail('github')}/>
         <MusicWidget config={siteConfig.spotify} onOpen={trigger => { musicTrigger.current = trigger; setDetail('music') }}/>
-        <BoulderWidget onOpen={() => setDetail('play')}/>
         <RunningWidget config={siteConfig.running} onOpen={() => setDetail('running')}/>
+        <div className="play-blog-stack" data-tilt-group>
+          <BoulderWidget onOpen={() => setDetail('play')}/>
+          <BlogCard/>
+        </div>
       </main>
+      <footer className="site-footer">
+        <button className="legal-text-button" type="button" aria-haspopup="dialog" onClick={() => setDetail('legal')}>Impressum &amp; Privacy</button>
+      </footer>
     </div>
-    <Dock profile={siteConfig.profile} username={siteConfig.github.username} playlistUrl={siteConfig.spotify.url} onPlay={() => setDetail('play')} onWork={() => setDetail('work')} onLegal={() => setDetail('legal')}/>
+    <Dock profile={siteConfig.profile} username={siteConfig.github.username} playlistUrl={siteConfig.spotify.url} onPlay={() => setDetail('play')} onWork={() => setDetail('work')}/>
     {(detail === 'music' || musicMinimized) && <PlaylistWindow
       config={siteConfig.spotify} minimized={detail !== 'music'} trigger={musicTrigger}
       onRestore={() => setDetail('music')} onPrivacy={() => setDetail('privacy')}

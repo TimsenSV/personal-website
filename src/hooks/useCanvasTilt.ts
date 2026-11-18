@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react'
 
+const maxTilt = 4
+
 /** Pointer-only enhancement. No React renders per move, no transform on open pop-outs. */
 export function useCanvasTilt() {
   const ref = useRef<HTMLElement>(null)
@@ -22,7 +24,9 @@ export function useCanvasTilt() {
     }
     function move(event: PointerEvent) {
       const card = event.target instanceof Element ? event.target.closest<HTMLElement>('.card') : null
-      if (!media!.matches || event.pointerType !== 'mouse' || event.buttons || !card || card.parentElement !== canvas || document.querySelector('dialog[open]') || card.querySelector('[role="dialog"]')) { reset(true); return }
+      const parent = card?.parentElement
+      const inCanvas = parent === canvas || (parent?.hasAttribute('data-tilt-group') && parent.parentElement === canvas)
+      if (!media!.matches || event.pointerType !== 'mouse' || event.buttons || !card || !inCanvas || document.querySelector('dialog[open]') || card.querySelector('[role="dialog"]')) { reset(true); return }
       if (card !== active) {
         reset()
         active = card
@@ -34,8 +38,8 @@ export function useCanvasTilt() {
       const y = Math.max(-1, Math.min(1, (event.clientY - bounds.top) / bounds.height * 2 - 1))
       cancelAnimationFrame(frame)
       frame = requestAnimationFrame(() => {
-        card.style.setProperty('--tilt-x', `${-y * 2.4}deg`)
-        card.style.setProperty('--tilt-y', `${x * 2.4}deg`)
+        card.style.setProperty('--tilt-x', `${-y * maxTilt}deg`)
+        card.style.setProperty('--tilt-y', `${x * maxTilt}deg`)
         card.dataset.tiltActive = ''
       })
     }

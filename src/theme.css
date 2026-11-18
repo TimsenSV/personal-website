@@ -105,8 +105,6 @@
 
   & .dock { background: #222630ed; border-color: #4b505b; box-shadow: 0 9px 34px #0006; }
   & .dock-divider { background: #4b505c; }
-  & .dock .dock-icon.legal { color: #a6aebc; }
-  & .dock .dock-item:hover .dock-icon.legal { background: var(--hover); }
   & .dock-indicator { background: var(--blue); }
   & .window { border-color: var(--line); }
   & .window::backdrop, & .photo-lightbox::backdrop { background: #07090eb8; }

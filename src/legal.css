@@ -1,4 +1,7 @@
 @layer widgets {
+  .site-footer { text-align: center; padding-top: 12px; }
+  .site-footer .legal-text-button { color: var(--muted); padding-inline: 10px; }
+  .site-footer .legal-text-button:hover { color: var(--ink); }
   .legal-window { width: min(640px, calc(100% - 48px)); }
   .legal-detail { padding: 24px 32px 32px; }
   .legal-sections { display: flex; gap: 6px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
