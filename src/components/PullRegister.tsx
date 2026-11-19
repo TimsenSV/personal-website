@@ -28,7 +28,7 @@ export function PullRegister({ onOpen }: { onOpen: (paper: DOMRect) => void }) {
     const desk = slot.closest('.intro-desk')!.getBoundingClientRect()
     const room = desk.right - start.right
     travel.current = Math.max(32, Math.min(104, room - 30))
-    slot.style.setProperty('--tumble-exit', Math.max(48, room + 22) + 'px')
+    slot.style.setProperty('--register-exit', Math.max(48, room + 22) + 'px')
   }
 
   useEffect(() => {
@@ -136,6 +136,7 @@ export function PullRegister({ onOpen }: { onOpen: (paper: DOMRect) => void }) {
 
   return <span className="cv-index-anchor" ref={anchor}>
     <span className="sr-only" id={hint}>Pull right and release, or activate to open the CV.</span>
+    <span className="register-ground" aria-hidden="true"/>
     <button type="button" ref={button} className="cv-index" aria-label="Open CV" aria-haspopup="dialog" aria-describedby={hint}
       onPointerDown={start} onPointerMove={follow} onPointerUp={release} onBlur={cancel}
       onPointerCancel={cancel} onLostPointerCapture={e => { if (grab.current?.id === e.pointerId) cancel() }}
@@ -152,6 +153,10 @@ export function PullRegister({ onOpen }: { onOpen: (paper: DOMRect) => void }) {
           {cvConfig.experience.slice(0, 2).map(role => <span className="register-entry" key={role.organization}>{role.organization}</span>)}
         </span>
         <span className="register-tab"><span>CV</span><ArrowRight size={14}/></span>
+      </span>
+      <span className="register-dust" aria-hidden="true"><i/><i/><i/><i/></span>
+      <span className="register-actor" aria-hidden="true">
+        <span className="register-shadow"/>
         <RegisterTim/>
       </span>
     </button>
