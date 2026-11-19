@@ -4,7 +4,7 @@
 
 Hey, I’m Tim.
 
-I’ll be straightforward. I’ve been a lurker for the last couple of years. (A lurker is someone who reads the whole thread, knows all the drama, and leaves the reply box untouched.) Reading, watching, and saving pretty much anything about product development, startups, software, or tech. My bookmarks are going strong, thank you for asking. It wasn’t always like that, though.
+I’ll be straightforward. I’ve been a lurker for the last couple of years. (Reads the whole thread. Never hits Reply.) Reading, watching, and saving pretty much anything about product development, startups, software, or tech. My bookmarks are going strong, thank you for asking. It wasn’t always like that, though.
 
 ## You might ask how I ended up here
 
