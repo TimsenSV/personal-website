@@ -76,6 +76,7 @@ export const siteConfig: PortfolioConfig = {
       { src: 'images/photos/05-evening.webp', preview: { src: 'images/photos/05-evening-small.webp', width: 480 }, width: 1200, height: 1600, alt: 'Tim laughing at an outdoor table under warm lights', position: '50% 30%' },
       { src: 'images/photos/06-climbing-gear.webp', preview: { src: 'images/photos/06-climbing-gear-small.webp', width: 480 }, width: 1200, height: 1600, alt: 'A view down at climbing gear clipped to a harness' },
       { src: 'images/photos/07-city-evening.webp', preview: { src: 'images/photos/07-city-evening-small.webp', width: 480 }, width: 1200, height: 1600, alt: 'Tim in a cap sitting beside a stone wall on an evening street', position: '50% 28%' },
+      { src: 'images/photos/08-outdoor-portrait.webp', width: 640, height: 640, alt: 'Tim wearing glasses and a backpack outdoors' },
     ],
     email: null,
     linkedinUrl: 'https://www.linkedin.com/in/timsenhoffmann/',
