@@ -67,8 +67,9 @@ export const siteConfig: PortfolioConfig = {
     personal: 'Somewhere between product ideas, a good playlist and the next hold.',
     // Stylised game avatar with brown-blond hair as supplied by Tim; not a portrait.
     pixelAvatar: { hair: '#9b774b', hairHighlight: '#ccb27b', skin: '#edbb96', shirt: '#3159f5', trousers: '#30394f', chalkBag: '#ff7140' },
-    // User-supplied photos. IMG_1247 first, IMG_2460 second; web derivatives only.
+    // User-supplied photos in carousel order. Web derivatives only.
     photos: [
+      { src: 'images/photos/08-outdoor-portrait.webp', width: 640, height: 640, alt: 'Tim wearing glasses and a backpack outdoors' },
       { src: 'images/photos/01-portrait.webp', preview: { src: 'images/photos/01-portrait-small.webp', width: 640 }, width: 1600, height: 1600, alt: 'Tim smiling in front of a blue and turquoise wall' },
       { src: 'images/photos/02-profile.webp', width: 640, height: 640, alt: 'Black-and-white side portrait of Tim wearing glasses' },
       { src: 'images/photos/03-climbing-wall.webp', preview: { src: 'images/photos/03-climbing-wall-small.webp', width: 480 }, width: 1200, height: 1600, alt: 'Tim climbing an indoor wall with colourful holds', position: '50% 40%' },
@@ -76,7 +77,6 @@ export const siteConfig: PortfolioConfig = {
       { src: 'images/photos/05-evening.webp', preview: { src: 'images/photos/05-evening-small.webp', width: 480 }, width: 1200, height: 1600, alt: 'Tim laughing at an outdoor table under warm lights', position: '50% 30%' },
       { src: 'images/photos/06-climbing-gear.webp', preview: { src: 'images/photos/06-climbing-gear-small.webp', width: 480 }, width: 1200, height: 1600, alt: 'A view down at climbing gear clipped to a harness' },
       { src: 'images/photos/07-city-evening.webp', preview: { src: 'images/photos/07-city-evening-small.webp', width: 480 }, width: 1200, height: 1600, alt: 'Tim in a cap sitting beside a stone wall on an evening street', position: '50% 28%' },
-      { src: 'images/photos/08-outdoor-portrait.webp', width: 640, height: 640, alt: 'Tim wearing glasses and a backpack outdoors' },
     ],
     email: null,
     linkedinUrl: 'https://www.linkedin.com/in/timsenhoffmann/',
