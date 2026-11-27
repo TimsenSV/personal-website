@@ -161,8 +161,8 @@ export const siteConfig: PortfolioConfig = {
       screenshots: [
         {
           src: 'images/projects/showcase/01-website.jpg',
-          alt: 'showcase website hero with a sofa transformed into different interior scenes',
-          caption: 'One product photo. A whole world of possibilities.', width: 1340, height: 896,
+          alt: 'showcase homepage with a product photo upload form above a carousel of living and dining room scenes',
+          caption: 'From one product photo to a gallery of room scenes.', width: 1440, height: 960,
         },
         {
           src: 'images/projects/showcase/02-studio.png',
