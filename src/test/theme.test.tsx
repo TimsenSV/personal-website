@@ -21,6 +21,7 @@ afterEach(() => {
   delete document.documentElement.dataset.theme
   Reflect.deleteProperty(document, 'startViewTransition')
   Reflect.deleteProperty(document, 'getAnimations')
+  vi.useRealTimers()
 })
 
 describe('dock theme', () => {
@@ -32,6 +33,7 @@ describe('dock theme', () => {
     expect(button).toHaveAttribute('aria-pressed', 'true')
     fireEvent.click(button)
     expect(document.documentElement).toHaveAttribute('data-theme', 'light')
+    expect(document.documentElement).not.toHaveAttribute('data-theme-lighting')
     expect(localStorage.getItem('timsen-theme')).toBe('light')
     expect(start).not.toHaveBeenCalled()
     localStorage.setItem('timsen-theme', 'dark')
@@ -49,6 +51,25 @@ describe('dock theme', () => {
     expect(document.documentElement).toHaveAttribute('data-theme', 'light')
   })
 
+  it('reverses the lamp gesture from its current pose on a quick second toggle', () => {
+    vi.useFakeTimers({ toFake: ['performance', 'requestAnimationFrame', 'cancelAnimationFrame'] })
+    const button = renderSwitch()
+    const root = document.documentElement
+    const advance = (time: number) => act(() => { vi.advanceTimersByTime(time) })
+
+    fireEvent.click(button)
+    expect(root).toHaveAttribute('data-theme-lighting', 'stowed')
+    advance(440)
+    expect(root).toHaveAttribute('data-theme-lighting', 'draw')
+    fireEvent.click(button)
+    expect(root).toHaveAttribute('data-theme-lighting', 'draw')
+    advance(150)
+    expect(root).toHaveAttribute('data-theme-lighting', 'grip')
+    advance(440)
+    expect(root).not.toHaveAttribute('data-theme-lighting')
+    expect(root).toHaveAttribute('data-theme', 'light')
+  })
+
   it('reverses the same wave at the button and commits the last choice before removing snapshots', async () => {
     const finish = pending()
     const ready = pending()
@@ -62,6 +83,7 @@ describe('dock theme', () => {
     const button = renderSwitch()
     vi.spyOn(button, 'getBoundingClientRect').mockReturnValue(new DOMRect(50, 400, 44, 44))
     fireEvent.click(button)
+    expect(document.documentElement).toHaveAttribute('data-theme-lighting', 'stowed')
     await act(async () => ready.resolve())
     fireEvent.click(document.documentElement, { clientX: 15, clientY: 15 })
     expect(button).toHaveAttribute('aria-pressed', 'true')
@@ -72,6 +94,7 @@ describe('dock theme', () => {
     expect(button).toHaveAttribute('aria-pressed', 'false')
     expect(document.documentElement).toHaveAttribute('data-theme', 'light')
     expect(document.documentElement).not.toHaveAttribute('data-theme-wave')
+    expect(document.documentElement).not.toHaveAttribute('data-theme-lighting')
     expect(document.head.textContent).not.toContain('@keyframes dock-theme-wave')
   })
 })

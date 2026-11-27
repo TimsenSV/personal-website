@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { createThemeLighting } from '../lib/themeLighting'
 import { startThemeRipple, type ThemeRipple } from '../lib/themeRipple'
 
 const preferenceKey = 'timsen-theme'
@@ -18,18 +19,25 @@ export function useColorTheme() {
   const target = useRef(dark)
   const explicit = useRef(false)
   const ripple = useRef<ThemeRipple | null>(null)
+  const lighting = useRef<ReturnType<typeof createThemeLighting> | null>(null)
   useEffect(() => {
+    lighting.current = createThemeLighting(target.current)
     const followPreference = () => {
       const saved = savedTheme()
       explicit.current = saved === 'dark' || saved === 'light'
       target.current = explicit.current ? saved === 'dark' : systemDark()
       ripple.current?.stop()
       paint(target.current)
+      lighting.current?.sync(target.current)
       setDark(target.current)
     }
     const systemChanged = () => { if (!explicit.current) followPreference() }
     const storageChanged = (e: StorageEvent) => { if (e.key === preferenceKey || e.key === null) followPreference() }
-    const motionChanged = (e: MediaQueryListEvent) => { if (e.matches) ripple.current?.stop() }
+    const motionChanged = (e: MediaQueryListEvent) => {
+      if (!e.matches) return
+      ripple.current?.stop()
+      lighting.current?.sync(target.current)
+    }
     const scheme = window.matchMedia?.(darkQuery)
     const motion = window.matchMedia?.(motionQuery)
     followPreference()
@@ -40,6 +48,8 @@ export function useColorTheme() {
       scheme?.removeEventListener('change', systemChanged)
       motion?.removeEventListener('change', motionChanged)
       window.removeEventListener('storage', storageChanged)
+      lighting.current?.sync(target.current)
+      lighting.current = null
       ripple.current?.stop()
     }
   }, [])
@@ -50,9 +60,24 @@ export function useColorTheme() {
     explicit.current = true
     setDark(next)
     try { localStorage.setItem(preferenceKey, next ? 'dark' : 'light') } catch { /* The choice still applies in this tab. */ }
+    if (window.matchMedia?.(motionQuery).matches) {
+      ripple.current?.stop()
+      paint(next)
+      lighting.current?.sync(next)
+      return
+    }
     if (ripple.current) { ripple.current.aim(next); return }
-    if (!document.startViewTransition || window.matchMedia?.(motionQuery).matches) { paint(next); return }
-    ripple.current = startThemeRipple(button, next, paint, () => { ripple.current = null })
+    lighting.current?.hold()
+    if (typeof document.startViewTransition === 'function') {
+      // Keep the current pose through the ripple so neither snapshot hides the gesture.
+      ripple.current = startThemeRipple(button, next, paint, () => {
+        ripple.current = null
+        lighting.current?.aim(target.current)
+      })
+      if (ripple.current) return
+    }
+    paint(next)
+    lighting.current?.aim(next)
   }
   return { dark, toggle }
 }
