@@ -1,4 +1,6 @@
 import { memo, useId, type CSSProperties } from 'react'
+import { PixelHeadlamp } from './PixelHeadlamp'
+import { PixelLampGesture } from './PixelLampGesture'
 import { PixelTimHead } from './PixelTimHead'
 import { limbPath, type JointPair, type Point } from './pixelLimb'
 import { siteConfig } from '../content/site'
@@ -30,9 +32,11 @@ const frames: TugPose[] = [
   { name: 'step', hip: [20,31], backArm: [[13,26],[9,23]], frontArm: [[24,27],[28,23]], backLeg: [[12,37],[8,46]], frontLeg: [[25,36],[32,34]] },
 ]
 const frameWidth = 58
+// Leave room for the light outside the viewport without showing adjacent poses.
+const frameStride = 144
 const spriteStyle = {
   ...Object.fromEntries(Object.entries(siteConfig.profile.pixelAvatar).map(([key, value]) => ['--pixel-' + key, value])),
-  ...Object.fromEntries(frames.map(({ name }, index) => ['--frame-' + name, -index * frameWidth + 'px'])),
+  ...Object.fromEntries(frames.map(({ name }, index) => ['--frame-' + name, -index * frameStride + 'px'])),
 } as CSSProperties
 
 function Boot({ toe: [x, y] }: { toe: Point }) {
@@ -50,7 +54,7 @@ export const RegisterTim = memo(function RegisterTim() {
       <path d="M-6-14H3v2h4v5H4v9H-6v-7h-4v-6h4z" fill="var(--pixel-shirt)"/>
       <path d="M-7-12h4v2h-4z" fill="#afcaff"/><path d="M2-6h3v7H-5v-2h7z" fill="#2845ab"/>
       <path d="M-6 0H5v3H-6z" fill="var(--pixel-trousers)"/>
-      <g transform="translate(20 -33) scale(-1 1)"><PixelTimHead/></g>
+      <g transform="translate(20 -33) scale(-1 1)"><PixelTimHead/><PixelHeadlamp/><PixelLampGesture sprite="register"/></g>
     </g><g id={chalkBag}>
       <path d="M4-2h5v5H7v2H4z" fill="var(--pixel-chalkBag)"/>
       <path d="M4-3h5v2H4z" fill="#333f56"/>
@@ -63,7 +67,7 @@ export const RegisterTim = memo(function RegisterTim() {
         Math.round(x + dx * cos - dy * sin),
         Math.round(y + dx * sin + dy * cos),
       ]
-      return <g key={name} transform={`translate(${index * frameWidth} 0)`}>
+      return <g key={name} transform={`translate(${index * frameStride} 0)`}>
         <path d={limbPath([x+2,y+2],backLeg,4)} fill="#293449"/><Boot toe={backLeg[1]}/>
         <path d={limbPath(shoulder(-1, -9),backArm,3)} fill="#c58e6e"/>
         <path d={limbPath([x-3,y+1],frontLeg,5)} fill="var(--pixel-trousers)"/><Boot toe={frontLeg[1]}/>
@@ -71,8 +75,10 @@ export const RegisterTim = memo(function RegisterTim() {
           <use href={'#' + torso}/>
           <use href={'#' + chalkBag} x={seated ? -2 : 0} y={seated ? -5 : 0}/>
         </g>
-        <path d={limbPath(shoulder(-6, -8),frontArm,4)} fill="var(--pixel-skin)"/>
-        <rect x={frontArm[1][0]-3} y={frontArm[1][1]-2} width="4" height="3" fill="#f4c49c"/>
+        <g className="register-tug-arm">
+          <path d={limbPath(shoulder(-6, -8),frontArm,4)} fill="var(--pixel-skin)"/>
+          <rect x={frontArm[1][0]-3} y={frontArm[1][1]-2} width="4" height="3" fill="#f4c49c"/>
+        </g>
       </g>
     })}</g>
   </svg>

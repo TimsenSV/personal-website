@@ -1,0 +1,53 @@
+.pixel-headlamp { display: var(--pixel-headlamp-display, none); pointer-events: none; }
+.pixel-lamp-gesture, .boulder-floodlights { pointer-events: none; }
+.pixel-headlamp-beam, .pixel-headlamp-lens {
+  opacity: var(--pixel-headlamp-on, 0);
+  transition: opacity .14s ease-out;
+}
+.boulder-floodlight-beams, .boulder-floodlight-lens {
+  opacity: var(--boulder-floodlight-on, 0);
+  transition: opacity .22s ease-out;
+}
+.boulder-floodlight-pivot {
+  transform-origin: 0 0;
+  transform: rotate(calc(var(--floodlight-aim) + var(--floodlight-turn) * var(--boulder-floodlight-sweep, 0deg)));
+  transition: transform .31s ease-in-out;
+}
+
+:root[data-theme='dark'] {
+  --pixel-headlamp-display: inline;
+  --pixel-headlamp-on: 1;
+  --boulder-floodlight-on: 1;
+}
+:root[data-theme-lighting] {
+  --pixel-headlamp-display: none;
+  --pixel-headlamp-on: 0;
+  --boulder-floodlight-on: 0;
+}
+:root:is([data-theme-lighting='fit'], [data-theme-lighting='mounted'], [data-theme-lighting='lit']) {
+  --pixel-headlamp-display: inline;
+}
+:root[data-theme-lighting='lit'] { --pixel-headlamp-on: 1; }
+:root:is([data-theme-lighting='draw'], [data-theme-lighting='lift'], [data-theme-lighting='fit'], [data-theme-lighting='mounted'], [data-theme-lighting='lit']) {
+  --boulder-floodlight-on: 1;
+}
+:root[data-theme-lighting='reach'] {
+  --lamp-pose-reach: inline;
+  --boulder-floodlight-on: .42;
+  --boulder-floodlight-sweep: 6deg;
+}
+:root[data-theme-lighting='grip'] {
+  --lamp-pose-grip: inline;
+  --boulder-floodlight-on: .76;
+  --boulder-floodlight-sweep: 6deg;
+}
+:root[data-theme-lighting='draw'] { --lamp-pose-draw: inline; --boulder-floodlight-sweep: -3deg; }
+:root[data-theme-lighting='lift'] { --lamp-pose-lift: inline; --boulder-floodlight-sweep: -3deg; }
+:root[data-theme-lighting='fit'] { --lamp-pose-fit: inline; }
+:root:is([data-theme-lighting='reach'], [data-theme-lighting='grip'], [data-theme-lighting='draw'], [data-theme-lighting='lift'], [data-theme-lighting='fit']) {
+  & :is(.register-tug-arm, .runner-swing-arm) { display: none; }
+}
+/* Start the gesture at the CV tab, even if the idle loop took him past the desk edge. */
+:root[data-theme-lighting]:not([data-theme-lighting='stowed'], [data-theme-lighting='lit']) {
+  & :is(.tug-strip, .register-actor, .register-dust, .register-piece) { animation: none; }
+}

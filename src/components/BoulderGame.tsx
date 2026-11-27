@@ -6,6 +6,7 @@ import { EnergyBar, PixelType } from './PixelType'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { ClimbingTim } from './ClimbingTim'
 import { ClimbBackdrop } from './ClimbBackdrop'
+import { BoulderFloodlights } from './BoulderFloodlights'
 import { climbMotion, laneX, type ClimbMotion } from '../game/climbMotion'
 import { climbReducer, createClimb, formatHeight, CLIMB_NAME, isInTimingZone, isThreeLaneRow, readBest, routeRow, saveBest, zoneBounds, type ClimbState, type HoldKind, type Side, type TimingZone } from '../game/climber'
 
@@ -54,6 +55,7 @@ const ClimbWall = memo(function ClimbWall({ seed, step, side, kind, status, even
   const nextRow = boost ? boost.step : step + 1
   return <svg className="climb-wall" viewBox="0 0 440 560" fill="none" aria-hidden="true">
     <defs><pattern id="climb-bolts" width="40" height="40" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="1.1" fill="currentColor" opacity=".2"/></pattern></defs>
+    <BoulderFloodlights/>
     <rect width="440" height="560" fill="url(#climb-bolts)"/>
     <path d="M53 0L16 140 70 280 38 440M402 0L425 175 375 300 417 465" stroke="currentColor" opacity=".08"/>
     {rows.map(index => <g key={`${seed}-${index}`} className="climb-wall-row" style={{ transform: `translateY(${375 - (index - camera) * 100}px)` }}>

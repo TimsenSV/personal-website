@@ -33,6 +33,7 @@
   }
   @keyframes runner-pan { to { transform: translateX(calc(0px - var(--strip-width))); } }
   .pixel-runner { position: absolute; width: 128px; height: 144px; bottom: 3px; left: calc(50% - 54px); image-rendering: pixelated; overflow: visible; }
+  .pixel-runner .pixel-headlamp-beam { transform: scaleX(.86); }
   .runner-track { position: absolute; height: 20px; left: 8%; right: 8%; bottom: 8px; border-top: 2px solid #eac9af; border-bottom: 1px solid #edd7c5; transform: skewX(-35deg); background: repeating-linear-gradient(90deg,transparent 0 25px,#edceb7 25px 34px,transparent 34px 66px); background-size: 66px 100%; }
   .runner-speed { position: absolute; top: 58px; left: calc(50% - 73px); width: 30px; }
   .runner-speed i { display: block; background: #ddaf8e; height: 2px; margin-bottom: 7px; width: 22px; opacity: .55; }.runner-speed i:nth-child(2) { width: 31px; margin-left: -8px; }.runner-speed i:last-child { width: 15px; margin-left: 7px; }
@@ -52,6 +53,7 @@
   @keyframes runner-speed { 50% { opacity: .45; transform: translateX(-3px); } }
   @media (max-width: 1180px) and (min-width: 961px) { .runner-card { padding: 20px; }.runner-card h2 { font-size: 23px; } }
   @media (max-width: 620px) { .runner-card { padding: 20px 25px 18px; min-height: 330px; }.runner-card h2 { max-width: 340px; font-size: 27px; }.runner-scene { height: 150px; } }
+  @media (max-width: 620px) { .pixel-runner .pixel-headlamp-beam { transform: scaleX(.68); } }
   @media (max-width: 375px) { .runner-card { padding: 18px 20px; }.runner-card h2 { font-size: 24px; } }
   @media (prefers-reduced-motion: reduce) { .runner-scene * { animation: none !important; }.runner-frame { opacity: 0; }.runner-frame.frame-start { opacity: 1; } }
 }

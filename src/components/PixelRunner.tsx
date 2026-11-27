@@ -1,5 +1,7 @@
 import type { CSSProperties } from 'react'
 import { siteConfig } from '../content/site'
+import { PixelHeadlamp } from './PixelHeadlamp'
+import { PixelLampGesture } from './PixelLampGesture'
 import { PixelTimHead } from './PixelTimHead'
 import { limbPath, type JointPair, type Point } from './pixelLimb'
 
@@ -62,12 +64,16 @@ export function PixelRunner() {
         <path d="M27 25h2v3h-3v3h-4v2H12v-2h8v-2h4v-2h3z" fill="#ff8050"/>
         <path d="M23 24h3v1h-3z" fill="#f6efc7"/>
         <path d="M18 19h6v3h-2v1h-3v-1h-1z" fill="#d29774"/>
+        <path d="M12 31h6v1h1v5h-1v1h-6v-1h-1v-5h1z" fill="#283747"/>
+        <path d="M12 32h6v2h-6z" fill="#738498"/>
         <g transform="translate(2 -1)"><PixelTimHead/>
           <path d="M13 10h5v1h8v-1h3v2h-3v1h-9v-1h-4z" fill="#ffefc8"/>
           <path d="M13 11h3v2h-4v2h-4v-1h2v-2h3z" fill="#e57d49"/>
+          <PixelHeadlamp/>
+          <PixelLampGesture sprite="runner"/>
         </g>
       </g>
-      <StrideFrames arms/>
+      <g className="runner-swing-arm"><StrideFrames arms/></g>
     </g>
   </svg>
 }

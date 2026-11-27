@@ -1,5 +1,6 @@
 import { useId } from 'react'
 import { holds } from '../game/boulder'
+import { BoulderFloodlights } from './BoulderFloodlights'
 
 const wall = 'M28 24L218 10 254 34 244 124 263 148 251 250 51 274 29 247 41 147 18 118Z'
 const placements = holds.map(({ x, y, rotation }) => ({ x: 25 + x * 2.23, y: 14 + y * 2.55, rotation }))
@@ -28,11 +29,15 @@ function Grip({ shape }: { shape: 'jug' | 'pinch' | 'rail' }) {
 
 export function BoulderPreview() {
   const bolts = useId()
+  const wallClip = useId()
   const shapes = ['jug', 'rail', 'pinch', 'jug', 'rail', 'jug', 'pinch', 'rail'] as const
   return <svg className="boulder-preview" viewBox="0 0 300 302" fill="none" aria-hidden="true">
-    <defs><pattern id={bolts} width="17" height="19" patternUnits="userSpaceOnUse" patternTransform="rotate(-5)">
-      <circle cx="6" cy="7" r="1.1" fill="#7a839c" opacity=".48"/>
-    </pattern></defs>
+    <defs>
+      <pattern id={bolts} width="17" height="19" patternUnits="userSpaceOnUse" patternTransform="rotate(-5)">
+        <circle cx="6" cy="7" r="1.1" fill="#7a839c" opacity=".48"/>
+      </pattern>
+      <clipPath id={wallClip}><path d={wall}/></clipPath>
+    </defs>
     <path d="M12 270L227 244 286 266 66 297Z" fill="#dee3ef"/>
     <path d="M13 267L224 243 283 263 65 292 13 274Z" fill="#9eaac7"/>
     <path d="M13 267L225 242 283 262 65 285Z" fill="#b8c4df"/>
@@ -44,6 +49,7 @@ export function BoulderPreview() {
     <path d="M41 147L165 97 244 124 263 148 132 183Z" fill="var(--wall-middle, #e1e5f0)"/>
     <path d="M132 183L263 148 251 250 190 257Z" fill="var(--wall-shadow, #d0d8ea)"/>
     <path d="M28 24L165 97 218 10M41 147L165 97 244 124M132 183L190 257" stroke="#b8c2d5" strokeWidth="1"/>
+    <BoulderFloodlights wallClip={wallClip}/>
     <path d={wall} fill={`url(#${bolts})`}/>
     <g strokeLinejoin="round" strokeWidth="1">
       <path d="M42 185L81 150 94 191 48 198Z" fill="#bbc5d9" stroke="#adb8ce"/>

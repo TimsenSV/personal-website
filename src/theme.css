@@ -99,7 +99,7 @@
   & .strava-follow, & .strava-run-link > svg { color: #ffab80; border-color: #54404a; }
   & .runner-track { border-color: #846458; background-image: repeating-linear-gradient(90deg, transparent 0 25px, #70564e 25px 34px, transparent 34px 66px); }
   & .boulder-card { background: #202535; border-color: #374057; }
-  & .boulder-preview { --wall-base: #546079; --wall-lit: #697790; --wall-side: #414c67; --wall-middle: #586681; --wall-shadow: #3c475f; --wall-edge: #8793ad; }
+  & .boulder-preview { --wall-base: #3e4963; --wall-lit: #4a5774; --wall-side: #344059; --wall-middle: #414d68; --wall-shadow: #303a52; --wall-edge: #657390; }
   & .boulder-start { background: #2b3550; border-color: #47577c; color: #c8d5ff; }
   & .boulder-start:hover { background: #364363; }
 
